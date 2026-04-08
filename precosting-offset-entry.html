@@ -734,8 +734,8 @@
        TABS PLACEHOLDER  –  Will be populated later
        ================================================================ */
     .tabs-placeholder {
-      margin-top: 24px;
-      border: 2px dashed var(--color-border);
+      margin-top: 8px;
+      border: 2px dashed #c8d0e4;
       border-radius: var(--radius-lg);
       padding: 28px 24px;
       text-align: center;
@@ -952,12 +952,37 @@
     /* -- Tabs placeholder: polished hover --------------------------- */
     .tabs-placeholder {
       background: linear-gradient(135deg, #f8f9fc, #f1f4f9);
-      border-color: #c8cdd8;
+      border-color: #c8d0e4;
       transition: border-color var(--transition), box-shadow var(--transition);
+      padding: 22px 24px;
+      text-align: center;
     }
     .tabs-placeholder:hover {
-      border-color: #a8b4c8;
+      border-color: #a0aec8;
       box-shadow: 0 2px 12px rgba(27,47,94,0.07);
+    }
+    .tabs-placeholder-title {
+      font-size: 12.5px !important;
+      font-weight: 700 !important;
+      color: var(--color-primary) !important;
+      margin-bottom: 8px !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      letter-spacing: 0.02em;
+    }
+    .tabs-placeholder-desc {
+      font-size: 11.5px;
+      color: var(--color-text-muted);
+      line-height: 1.6;
+      margin-top: 6px;
+    }
+    .tabs-placeholder-note {
+      font-size: 10.5px;
+      color: #94a3b8;
+      margin-top: 8px;
+      font-style: italic;
     }
 
     /* -- Sidebar list panel: glass border --------------------------- */
@@ -968,6 +993,164 @@
       outline: 2px solid rgba(255,255,255,0.55);
       outline-offset: 2px;
     }
+
+    /* ================================================================
+       SUMMARY STRIP  –  full-bleed navy banner at top of form
+       ================================================================ */
+    .summary-strip {
+      background: linear-gradient(135deg, #1b2f5e 0%, #243a72 100%);
+      border-bottom: 3px solid var(--color-accent);
+      padding: 0;
+      margin: -20px -24px 0;   /* bleed to form-card edges */
+    }
+    .summary-strip-title {
+      padding: 11px 24px 9px;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .summary-strip-title::before {
+      content: '';
+      width: 3px;
+      height: 11px;
+      background: var(--color-accent);
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    .summary-strip-title::after { display: none; }
+    .summary-strip-grid {
+      padding: 12px 24px 16px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+      gap: 10px 20px;
+    }
+    .sum-item { display: flex; flex-direction: column; gap: 2px; }
+    .sum-item-label {
+      font-size: 8.5px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.42);
+    }
+    .sum-item-value {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #ffffff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      letter-spacing: 0.01em;
+    }
+    .sum-item-value.empty {
+      color: rgba(255,255,255,0.18);
+      font-weight: 400;
+      font-style: italic;
+      font-size: 11px;
+    }
+    .sum-item-value.highlight {
+      color: var(--color-accent);
+    }
+
+    /* ================================================================
+       PAGE SECTION LABELS  –  "Form" and "Detail Tabs" headings
+       ================================================================ */
+    .page-section-label {
+      padding: 16px 0 8px;
+      font-size: 9.5px;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--color-primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      pointer-events: none;
+      user-select: none;
+    }
+    .page-section-label::before {
+      content: '';
+      width: 3px;
+      height: 13px;
+      background: var(--color-accent);
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    .page-section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, #dde3f0, transparent);
+    }
+
+    /* ================================================================
+       HORIZONTAL SECTION TABS BAR
+       Replaces the per-section vertical collapsible-trigger dividers.
+       ================================================================ */
+    .horiz-tab-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 2px 1px;
+      padding: 6px 8px 0;
+      background: #f0f2f8;
+      border: 1.5px solid #dde3f0;
+      border-bottom: 2.5px solid var(--color-primary);
+      border-radius: 8px 8px 0 0;
+      margin: 0 0 0;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+    .horiz-tab {
+      padding: 8px 15px 9px;
+      font-size: 11px;
+      font-weight: 500;
+      color: #6b7490;
+      background: transparent;
+      border: 1.5px solid transparent;
+      border-bottom: none;
+      border-radius: 6px 6px 0 0;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.14s, color 0.14s, border-color 0.14s, box-shadow 0.14s;
+      margin-bottom: -2.5px;
+      position: relative;
+      letter-spacing: 0.01em;
+    }
+    .horiz-tab:hover {
+      background: rgba(27,47,94,0.06);
+      color: var(--color-primary);
+    }
+    .horiz-tab.open {
+      background: #ffffff;
+      color: var(--color-primary);
+      font-weight: 700;
+      border-color: #d0d8ea;
+      border-bottom-color: #ffffff;
+      box-shadow: 0 -2px 6px rgba(27,47,94,0.08);
+      z-index: 1;
+    }
+    /* Form content area below the tab bar */
+    .form-section-body {
+      background: #ffffff;
+      border: 1.5px solid #dde3f0;
+      border-top: none;
+      border-radius: 0 0 8px 8px;
+      min-height: 40px;
+    }
+    /* Collapsible panels inside form-section-body get proper inner spacing */
+    .form-section-body .collapsible-content-inner {
+      padding: 20px 22px 26px;
+    }
+    /* Hide the original per-section accordion divider triggers */
+    .collapsible-trigger { display: none !important; }
 
     /* ================================================================
        SCROLLBAR STYLING
@@ -1111,6 +1294,98 @@
         <div class="form-body" id="form-body">
 
           <!-- =======================================================
+               SUMMARY STRIP
+               Live-updating key pre-costing values at a glance.
+               id: summary-strip
+               ======================================================= -->
+          <div class="summary-strip" id="summary-strip">
+            <div class="summary-strip-title">Pre Costing Summary</div>
+            <div class="summary-strip-grid">
+              <div class="sum-item">
+                <div class="sum-item-label">Customer</div>
+                <div class="sum-item-value empty" id="sum-customer">—</div>
+              </div>
+              <div class="sum-item">
+                <div class="sum-item-label">Currency</div>
+                <div class="sum-item-value empty" id="sum-currency">—</div>
+              </div>
+              <div class="sum-item">
+                <div class="sum-item-label">Ex Rate</div>
+                <div class="sum-item-value empty" id="sum-exrate">—</div>
+              </div>
+              <div class="sum-item">
+                <div class="sum-item-label">FG Description</div>
+                <div class="sum-item-value empty" id="sum-product-desc">—</div>
+              </div>
+              <div class="sum-item">
+                <div class="sum-item-label">FG Qty</div>
+                <div class="sum-item-value empty" id="sum-fg-qty">—</div>
+              </div>
+              <div class="sum-item">
+                <div class="sum-item-label">UOM</div>
+                <div class="sum-item-value empty" id="sum-uom">—</div>
+              </div>
+              <div class="sum-item">
+                <div class="sum-item-label">Full Sheet</div>
+                <div class="sum-item-value empty" id="sum-full-sheet">—</div>
+              </div>
+              <div class="sum-item">
+                <div class="sum-item-label">No Of Outs</div>
+                <div class="sum-item-value empty" id="sum-outs">—</div>
+              </div>
+              <div class="sum-item">
+                <div class="sum-item-label">Route Code</div>
+                <div class="sum-item-value empty" id="sum-route-code">—</div>
+              </div>
+              <div class="sum-item">
+                <div class="sum-item-label">No Of Sheets</div>
+                <div class="sum-item-value empty" id="sum-sheets">—</div>
+              </div>
+              <div class="sum-item">
+                <div class="sum-item-label">Total Waste %</div>
+                <div class="sum-item-value empty" id="sum-waste">—</div>
+              </div>
+              <div class="sum-item">
+                <div class="sum-item-label">GSM</div>
+                <div class="sum-item-value empty" id="sum-gsm">—</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FORM SECTION LABEL -->
+          <div class="page-section-label">Form</div>
+
+          <!-- =======================================================
+               HORIZONTAL SECTION TABS BAR
+               id: horiz-tab-bar
+               ======================================================= -->
+          <div class="horiz-tab-bar" id="horiz-tab-bar">
+            <button class="horiz-tab" data-section="section-header"           onclick="toggleSectionById('section-header')">Header</button>
+            <button class="horiz-tab" data-section="section-fg-product"        onclick="toggleSectionById('section-fg-product')">Product</button>
+            <button class="horiz-tab" data-section="section-sheet-dimensions"  onclick="toggleSectionById('section-sheet-dimensions')">Sheet Dimensions</button>
+            <button class="horiz-tab" data-section="section-routing-wastage"   onclick="toggleSectionById('section-routing-wastage')">Routing &amp; Wastage</button>
+            <button class="horiz-tab" data-section="section-material"          onclick="toggleSectionById('section-material')">Board / Paper</button>
+            <button class="horiz-tab" data-section="section-printing"          onclick="toggleSectionById('section-printing')">Printing</button>
+            <button class="horiz-tab" data-section="section-varnishing"        onclick="toggleSectionById('section-varnishing')">Varnishing</button>
+            <button class="horiz-tab" data-section="section-lamination"        onclick="toggleSectionById('section-lamination')">Lamination</button>
+            <button class="horiz-tab" data-section="section-tiep-artwork"      onclick="toggleSectionById('section-tiep-artwork')">TIEP / Artwork</button>
+            <button class="horiz-tab" data-section="section-finishing"         onclick="toggleSectionById('section-finishing')">Finishing</button>
+            <button class="horiz-tab" data-section="section-slab-quantities"   onclick="toggleSectionById('section-slab-quantities')">Slab Quantities</button>
+            <button class="horiz-tab" data-section="section-remarks"           onclick="toggleSectionById('section-remarks')">Remarks</button>
+          </div>
+
+          <!-- form-section-body wraps ALL collapsible panels (Header + Form sections) -->
+          <div class="form-section-body">
+
+          <!-- =======================================================
+               SECTION HEADER – collapsible wrapper
+               Contains: Doc Info + Customer Info + Product Description
+               id: section-header
+               ======================================================= -->
+          <div id="section-header" class="collapsible-section">
+            <div class="collapsible-content"><div class="collapsible-content-inner">
+
+          <!-- =======================================================
                SECTION 1 – DOCUMENT INFO
                Fields: Company, Pre Costing No, Pre Costing Date,
                        Price Enquiry No, View Price Enquiry
@@ -1227,13 +1502,16 @@
             </div>
           </div>
 
+            </div></div><!-- /section-header: collapsible-content-inner + collapsible-content -->
+          </div><!-- /section-header -->
+
           <!-- =======================================================
                SECTION 3 – FG PRODUCT
                Fields: FG Qty, FG/SFG Product Description (dropdown),
                        Product Code, UOM, Qty
                id: section-fg-product
                ======================================================= -->
-          <div id="section-fg-product" class="collapsible-section open">
+          <div id="section-fg-product" class="collapsible-section">
             <div class="section-divider collapsible-trigger" onclick="toggleSection(this)">
               <div class="section-divider-label">Product</div>
               <div class="section-divider-line"></div>
@@ -1949,6 +2227,11 @@
             </div></div>
           </div>
 
+          </div><!-- /form-section-body -->
+
+          <!-- DETAIL TABS SECTION LABEL -->
+          <div class="page-section-label">Detail Tabs</div>
+
           <!-- =======================================================
                TABS PLACEHOLDER
                The detail tabs (Pre Press Details, Route Cost,
@@ -1956,9 +2239,12 @@
                id: tabs-container
                ======================================================= -->
           <div class="tabs-placeholder" id="tabs-container">
-            <div class="tabs-placeholder-title">Detail Tabs Area</div>
-            <p>Pre Press Details · Route Cost · Board/Paper Details · Corrugated Paper Details · Ink Material · Adhesive · Foil Material · Varnishing Details</p>
-            <p style="margin-top:6px;font-size:11px;color:#94a3b8;">Tabs will be connected here in the next phase.</p>
+            <div class="tabs-placeholder-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:.5;flex-shrink:0;"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+              Detail Tabs
+            </div>
+            <p class="tabs-placeholder-desc">Pre Press Details &middot; Route Cost &middot; Board/Paper Details &middot; Corrugated Paper Details &middot; Ink Material &middot; Adhesive &middot; Foil Material &middot; Varnishing Details</p>
+            <p class="tabs-placeholder-note">These tabs will be connected in the next phase.</p>
           </div>
 
         </div><!-- /form-body -->
@@ -2171,6 +2457,157 @@
     });
   }
   document.addEventListener('DOMContentLoaded', initCollapsible);
+
+  /* ----------------------------------------------------------------
+     HORIZONTAL TABS: Toggle section by ID + sync tab active state
+     Called by .horiz-tab onclick="toggleSectionById('section-xxx')"
+     ---------------------------------------------------------------- */
+  function toggleSectionById(sectionId) {
+    const section = document.getElementById(sectionId);
+    if (!section) return;
+    const content = section.querySelector('.collapsible-content');
+    if (!content) return;
+    const isOpen = section.classList.contains('open');
+
+    /* ── Close all other open sections first (exclusive tabs) ── */
+    if (!isOpen) {
+      document.querySelectorAll('.collapsible-section.open').forEach(openSec => {
+        if (openSec.id === sectionId) return;
+        const oc = openSec.querySelector('.collapsible-content');
+        if (!oc) return;
+        oc.style.height  = oc.scrollHeight + 'px';
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          oc.style.height  = '0';
+          oc.style.opacity = '0';
+        }));
+        openSec.classList.remove('open');
+        syncHorizTab(openSec.id);
+      });
+    }
+
+    /* ── Toggle the clicked section ─────────────────────────── */
+    if (isOpen) {
+      content.style.height  = content.scrollHeight + 'px';
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        content.style.height  = '0';
+        content.style.opacity = '0';
+      }));
+      section.classList.remove('open');
+    } else {
+      section.classList.add('open');
+      const h = content.scrollHeight;
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        content.style.height  = h + 'px';
+        content.style.opacity = '1';
+      }));
+      content.addEventListener('transitionend', function handler(e) {
+        if (e.propertyName === 'height' && section.classList.contains('open')) {
+          content.style.height = 'auto';
+          content.removeEventListener('transitionend', handler);
+        }
+      });
+      setTimeout(() => section.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 80);
+    }
+    syncHorizTab(sectionId);
+  }
+
+  function syncHorizTab(sectionId) {
+    const isOpen = document.getElementById(sectionId)?.classList.contains('open');
+    document.querySelectorAll(`.horiz-tab[data-section="${sectionId}"]`)
+      .forEach(tab => tab.classList.toggle('open', !!isOpen));
+  }
+
+  /* On page load: open only section-header, close everything else */
+  function initHorizTabs() {
+    document.querySelectorAll('.collapsible-section').forEach(sec => {
+      const content = sec.querySelector('.collapsible-content');
+      if (!content) return;
+      if (sec.id === 'section-header') {
+        sec.classList.add('open');
+        content.style.height  = 'auto';
+        content.style.opacity = '1';
+      } else {
+        sec.classList.remove('open');
+        content.style.height  = '0';
+        content.style.opacity = '0';
+      }
+      syncHorizTab(sec.id);
+    });
+  }
+  document.addEventListener('DOMContentLoaded', initHorizTabs);
+
+  /* ----------------------------------------------------------------
+     SUMMARY STRIP: Live field bindings
+     Reflect key form values into the summary bar at the top.
+     ---------------------------------------------------------------- */
+  function initSummary() {
+    const bind = (sumId, fieldId) => {
+      const field = document.getElementById(fieldId);
+      const el    = document.getElementById(sumId);
+      if (!field || !el) return;
+      const refresh = () => {
+        const v = (field.value || '').trim();
+        el.textContent = v || '—';
+        el.classList.toggle('empty', !v);
+      };
+      field.addEventListener('input',  refresh);
+      field.addEventListener('change', refresh);
+      refresh();
+    };
+    bind('sum-currency',     'field-currency');
+    bind('sum-exrate',       'field-ex-rate');
+    bind('sum-product-desc', 'field-product-desc');
+    bind('sum-fg-qty',       'field-fg-qty');
+    bind('sum-uom',          'field-fg-uom');
+    bind('sum-outs',         'field-full-outs');
+    bind('sum-sheets',       'field-no-of-sheets');
+    bind('sum-waste',        'field-total-waste');
+    bind('sum-gsm',          'field-gsm');
+
+    /* Full Sheet W × L composite */
+    const refreshFS = () => {
+      const w  = (document.getElementById('field-full-w')?.value  || '').trim();
+      const l  = (document.getElementById('field-full-l')?.value  || '').trim();
+      const el = document.getElementById('sum-full-sheet');
+      if (!el) return;
+      const v = (w && l) ? `${w} × ${l}` : '';
+      el.textContent = v || '—';
+      el.classList.toggle('empty', !v);
+    };
+    ['field-full-w', 'field-full-l'].forEach(id =>
+      document.getElementById(id)?.addEventListener('input', refreshFS));
+    refreshFS();
+
+    /* Customer select */
+    const custSel = document.getElementById('field-customer');
+    const custEl  = document.getElementById('sum-customer');
+    if (custSel && custEl) {
+      const refreshCust = () => {
+        const v = custSel.value?.trim() || custSel.options?.[custSel.selectedIndex]?.text || '';
+        const empty = !v || custSel.selectedIndex === 0;
+        custEl.textContent = empty ? '—' : v;
+        custEl.classList.toggle('empty', empty);
+      };
+      custSel.addEventListener('change', refreshCust);
+      custSel.addEventListener('input',  refreshCust);
+      refreshCust();
+    }
+
+    /* Route Code select */
+    const routeSel = document.getElementById('field-route-code');
+    const routeEl  = document.getElementById('sum-route-code');
+    if (routeSel && routeEl) {
+      const refreshRoute = () => {
+        const v = routeSel.value?.trim() || '';
+        const empty = !v || routeSel.selectedIndex === 0;
+        routeEl.textContent = empty ? '—' : v;
+        routeEl.classList.toggle('empty', empty);
+      };
+      routeSel.addEventListener('change', refreshRoute);
+      refreshRoute();
+    }
+  }
+  document.addEventListener('DOMContentLoaded', initSummary);
 
   /* ----------------------------------------------------------------
      VISUAL EFFECT: Button ripple
