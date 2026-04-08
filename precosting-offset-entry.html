@@ -697,6 +697,8 @@
       border: none;
       transition: var(--transition);
       letter-spacing: 0.02em;
+      position: relative;
+      overflow: hidden;
     }
     .btn-primary {
       background: var(--color-primary);
@@ -745,6 +747,226 @@
       font-weight: 600;
       color: var(--color-primary);
       margin-bottom: 6px;
+    }
+
+    /* ================================================================
+       VISUAL POLISH
+       Shadows · Gradients · Hover states · Micro-interactions
+       ================================================================ */
+
+    /* -- Background: subtle dot grid on content area ----------------- */
+    .content-scroll {
+      background-color: var(--color-bg);
+      background-image: radial-gradient(circle, rgba(27,47,94,0.055) 1px, transparent 1px);
+      background-size: 22px 22px;
+    }
+
+    /* -- Form card: deeper elevation --------------------------------- */
+    .form-card {
+      box-shadow: 0 4px 28px rgba(27,47,94,0.13), 0 1px 4px rgba(27,47,94,0.07);
+    }
+
+    /* -- Form header: diagonal gradient ------------------------------ */
+    .form-header {
+      background: linear-gradient(135deg, #172952 0%, #253f82 100%);
+    }
+    .form-header-title {
+      text-shadow: 0 1px 3px rgba(0,0,0,0.20);
+    }
+
+    /* -- Header icon buttons: lift + active press -------------------- */
+    .hdr-btn {
+      transition: background var(--transition), transform 0.14s ease, color var(--transition);
+    }
+    .hdr-btn:hover  { transform: translateY(-1px); }
+    .hdr-btn:active { transform: translateY(0) scale(0.90); }
+
+    /* -- Top bar: stronger shadow ------------------------------------ */
+    .top-bar {
+      box-shadow: 0 2px 12px rgba(27,47,94,0.09);
+    }
+
+    /* -- Avatar: gradient + hover scale ------------------------------ */
+    .avatar {
+      background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+      box-shadow: 0 2px 8px rgba(27,47,94,0.28);
+      cursor: pointer;
+      transition: transform 0.16s ease, box-shadow 0.16s ease;
+    }
+    .avatar:hover {
+      transform: scale(1.07);
+      box-shadow: 0 4px 12px rgba(27,47,94,0.35);
+    }
+
+    /* -- Input: hover + focus inset left-accent ---------------------- */
+    .field-input:hover:not([readonly]):not([disabled]):not(:focus) {
+      border-color: #a8b4c8;
+      background: #fff;
+    }
+    .field-input:focus {
+      border-color: var(--color-border-focus);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(27,47,94,0.10), inset 2px 0 0 var(--color-primary);
+    }
+    .field-select:hover:not(:focus) {
+      border-color: #a8b4c8;
+      background-color: #fff;
+    }
+    .field-textarea:hover:not(:focus) {
+      border-color: #a8b4c8;
+      background: #fff;
+    }
+
+    /* -- Label: highlight when parent is focused --------------------- */
+    .field-group:focus-within > .field-label {
+      color: var(--color-primary);
+    }
+    .section-divider-label {
+      transition: color var(--transition), letter-spacing 0.22s ease;
+    }
+
+    /* -- Select clear button: fade in on row hover ------------------- */
+    .select-clear {
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+    .select-wrap:hover .select-clear,
+    .select-wrap:focus-within .select-clear { opacity: 1; }
+
+    /* -- Input badge: subtle gradient -------------------------------- */
+    .input-badge {
+      background: linear-gradient(135deg, #edf0f7, #e4eaf4);
+    }
+
+    /* -- Buttons: shadow + lift -------------------------------------- */
+    .btn-primary {
+      box-shadow: 0 2px 8px rgba(27,47,94,0.24);
+      transition: background var(--transition), transform 0.14s ease, box-shadow 0.14s ease;
+    }
+    .btn-primary:hover {
+      background: var(--color-primary-light);
+      transform: translateY(-1px);
+      box-shadow: 0 5px 18px rgba(27,47,94,0.30);
+    }
+    .btn-primary:active {
+      transform: translateY(0);
+      box-shadow: 0 1px 4px rgba(27,47,94,0.18);
+    }
+    .btn-outline {
+      transition: background var(--transition), border-color var(--transition),
+                  color var(--transition), transform 0.14s ease;
+    }
+    .btn-outline:hover {
+      background: #eef1f7;
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+      transform: translateY(-1px);
+    }
+    .btn-outline:active { transform: translateY(0); }
+
+    /* -- Button ripple (spawned by JS) ------------------------------- */
+    .btn-ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.28);
+      transform: scale(0);
+      animation: ripple-anim 0.52s linear;
+      pointer-events: none;
+    }
+    .btn-outline .btn-ripple { background: rgba(27,47,94,0.10); }
+    @keyframes ripple-anim {
+      to { transform: scale(1); opacity: 0; }
+    }
+
+    /* -- Toggle: soft glow when ON ----------------------------------- */
+    .toggle input:checked + .toggle-slider {
+      box-shadow: 0 0 0 3px rgba(27,47,94,0.14);
+    }
+    .toggle.toggle-accent input:checked + .toggle-slider {
+      box-shadow: 0 0 0 3px rgba(200,152,60,0.20);
+    }
+
+    /* -- Sheet blocks: hover elevation ------------------------------- */
+    .sheet-block {
+      transition: box-shadow var(--transition), border-color var(--transition);
+    }
+    .sheet-block:hover {
+      border-color: #c5ccd8;
+      box-shadow: 0 4px 16px rgba(27,47,94,0.10);
+    }
+
+    /* -- Printing columns: hover elevation --------------------------- */
+    .printing-columns {
+      transition: box-shadow var(--transition), border-color var(--transition);
+    }
+    .printing-columns:hover {
+      border-color: #c5ccd8;
+      box-shadow: 0 4px 14px rgba(27,47,94,0.09);
+    }
+
+    /* -- Finishing toggle-field: hover highlight (no layout shift) --- */
+    .toggle-field {
+      border-radius: var(--radius);
+      transition: box-shadow var(--transition), background var(--transition);
+    }
+    .toggle-field:hover {
+      background: rgba(27,47,94,0.04);
+      box-shadow: 0 0 0 6px rgba(27,47,94,0.04);
+    }
+
+    /* -- Slab header cells: tinted stripe ---------------------------- */
+    .slab-header-cell {
+      background: rgba(27,47,94,0.035);
+      padding: 5px 4px;
+      border-radius: 3px 3px 0 0;
+    }
+
+    /* -- Collapsible trigger: more visible hover --------------------- */
+    .collapsible-trigger:hover {
+      background: rgba(27,47,94,0.055);
+    }
+    .collapsible-trigger:hover .section-divider-label {
+      letter-spacing: 0.12em;
+    }
+
+    /* -- Link button: animated underline slide-in ------------------- */
+    .link-btn { position: relative; }
+    .link-btn::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; left: 0;
+      width: 100%; height: 1px;
+      background: var(--color-accent);
+      transform: scaleX(0);
+      transform-origin: left center;
+      transition: transform 0.22s ease;
+    }
+    .link-btn:hover { text-decoration: none; }
+    .link-btn:hover::after { transform: scaleX(1); }
+
+    /* -- Form footer: gradient tray --------------------------------- */
+    .form-footer {
+      background: linear-gradient(to bottom, #fafbfc, #f2f5fa);
+    }
+
+    /* -- Tabs placeholder: polished hover --------------------------- */
+    .tabs-placeholder {
+      background: linear-gradient(135deg, #f8f9fc, #f1f4f9);
+      border-color: #c8cdd8;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+    .tabs-placeholder:hover {
+      border-color: #a8b4c8;
+      box-shadow: 0 2px 12px rgba(27,47,94,0.07);
+    }
+
+    /* -- Sidebar list panel: glass border --------------------------- */
+    .list-panel { border: 1px solid rgba(255,255,255,0.10); }
+
+    /* -- Header action button: keyboard focus ring ------------------ */
+    .hdr-btn:focus-visible {
+      outline: 2px solid rgba(255,255,255,0.55);
+      outline-offset: 2px;
     }
 
     /* ================================================================
@@ -1247,7 +1469,7 @@
               </div>
 
               <!-- Paper Combination -->
-              <div class="field-group col-2" style="grid-column:5/span 2;">
+              <div class="field-group col-3">
                 <label class="field-label">Paper Combination</label>
                 <input type="text" class="field-input" id="field-paper-combination" name="paperCombination" placeholder="" />
               </div>
@@ -1271,7 +1493,7 @@
             <!-- Mellow Colour toggle row -->
             <div style="margin-bottom:12px;">
               <div class="toggle-wrap">
-                <label class="toggle toggle-accent" id="toggle-mellow-colour">
+                <label class="toggle" id="toggle-mellow-colour">
                   <input type="checkbox" id="field-mellow-colour" name="mellowColour" />
                   <span class="toggle-slider"></span>
                 </label>
@@ -1458,7 +1680,7 @@
               <div class="field-group">
                 <label class="field-label">TIEP</label>
                 <div class="toggle-wrap" style="height:34px;">
-                  <label class="toggle toggle-accent" id="toggle-tiep">
+                  <label class="toggle" id="toggle-tiep">
                     <input type="checkbox" id="field-tiep" name="tiep" checked />
                     <span class="toggle-slider"></span>
                   </label>
@@ -1468,7 +1690,7 @@
               <div class="field-group">
                 <label class="field-label">Assemble?</label>
                 <div class="toggle-wrap" style="height:34px;">
-                  <label class="toggle toggle-accent" id="toggle-assemble">
+                  <label class="toggle" id="toggle-assemble">
                     <input type="checkbox" id="field-assemble" name="assemble" checked />
                     <span class="toggle-slider"></span>
                   </label>
@@ -1949,6 +2171,24 @@
     });
   }
   document.addEventListener('DOMContentLoaded', initCollapsible);
+
+  /* ----------------------------------------------------------------
+     VISUAL EFFECT: Button ripple
+     Adds an expanding circle on click for all .btn elements.
+     ---------------------------------------------------------------- */
+  document.querySelectorAll('.btn').forEach(btn => {
+    btn.addEventListener('click', function (e) {
+      const rect   = btn.getBoundingClientRect();
+      const size   = Math.max(rect.width, rect.height) * 1.5;
+      const x      = e.clientX - rect.left - size / 2;
+      const y      = e.clientY - rect.top  - size / 2;
+      const ripple = document.createElement('span');
+      ripple.className = 'btn-ripple';
+      ripple.style.cssText = `width:${size}px;height:${size}px;left:${x}px;top:${y}px`;
+      btn.appendChild(ripple);
+      ripple.addEventListener('animationend', () => ripple.remove());
+    });
+  });
 
   /* ----------------------------------------------------------------
      COLLECT FORM DATA
