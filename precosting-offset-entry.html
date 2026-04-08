@@ -1149,10 +1149,6 @@
     .form-section-body .collapsible-content-inner {
       padding: 20px 22px 26px;
     }
-    /* Header section (sits outside form-section-body) keeps its own padding */
-    #section-header .collapsible-content-inner {
-      padding: 0 0 6px;
-    }
     /* Hide the original per-section accordion divider triggers */
     .collapsible-trigger { display: none !important; }
 
@@ -1378,6 +1374,9 @@
             <button class="horiz-tab" data-section="section-remarks"           onclick="toggleSectionById('section-remarks')">Remarks</button>
           </div>
 
+          <!-- form-section-body wraps ALL collapsible panels (Header + Form sections) -->
+          <div class="form-section-body">
+
           <!-- =======================================================
                SECTION HEADER – collapsible wrapper
                Contains: Doc Info + Customer Info + Product Description
@@ -1505,9 +1504,6 @@
 
             </div></div><!-- /section-header: collapsible-content-inner + collapsible-content -->
           </div><!-- /section-header -->
-
-          <!-- form-section-body wraps all collapsible content panels -->
-          <div class="form-section-body">
 
           <!-- =======================================================
                SECTION 3 – FG PRODUCT
