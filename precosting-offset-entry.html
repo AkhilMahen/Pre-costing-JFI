@@ -1271,6 +1271,33 @@
           </div>
 
           <!-- =======================================================
+               HORIZONTAL SECTION TABS BAR
+               id: horiz-tab-bar
+               ======================================================= -->
+          <div class="horiz-tab-bar" id="horiz-tab-bar">
+            <button class="horiz-tab" data-section="section-header"           onclick="toggleSectionById('section-header')">Header</button>
+            <button class="horiz-tab" data-section="section-fg-product"        onclick="toggleSectionById('section-fg-product')">Product</button>
+            <button class="horiz-tab" data-section="section-sheet-dimensions"  onclick="toggleSectionById('section-sheet-dimensions')">Sheet Dimensions</button>
+            <button class="horiz-tab" data-section="section-routing-wastage"   onclick="toggleSectionById('section-routing-wastage')">Routing &amp; Wastage</button>
+            <button class="horiz-tab" data-section="section-material"          onclick="toggleSectionById('section-material')">Board / Paper</button>
+            <button class="horiz-tab" data-section="section-printing"          onclick="toggleSectionById('section-printing')">Printing</button>
+            <button class="horiz-tab" data-section="section-varnishing"        onclick="toggleSectionById('section-varnishing')">Varnishing</button>
+            <button class="horiz-tab" data-section="section-lamination"        onclick="toggleSectionById('section-lamination')">Lamination</button>
+            <button class="horiz-tab" data-section="section-tiep-artwork"      onclick="toggleSectionById('section-tiep-artwork')">TIEP / Artwork</button>
+            <button class="horiz-tab" data-section="section-finishing"         onclick="toggleSectionById('section-finishing')">Finishing</button>
+            <button class="horiz-tab" data-section="section-slab-quantities"   onclick="toggleSectionById('section-slab-quantities')">Slab Quantities</button>
+            <button class="horiz-tab" data-section="section-remarks"           onclick="toggleSectionById('section-remarks')">Remarks</button>
+          </div>
+
+          <!-- =======================================================
+               SECTION HEADER – collapsible wrapper
+               Contains: Doc Info + Customer Info + Product Description
+               id: section-header
+               ======================================================= -->
+          <div id="section-header" class="collapsible-section">
+            <div class="collapsible-content"><div class="collapsible-content-inner">
+
+          <!-- =======================================================
                SECTION 1 – DOCUMENT INFO
                Fields: Company, Pre Costing No, Pre Costing Date,
                        Price Enquiry No, View Price Enquiry
@@ -1387,24 +1414,8 @@
             </div>
           </div>
 
-          <!-- =======================================================
-               HORIZONTAL SECTION TABS BAR
-               Replaces per-section vertical accordion dividers.
-               id: horiz-tab-bar
-               ======================================================= -->
-          <div class="horiz-tab-bar" id="horiz-tab-bar">
-            <button class="horiz-tab" data-section="section-fg-product"        onclick="toggleSectionById('section-fg-product')">Product</button>
-            <button class="horiz-tab" data-section="section-sheet-dimensions"  onclick="toggleSectionById('section-sheet-dimensions')">Sheet Dimensions</button>
-            <button class="horiz-tab" data-section="section-routing-wastage"   onclick="toggleSectionById('section-routing-wastage')">Routing &amp; Wastage</button>
-            <button class="horiz-tab" data-section="section-material"          onclick="toggleSectionById('section-material')">Board / Paper</button>
-            <button class="horiz-tab" data-section="section-printing"          onclick="toggleSectionById('section-printing')">Printing</button>
-            <button class="horiz-tab" data-section="section-varnishing"        onclick="toggleSectionById('section-varnishing')">Varnishing</button>
-            <button class="horiz-tab" data-section="section-lamination"        onclick="toggleSectionById('section-lamination')">Lamination</button>
-            <button class="horiz-tab" data-section="section-tiep-artwork"      onclick="toggleSectionById('section-tiep-artwork')">TIEP / Artwork</button>
-            <button class="horiz-tab" data-section="section-finishing"         onclick="toggleSectionById('section-finishing')">Finishing</button>
-            <button class="horiz-tab" data-section="section-slab-quantities"   onclick="toggleSectionById('section-slab-quantities')">Slab Quantities</button>
-            <button class="horiz-tab" data-section="section-remarks"           onclick="toggleSectionById('section-remarks')">Remarks</button>
-          </div>
+            </div></div><!-- /section-header: collapsible-content-inner + collapsible-content -->
+          </div><!-- /section-header -->
 
           <!-- =======================================================
                SECTION 3 – FG PRODUCT
@@ -1412,7 +1423,7 @@
                        Product Code, UOM, Qty
                id: section-fg-product
                ======================================================= -->
-          <div id="section-fg-product" class="collapsible-section open">
+          <div id="section-fg-product" class="collapsible-section">
             <div class="section-divider collapsible-trigger" onclick="toggleSection(this)">
               <div class="section-divider-label">Product</div>
               <div class="section-divider-line"></div>
@@ -2361,6 +2372,24 @@
     const content = section.querySelector('.collapsible-content');
     if (!content) return;
     const isOpen = section.classList.contains('open');
+
+    /* ── Close all other open sections first (exclusive tabs) ── */
+    if (!isOpen) {
+      document.querySelectorAll('.collapsible-section.open').forEach(openSec => {
+        if (openSec.id === sectionId) return;
+        const oc = openSec.querySelector('.collapsible-content');
+        if (!oc) return;
+        oc.style.height  = oc.scrollHeight + 'px';
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          oc.style.height  = '0';
+          oc.style.opacity = '0';
+        }));
+        openSec.classList.remove('open');
+        syncHorizTab(openSec.id);
+      });
+    }
+
+    /* ── Toggle the clicked section ─────────────────────────── */
     if (isOpen) {
       content.style.height  = content.scrollHeight + 'px';
       requestAnimationFrame(() => requestAnimationFrame(() => {
@@ -2381,7 +2410,6 @@
           content.removeEventListener('transitionend', handler);
         }
       });
-      /* Scroll the newly opened section into view */
       setTimeout(() => section.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 80);
     }
     syncHorizTab(sectionId);
@@ -2393,9 +2421,22 @@
       .forEach(tab => tab.classList.toggle('open', !!isOpen));
   }
 
-  /* Initialise all tab active states on page load */
+  /* On page load: open only section-header, close everything else */
   function initHorizTabs() {
-    document.querySelectorAll('.collapsible-section').forEach(sec => syncHorizTab(sec.id));
+    document.querySelectorAll('.collapsible-section').forEach(sec => {
+      const content = sec.querySelector('.collapsible-content');
+      if (!content) return;
+      if (sec.id === 'section-header') {
+        sec.classList.add('open');
+        content.style.height  = 'auto';
+        content.style.opacity = '1';
+      } else {
+        sec.classList.remove('open');
+        content.style.height  = '0';
+        content.style.opacity = '0';
+      }
+      syncHorizTab(sec.id);
+    });
   }
   document.addEventListener('DOMContentLoaded', initHorizTabs);
 
