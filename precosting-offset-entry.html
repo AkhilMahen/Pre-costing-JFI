@@ -1,0 +1,1924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pre Costing – Offset Entry | Pentagon ERP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- ============================================================
+       DESIGN TOKENS  –  Edit these variables to re-theme the page
+       ============================================================ -->
+  <style>
+    :root {
+      /* Brand colours */
+      --color-primary:        #1b2f5e;   /* dark navy */
+      --color-primary-light:  #243878;
+      --color-accent:         #c8983c;   /* gold */
+      --color-accent-hover:   #b5842e;
+
+      /* UI surfaces */
+      --color-bg:             #eef0f5;
+      --color-card:           #ffffff;
+      --color-sidebar-bg:     #1b2f5e;
+      --color-sidebar-item:   rgba(255,255,255,0.07);
+      --color-sidebar-active: rgba(200,152,60,0.2);
+
+      /* Text */
+      --color-text:           #1e293b;
+      --color-text-muted:     #64748b;
+      --color-label:          #475569;
+
+      /* Borders & shadows */
+      --color-border:         #d9dde8;
+      --color-border-focus:   #1b2f5e;
+      --shadow-card:          0 2px 16px rgba(27,47,94,0.10);
+      --shadow-input-focus:   0 0 0 3px rgba(27,47,94,0.12);
+
+      /* Section headings */
+      --color-section-label:  #1b2f5e;
+
+      /* Toggle */
+      --toggle-off:           #cbd5e1;
+      --toggle-on:            #1b2f5e;
+
+      /* Misc */
+      --radius:               6px;
+      --radius-lg:            10px;
+      --transition:           0.18s ease;
+      --font:                 'Inter', system-ui, sans-serif;
+    }
+
+    /* ================================================================
+       BASE RESET
+       ================================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; font-family: var(--font); font-size: 13px; color: var(--color-text); background: var(--color-bg); }
+    a { text-decoration: none; color: inherit; }
+    button, input, select, textarea { font-family: inherit; font-size: inherit; }
+
+    /* ================================================================
+       LAYOUT  –  Sidebar + Main
+       ================================================================ */
+    .app-shell {
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ----------------------------------------------------------------
+       SIDEBAR
+       ---------------------------------------------------------------- */
+    .sidebar {
+      width: 220px;
+      min-width: 220px;
+      background: var(--color-sidebar-bg);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      color: #fff;
+      z-index: 10;
+    }
+
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 18px 16px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .sidebar-brand-icon {
+      width: 36px; height: 36px;
+      background: var(--color-accent);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 15px; color: #fff;
+      flex-shrink: 0;
+    }
+
+    .sidebar-brand-text { line-height: 1.25; }
+    .sidebar-brand-text .brand-name  { font-weight: 700; font-size: 14px; letter-spacing: 0.02em; }
+    .sidebar-brand-text .brand-sub   { font-size: 10px; opacity: 0.55; letter-spacing: 0.04em; text-transform: uppercase; }
+
+    .sidebar-section-label {
+      padding: 16px 16px 6px;
+      font-size: 9.5px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.45;
+    }
+
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 9px 16px;
+      cursor: pointer;
+      border-left: 3px solid transparent;
+      opacity: 0.75;
+      transition: var(--transition);
+      font-size: 12px;
+    }
+    .sidebar-item:hover { background: var(--color-sidebar-item); opacity: 1; }
+    .sidebar-item.active {
+      background: var(--color-sidebar-active);
+      border-left-color: var(--color-accent);
+      opacity: 1;
+      color: var(--color-accent);
+      font-weight: 600;
+    }
+
+    .sidebar-item .item-icon { font-size: 13px; opacity: 0.8; }
+
+    /* pre-costing sub-items */
+    .sidebar-sub-item {
+      padding: 7px 16px 7px 36px;
+      font-size: 11.5px;
+      cursor: pointer;
+      opacity: 0.65;
+      transition: var(--transition);
+    }
+    .sidebar-sub-item:hover { opacity: 1; background: var(--color-sidebar-item); }
+    .sidebar-sub-item.active { opacity: 1; color: var(--color-accent); font-weight: 500; }
+
+    /* New entry quick-list */
+    .list-panel {
+      margin: 14px 12px;
+      background: rgba(255,255,255,0.05);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .list-panel-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 12px;
+      font-size: 11px; font-weight: 600;
+      background: rgba(255,255,255,0.08);
+    }
+    .list-panel-header .btn-add {
+      width: 20px; height: 20px;
+      background: var(--color-accent);
+      border-radius: 4px;
+      border: none;
+      color: #fff; font-size: 15px; font-weight: 300;
+      cursor: pointer; line-height: 1;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .list-panel-item {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 12px;
+      font-size: 11px; cursor: pointer;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      opacity: 0.75;
+    }
+    .list-panel-item:hover { opacity: 1; background: rgba(255,255,255,0.06); }
+    .list-panel-item.active { opacity: 1; color: var(--color-accent); }
+    .list-panel-item .item-radio {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      border: 2px solid currentColor;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .list-panel-item.active .item-radio::after {
+      content: '';
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--color-accent);
+    }
+
+    /* ----------------------------------------------------------------
+       MAIN AREA
+       ---------------------------------------------------------------- */
+    .main-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: var(--color-bg);
+    }
+
+    /* Top-bar */
+    .top-bar {
+      height: 52px;
+      background: var(--color-card);
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      flex-shrink: 0;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+    .top-bar-left { display: flex; align-items: center; gap: 14px; }
+    .top-bar-breadcrumb { font-size: 11.5px; color: var(--color-text-muted); }
+    .top-bar-breadcrumb span.crumb-active { color: var(--color-primary); font-weight: 600; }
+    .top-bar-right { display: flex; align-items: center; gap: 12px; }
+    .top-bar-user { font-size: 12px; color: var(--color-text-muted); }
+    .avatar {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      color: #fff; font-size: 12px; font-weight: 600;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* Content scroll */
+    .content-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+    }
+
+    /* ================================================================
+       FORM CARD
+       ================================================================ */
+    .form-card {
+      background: var(--color-card);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+    }
+
+    /* ----------------------------------------------------------------
+       FORM CARD  –  Header Bar
+       ---------------------------------------------------------------- */
+    .form-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px;
+      background: var(--color-primary);
+      color: #fff;
+    }
+    .form-header-title {
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+    .form-header-title span {
+      color: var(--color-accent);
+      font-weight: 700;
+    }
+    .form-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    /* Header icon buttons */
+    .hdr-btn {
+      width: 32px; height: 32px;
+      border-radius: var(--radius);
+      border: none;
+      background: rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.85);
+      cursor: pointer;
+      font-size: 14px;
+      display: flex; align-items: center; justify-content: center;
+      transition: var(--transition);
+    }
+    .hdr-btn:hover { background: rgba(255,255,255,0.2); color: #fff; }
+    .hdr-btn.hdr-btn-close:hover { background: rgba(220,50,50,0.7); }
+
+    /* ----------------------------------------------------------------
+       FORM CARD  –  Body
+       ---------------------------------------------------------------- */
+    .form-body {
+      padding: 20px 24px;
+    }
+
+    /* ================================================================
+       SHARED FORM COMPONENT STYLES
+       ================================================================ */
+
+    /* Field group */
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+    }
+    .field-label {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--color-label);
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+    .field-label.required::after {
+      content: ' *';
+      color: #e53e3e;
+    }
+
+    /* Text / number input */
+    .field-input {
+      height: 34px;
+      padding: 0 10px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      background: #f9fafc;
+      color: var(--color-text);
+      width: 100%;
+      transition: var(--transition);
+      outline: none;
+    }
+    .field-input:focus {
+      border-color: var(--color-border-focus);
+      background: #fff;
+      box-shadow: var(--shadow-input-focus);
+    }
+    .field-input[readonly], .field-input[disabled] {
+      background: #f1f4f9;
+      color: var(--color-text-muted);
+      cursor: default;
+    }
+    .field-input.has-value {
+      background: #fff;
+      font-weight: 500;
+    }
+    /* Highlighted / required input */
+    .field-input.input-required {
+      border-left: 3px solid var(--color-accent);
+    }
+
+    /* Select */
+    .field-select {
+      height: 34px;
+      padding: 0 32px 0 10px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      background: #f9fafc url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2364748b'/%3E%3C/svg%3E") no-repeat right 10px center;
+      -webkit-appearance: none;
+      appearance: none;
+      color: var(--color-text);
+      width: 100%;
+      cursor: pointer;
+      transition: var(--transition);
+      outline: none;
+    }
+    .field-select:focus {
+      border-color: var(--color-border-focus);
+      background-color: #fff;
+      box-shadow: var(--shadow-input-focus);
+    }
+    .field-select.placeholder { color: var(--color-text-muted); }
+
+    /* Textarea */
+    .field-textarea {
+      padding: 8px 10px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      background: #f9fafc;
+      color: var(--color-text);
+      width: 100%;
+      resize: vertical;
+      min-height: 64px;
+      transition: var(--transition);
+      outline: none;
+      line-height: 1.5;
+    }
+    .field-textarea:focus {
+      border-color: var(--color-border-focus);
+      background: #fff;
+      box-shadow: var(--shadow-input-focus);
+    }
+
+    /* Select with clear (×) badge – wraps .field-select */
+    .select-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .select-wrap .field-select { padding-right: 50px; }
+    .select-clear {
+      position: absolute;
+      right: 24px;
+      font-size: 12px;
+      color: var(--color-text-muted);
+      cursor: pointer;
+      background: none;
+      border: none;
+      line-height: 1;
+      padding: 0 2px;
+    }
+    .select-clear:hover { color: var(--color-text); }
+
+    /* ================================================================
+       TOGGLE SWITCH COMPONENT
+       ================================================================ */
+    .toggle-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .toggle-label-text {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--color-label);
+    }
+    /* The actual toggle */
+    .toggle {
+      position: relative;
+      display: inline-block;
+      width: 36px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider {
+      position: absolute;
+      inset: 0;
+      background: var(--toggle-off);
+      border-radius: 20px;
+      cursor: pointer;
+      transition: 0.22s ease;
+    }
+    .toggle-slider::before {
+      content: '';
+      position: absolute;
+      left: 2px; top: 2px;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      transition: 0.22s ease;
+    }
+    .toggle input:checked + .toggle-slider { background: var(--toggle-on); }
+    .toggle input:checked + .toggle-slider::before { transform: translateX(16px); }
+    /* Variant: accent (gold) */
+    .toggle.toggle-accent input:checked + .toggle-slider { background: var(--color-accent); }
+
+    /* Toggle as a vertical field (label above) */
+    .toggle-field {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+    }
+    .toggle-field .field-label { margin-bottom: 2px; }
+
+    /* ================================================================
+       SECTION DIVIDER
+       ================================================================ */
+    .section-divider {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 20px 0 14px;
+    }
+    .section-divider-label {
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-section-label);
+      white-space: nowrap;
+    }
+    .section-divider-line {
+      flex: 1;
+      height: 1px;
+      background: var(--color-border);
+    }
+    /* Variant: accent bar */
+    .section-divider.accent .section-divider-label { color: var(--color-accent); }
+    .section-divider.accent .section-divider-line  { background: rgba(200,152,60,0.3); }
+
+    /* Inline section label (no line) */
+    .inline-section-label {
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-section-label);
+      padding: 6px 0 2px;
+    }
+
+    /* ================================================================
+       GRID ROWS  –  reusable CSS-grid helpers
+       All grid-* classes define column counts.
+       The .col-span-* classes span columns.
+       ================================================================ */
+    .grid-row {
+      display: grid;
+      gap: 14px 16px;
+      align-items: end;
+    }
+    .grid-2  { grid-template-columns: repeat(2,  1fr); }
+    .grid-3  { grid-template-columns: repeat(3,  1fr); }
+    .grid-4  { grid-template-columns: repeat(4,  1fr); }
+    .grid-5  { grid-template-columns: repeat(5,  1fr); }
+    .grid-6  { grid-template-columns: repeat(6,  1fr); }
+
+    .col-2   { grid-column: span 2; }
+    .col-3   { grid-column: span 3; }
+
+    /* ================================================================
+       SHEET INFO BLOCK  (FULL SHEET / CUT SHEET)
+       ================================================================ */
+    .sheet-block {
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      position: relative;
+      background: #fafbfd;
+    }
+    .sheet-block-label {
+      position: absolute;
+      top: -9px; left: 12px;
+      background: #fafbfd;
+      padding: 0 6px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-primary);
+    }
+
+    /* ================================================================
+       SLAB TABLE
+       ================================================================ */
+    .slab-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 140px;
+      gap: 10px 16px;
+    }
+    .slab-header-row {
+      display: contents;
+    }
+    .slab-header-cell {
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+      padding-bottom: 4px;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .slab-row { display: contents; }
+    .slab-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--color-primary);
+      padding-top: 4px;
+      display: flex;
+      align-items: center;
+    }
+
+    /* ================================================================
+       PRINTING SECTION (FRONT / REVERSE two-column sub-grid)
+       ================================================================ */
+    .printing-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px 24px;
+      padding: 12px 14px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      background: #fafbfd;
+    }
+    .printing-col-header {
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-primary);
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--color-accent);
+      margin-bottom: 10px;
+    }
+
+    /* ================================================================
+       FINISHING TOGGLES ROW
+       ================================================================ */
+    .finishing-toggles {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px 24px;
+      padding: 12px 14px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      background: #fafbfd;
+    }
+
+    /* ================================================================
+       VIEW PRICE ENQUIRY LINK
+       ================================================================ */
+    .link-btn {
+      color: var(--color-accent);
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: var(--transition);
+      text-decoration: none;
+      padding: 2px 0;
+    }
+    .link-btn:hover { color: var(--color-accent-hover); text-decoration: underline; }
+
+    /* ================================================================
+       FORM FOOTER  –  Submit / New buttons
+       ================================================================ */
+    .form-footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      padding: 14px 24px;
+      border-top: 1px solid var(--color-border);
+      background: #fafbfc;
+    }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 0 18px;
+      height: 36px;
+      border-radius: var(--radius);
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: var(--transition);
+      letter-spacing: 0.02em;
+    }
+    .btn-primary {
+      background: var(--color-primary);
+      color: #fff;
+    }
+    .btn-primary:hover { background: var(--color-primary-light); }
+
+    .btn-outline {
+      background: #fff;
+      border: 1.5px solid var(--color-border);
+      color: var(--color-text);
+    }
+    .btn-outline:hover { border-color: var(--color-primary); color: var(--color-primary); }
+
+    /* ================================================================
+       BADGE  –  "Auto" readonly pill
+       ================================================================ */
+    .input-badge {
+      display: inline-flex;
+      align-items: center;
+      height: 34px;
+      padding: 0 12px;
+      border-radius: var(--radius);
+      background: #e8edf5;
+      color: var(--color-text-muted);
+      font-weight: 500;
+      font-size: 12px;
+      border: 1px solid var(--color-border);
+      width: 100%;
+    }
+
+    /* ================================================================
+       TABS PLACEHOLDER  –  Will be populated later
+       ================================================================ */
+    .tabs-placeholder {
+      margin-top: 24px;
+      border: 2px dashed var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 28px 24px;
+      text-align: center;
+      color: var(--color-text-muted);
+      font-size: 12px;
+    }
+    .tabs-placeholder-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-primary);
+      margin-bottom: 6px;
+    }
+
+    /* ================================================================
+       SCROLLBAR STYLING
+       ================================================================ */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+    /* ================================================================
+       ICON FONT SHIMS  –  Using Unicode / emoji until icon lib added
+       ================================================================ */
+    .icon { font-style: normal; }
+
+  </style>
+</head>
+
+<body>
+
+<!-- ================================================================
+     APP SHELL
+     ================================================================ -->
+<div class="app-shell">
+
+  <!-- ============================================================
+       SIDEBAR
+       ============================================================ -->
+  <aside class="sidebar" id="sidebar">
+
+    <!-- Brand / Logo -->
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-icon">PR</div>
+      <div class="sidebar-brand-text">
+        <div class="brand-name">Pentagon</div>
+        <div class="brand-sub">Runway ERP · Dev</div>
+      </div>
+    </div>
+
+    <!-- Module navigation -->
+    <div class="sidebar-section-label">Modules</div>
+    <div class="sidebar-item"><span class="item-icon">⚙</span> Production</div>
+    <div class="sidebar-item"><span class="item-icon">🛒</span> Purchase</div>
+    <div class="sidebar-item"><span class="item-icon">📊</span> Sales</div>
+
+    <!-- Pre Costing sub-menu (expanded) -->
+    <div class="sidebar-item active" style="padding-left:28px;"><span class="item-icon">📋</span> Pre Costing</div>
+    <div class="sidebar-sub-item">Pending Price Enquiry · SDPC01</div>
+    <div class="sidebar-sub-item">Pre Costing Price Card · SDPC02</div>
+    <div class="sidebar-sub-item active">Pre Costing – Offset Entry · SDPC04</div>
+    <div class="sidebar-sub-item">Pre Costing Summary · SDPC05</div>
+    <div class="sidebar-sub-item">Pre Costing Flexible II</div>
+
+    <div class="sidebar-item"><span class="item-icon">📦</span> Sales Quotation</div>
+    <div class="sidebar-item"><span class="item-icon">🚚</span> Sales Delivery</div>
+
+    <!-- Quick Entry List Panel -->
+    <div class="list-panel" id="list-panel">
+      <div class="list-panel-header">
+        <span>Pre Costing List &nbsp;·&nbsp; JFI &amp; S ITEM</span>
+        <button class="btn-add" title="New Entry" onclick="handleNewEntry()">+</button>
+      </div>
+      <div class="list-panel-item active" onclick="selectEntry(this)">
+        <div class="item-radio"></div>
+        <div>
+          <div style="font-weight:600;font-size:11.5px;">JFI &amp; S ITEM</div>
+          <div style="font-size:10px;opacity:0.7;margin-top:2px;">(FGOS000004)</div>
+        </div>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ============================================================
+       MAIN CONTENT AREA
+       ============================================================ -->
+  <div class="main-area">
+
+    <!-- Top bar -->
+    <header class="top-bar">
+      <div class="top-bar-left">
+        <span style="font-size:16px;color:var(--color-text-muted);cursor:pointer;">☰</span>
+        <span class="top-bar-breadcrumb">
+          Sales &rsaquo; Pre Costing &rsaquo;
+          <span class="crumb-active">Offset Entry – SDPC04</span>
+        </span>
+      </div>
+      <div class="top-bar-right">
+        <span class="top-bar-user">JF&amp;I PACKAGING (PVT) LTD · 2026 &nbsp;|&nbsp; admin</span>
+        <div class="avatar">A</div>
+      </div>
+    </header>
+
+    <!-- Scrollable content -->
+    <div class="content-scroll">
+
+      <!-- ===========================================================
+           FORM CARD
+           =========================================================== -->
+      <div class="form-card" id="form-card-main">
+
+        <!-- ---------------------------------------------------------
+             FORM CARD HEADER
+             id: form-header
+             Contains: title, action icon buttons
+             --------------------------------------------------------- -->
+        <div class="form-header" id="form-header">
+          <div class="form-header-title">
+            Pre Costing – Offset Entry &nbsp;–&nbsp; <span id="form-doc-id">SDPC04</span>
+          </div>
+          <div class="form-header-actions">
+            <!-- Search -->
+            <button class="hdr-btn" title="Search" id="btn-search">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+            </button>
+            <!-- Attachment -->
+            <button class="hdr-btn" title="Attachments" id="btn-attachment">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
+            </button>
+            <!-- List / Log -->
+            <button class="hdr-btn" title="Activity Log" id="btn-log">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>
+            </button>
+            <!-- Email -->
+            <button class="hdr-btn" title="Send Email" id="btn-email">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 01-2.06 0L2 7"/></svg>
+            </button>
+            <!-- Grid / Columns -->
+            <button class="hdr-btn" title="Column Settings" id="btn-columns">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+            </button>
+            <!-- Close -->
+            <button class="hdr-btn hdr-btn-close" title="Close" id="btn-close" onclick="handleFormClose()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M18 6 6 18M6 6l12 12"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- ---------------------------------------------------------
+             FORM BODY
+             --------------------------------------------------------- -->
+        <div class="form-body" id="form-body">
+
+          <!-- =======================================================
+               SECTION 1 – DOCUMENT INFO
+               Fields: Company, Pre Costing No, Pre Costing Date,
+                       Price Enquiry No, View Price Enquiry
+               id: section-doc-info
+               ======================================================= -->
+          <div id="section-doc-info">
+            <div class="grid-row grid-5">
+
+              <!-- Company -->
+              <div class="field-group col-2">
+                <label class="field-label required">Company</label>
+                <div class="select-wrap">
+                  <select class="field-select" id="field-company" name="company">
+                    <option value="jfi">JF&amp;I PACKAGING (PVT) LTD</option>
+                    <option value="jfi-bd">JF&amp;I PACKAGING (BD) LTD</option>
+                  </select>
+                  <button class="select-clear" title="Clear">×</button>
+                </div>
+              </div>
+
+              <!-- Pre Costing No -->
+              <div class="field-group">
+                <label class="field-label">Pre Costing No.</label>
+                <div class="input-badge" id="field-pc-no">Auto</div>
+              </div>
+
+              <!-- Pre Costing Date -->
+              <div class="field-group">
+                <label class="field-label required">Pre Costing Date</label>
+                <input type="date" class="field-input has-value" id="field-pc-date" name="pcDate" value="2026-04-08" />
+              </div>
+
+              <!-- Price Enquiry No -->
+              <div class="field-group">
+                <label class="field-label">Price Enquiry No</label>
+                <div class="select-wrap">
+                  <select class="field-select" id="field-enq-no" name="enquiryNo">
+                    <option value="enq1">ENQ/25-26/006829/V1</option>
+                    <option value="">— Select —</option>
+                  </select>
+                  <button class="select-clear" title="Clear">×</button>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- View Price Enquiry link (right-aligned) -->
+            <div style="display:flex;justify-content:flex-end;margin-top:6px;">
+              <a class="link-btn" id="link-view-enquiry" href="#">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                View Price Enquiry
+              </a>
+            </div>
+          </div>
+
+          <!-- =======================================================
+               SECTION 2 – CUSTOMER & SALES INFO
+               Fields: Customer Name, SalesType, Currency, Ex Rate,
+                       Product Description
+               id: section-customer-info
+               ======================================================= -->
+          <div id="section-customer-info" class="grid-row grid-5" style="margin-top:14px;">
+
+            <!-- Customer Name -->
+            <div class="field-group col-2">
+              <label class="field-label required">Customer Name</label>
+              <div class="select-wrap">
+                <select class="field-select" id="field-customer" name="customer">
+                  <option value="jfi-bd">JF&amp;I PACKAGING (BD) LTD</option>
+                  <option value="">— Select —</option>
+                </select>
+                <button class="select-clear" title="Clear">×</button>
+              </div>
+            </div>
+
+            <!-- SalesType -->
+            <div class="field-group">
+              <label class="field-label">SalesType</label>
+              <input type="text" class="field-input has-value" id="field-sales-type" name="salesType" value="DIRECT EXPORT" />
+            </div>
+
+            <!-- Currency -->
+            <div class="field-group">
+              <label class="field-label">Currency</label>
+              <div class="select-wrap">
+                <select class="field-select" id="field-currency" name="currency">
+                  <option value="usd">USD</option>
+                  <option value="lkr">LKR</option>
+                  <option value="gbp">GBP</option>
+                  <option value="eur">EUR</option>
+                </select>
+                <button class="select-clear" title="Clear">×</button>
+              </div>
+            </div>
+
+            <!-- Ex Rate -->
+            <div class="field-group">
+              <label class="field-label">Ex Rate</label>
+              <input type="number" class="field-input has-value" id="field-ex-rate" name="exRate" value="309.5000" step="0.0001" />
+            </div>
+
+            <!-- Product Description -->
+            <div class="field-group col-2" style="grid-column: 5 / span 1;">
+              <!-- Spans into a 6th implied slot; use full width in 5-col -->
+            </div>
+
+          </div>
+
+          <!-- Product Description (full row because it's long) -->
+          <div class="grid-row grid-5" style="margin-top:0;">
+            <div class="field-group col-2" style="grid-column:1/span 5;">
+              <label class="field-label">Product Description</label>
+              <input type="text" class="field-input has-value" id="field-product-desc" name="productDesc" value="JFI &amp; S ITEM" />
+            </div>
+          </div>
+
+          <!-- =======================================================
+               SECTION 3 – FG PRODUCT
+               Fields: FG Qty, FG/SFG Product Description (dropdown),
+                       Product Code, UOM, Qty
+               id: section-fg-product
+               ======================================================= -->
+          <div id="section-fg-product">
+            <div class="section-divider">
+              <div class="section-divider-label">Product</div>
+              <div class="section-divider-line"></div>
+            </div>
+
+            <div class="grid-row grid-6">
+
+              <!-- FG Qty -->
+              <div class="field-group">
+                <label class="field-label required">FG Qty</label>
+                <input type="number" class="field-input has-value input-required" id="field-fg-qty" name="fgQty" value="5000" />
+              </div>
+
+              <!-- FG/SFG Product Description -->
+              <div class="field-group col-2">
+                <label class="field-label required">FG / SFG Product Description</label>
+                <div class="select-wrap">
+                  <select class="field-select" id="field-fg-desc" name="fgDesc">
+                    <option value="jfi-item">JFI &amp; S ITEM</option>
+                    <option value="">— Select —</option>
+                  </select>
+                  <button class="select-clear" title="Clear">×</button>
+                </div>
+              </div>
+
+              <!-- Product Code -->
+              <div class="field-group">
+                <label class="field-label">Product Code</label>
+                <input type="text" class="field-input has-value" id="field-product-code" name="productCode" value="FGOS000004" readonly />
+              </div>
+
+              <!-- UOM -->
+              <div class="field-group">
+                <label class="field-label">UOM</label>
+                <input type="text" class="field-input has-value" id="field-uom" name="uom" value="PCS" />
+              </div>
+
+              <!-- Qty -->
+              <div class="field-group">
+                <label class="field-label required">Qty</label>
+                <input type="number" class="field-input has-value input-required" id="field-qty" name="qty" value="5000" />
+              </div>
+
+            </div>
+          </div>
+
+          <!-- =======================================================
+               SECTION 4 – SHEET DIMENSIONS
+               Sub-sections: FULL SHEET, CUT SHEET
+               id: section-sheet-dimensions
+               ======================================================= -->
+          <div id="section-sheet-dimensions">
+            <div class="section-divider">
+              <div class="section-divider-label">Sheet Dimensions</div>
+              <div class="section-divider-line"></div>
+            </div>
+
+            <div class="grid-row grid-2" style="gap:16px;">
+
+              <!-- FULL SHEET -->
+              <div class="sheet-block" id="block-full-sheet">
+                <span class="sheet-block-label">Full Sheet</span>
+                <div class="grid-row grid-5" style="margin-top:6px;">
+                  <div class="field-group">
+                    <label class="field-label">UOM</label>
+                    <input type="text" class="field-input has-value" id="field-fs-uom" name="fsUom" value="Inch" />
+                  </div>
+                  <div class="field-group">
+                    <label class="field-label">W</label>
+                    <input type="number" class="field-input" id="field-fs-w" name="fsW" placeholder="0.00" step="0.01" />
+                  </div>
+                  <div class="field-group">
+                    <label class="field-label">L</label>
+                    <input type="number" class="field-input" id="field-fs-l" name="fsL" placeholder="0.00" step="0.01" />
+                  </div>
+                  <div class="field-group">
+                    <label class="field-label">No Of Outs</label>
+                    <input type="number" class="field-input" id="field-fs-outs" name="fsOuts" placeholder="0" />
+                  </div>
+                  <div class="field-group">
+                    <label class="field-label">Area [Sq In]</label>
+                    <input type="number" class="field-input" id="field-fs-area" name="fsArea" placeholder="0.00" readonly />
+                  </div>
+                </div>
+              </div>
+
+              <!-- CUT SHEET -->
+              <div class="sheet-block" id="block-cut-sheet">
+                <span class="sheet-block-label">Cut Sheet</span>
+                <div class="grid-row grid-4" style="margin-top:6px;">
+                  <div class="field-group">
+                    <label class="field-label">W</label>
+                    <input type="number" class="field-input" id="field-cs-w" name="csW" placeholder="0.00" step="0.01" />
+                  </div>
+                  <div class="field-group">
+                    <label class="field-label">L</label>
+                    <input type="number" class="field-input" id="field-cs-l" name="csL" placeholder="0.00" step="0.01" />
+                  </div>
+                  <div class="field-group">
+                    <label class="field-label">No Of Ups</label>
+                    <input type="number" class="field-input" id="field-cs-ups" name="csUps" placeholder="0" />
+                  </div>
+                  <div class="field-group">
+                    <label class="field-label">No of Impressions</label>
+                    <input type="number" class="field-input" id="field-cs-impr" name="csImpressions" placeholder="0" />
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- =======================================================
+               SECTION 5 – ROUTING & WASTAGE
+               Fields: Route Code, Wastage Type,
+                       No Of Sheets, Total Routing Waste %,
+                       Additional Wastage, Impressions With Wastage,
+                       Qty With Wastage
+               id: section-routing-wastage
+               ======================================================= -->
+          <div id="section-routing-wastage">
+            <div class="section-divider">
+              <div class="section-divider-label">Routing &amp; Wastage</div>
+              <div class="section-divider-line"></div>
+            </div>
+
+            <!-- Row A: Route Code + Wastage Type -->
+            <div class="grid-row grid-2" style="margin-bottom:12px;">
+              <div class="field-group">
+                <label class="field-label">Route Code</label>
+                <select class="field-select placeholder" id="field-route-code" name="routeCode">
+                  <option value="" disabled selected>Select an option</option>
+                  <option value="r1">Route 1</option>
+                  <option value="r2">Route 2</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label class="field-label">Wastage Type</label>
+                <select class="field-select placeholder" id="field-wastage-type" name="wastageType">
+                  <option value="" disabled selected>Select an option</option>
+                  <option value="w1">Type A</option>
+                  <option value="w2">Type B</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Row B: Wastage metrics -->
+            <div class="grid-row grid-5">
+              <div class="field-group">
+                <label class="field-label">No Of Sheets</label>
+                <input type="number" class="field-input" id="field-no-sheets" name="noSheets" placeholder="0" />
+              </div>
+              <div class="field-group">
+                <label class="field-label">Total Routing Waste %</label>
+                <input type="number" class="field-input" id="field-total-routing-waste" name="totalRoutingWaste" placeholder="0.00" step="0.01" />
+              </div>
+              <div class="field-group">
+                <label class="field-label">Additional Wastage</label>
+                <input type="number" class="field-input" id="field-additional-wastage" name="additionalWastage" placeholder="0.00" step="0.01" />
+              </div>
+              <div class="field-group">
+                <label class="field-label">Impressions With Wastage</label>
+                <input type="number" class="field-input" id="field-impr-wastage" name="impressionsWithWastage" placeholder="0" readonly />
+              </div>
+              <div class="field-group">
+                <label class="field-label">Qty With Wastage</label>
+                <input type="number" class="field-input" id="field-qty-wastage" name="qtyWithWastage" placeholder="0" readonly />
+              </div>
+            </div>
+          </div>
+
+          <!-- =======================================================
+               SECTION 6 – MATERIAL (BOARD / PAPER)
+               Fields: Main Board/Paper Material, Board/Paper Brand,
+                       GSM, Fluting?, Paper Combination
+               id: section-material
+               ======================================================= -->
+          <div id="section-material">
+            <div class="section-divider">
+              <div class="section-divider-label">Board / Paper Material</div>
+              <div class="section-divider-line"></div>
+            </div>
+
+            <div class="grid-row grid-6">
+
+              <!-- Main Board/Paper Material -->
+              <div class="field-group col-2">
+                <label class="field-label">Main Board / Paper Material</label>
+                <select class="field-select placeholder" id="field-main-board" name="mainBoard">
+                  <option value="" disabled selected>Select an option</option>
+                  <option value="m1">Kraft Liner</option>
+                  <option value="m2">Test Liner</option>
+                  <option value="m3">Fluting Medium</option>
+                </select>
+              </div>
+
+              <!-- Board/Paper Brand -->
+              <div class="field-group col-2">
+                <label class="field-label">Board / Paper Brand</label>
+                <select class="field-select placeholder" id="field-board-brand" name="boardBrand">
+                  <option value="" disabled selected>Select an option</option>
+                  <option value="b1">Brand A</option>
+                  <option value="b2">Brand B</option>
+                </select>
+              </div>
+
+              <!-- GSM -->
+              <div class="field-group">
+                <label class="field-label">GSM</label>
+                <input type="number" class="field-input" id="field-gsm" name="gsm" placeholder="0" />
+              </div>
+
+              <!-- Fluting? toggle -->
+              <div class="field-group">
+                <label class="field-label">Fluting?</label>
+                <div class="toggle-wrap" style="height:34px;">
+                  <label class="toggle" id="toggle-fluting">
+                    <input type="checkbox" id="field-fluting" name="fluting" />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Paper Combination -->
+              <div class="field-group col-2" style="grid-column:5/span 2;">
+                <label class="field-label">Paper Combination</label>
+                <input type="text" class="field-input" id="field-paper-combination" name="paperCombination" placeholder="" />
+              </div>
+
+            </div>
+          </div>
+
+          <!-- =======================================================
+               SECTION 7 – PRINTING (Mellow Colour, Front, Reverse)
+               id: section-printing
+               ======================================================= -->
+          <div id="section-printing">
+            <div class="section-divider">
+              <div class="section-divider-label">Printing</div>
+              <div class="section-divider-line"></div>
+            </div>
+
+            <!-- Mellow Colour toggle row -->
+            <div style="margin-bottom:12px;">
+              <div class="toggle-wrap">
+                <label class="toggle toggle-accent" id="toggle-mellow-colour">
+                  <input type="checkbox" id="field-mellow-colour" name="mellowColour" />
+                  <span class="toggle-slider"></span>
+                </label>
+                <span class="toggle-label-text">Mellow Colour</span>
+              </div>
+            </div>
+
+            <!-- FRONT / REVERSE two-column block -->
+            <div class="printing-columns" id="block-front-reverse">
+
+              <!-- FRONT column -->
+              <div id="col-front">
+                <div class="printing-col-header">FRONT</div>
+                <div class="grid-row grid-3" style="row-gap:10px;">
+                  <!-- Colour toggle -->
+                  <div class="field-group">
+                    <label class="field-label">Colour</label>
+                    <div class="toggle-wrap" style="height:34px;">
+                      <label class="toggle" id="toggle-front-colour">
+                        <input type="checkbox" id="field-front-colour" name="frontColour" />
+                        <span class="toggle-slider"></span>
+                      </label>
+                    </div>
+                  </div>
+                  <!-- No of Colors -->
+                  <div class="field-group">
+                    <label class="field-label">No of Colors</label>
+                    <input type="number" class="field-input" id="field-front-no-colors" name="frontNoColors" placeholder="0" min="0" />
+                  </div>
+                  <!-- Colour Combination -->
+                  <div class="field-group">
+                    <label class="field-label">Colour Combination</label>
+                    <select class="field-select placeholder" id="field-front-colour-combo" name="frontColourCombo">
+                      <option value="" disabled selected>Select an option</option>
+                      <option value="cmyk">CMYK</option>
+                      <option value="spot">Spot</option>
+                      <option value="mixed">Mixed</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- REVERSE column -->
+              <div id="col-reverse">
+                <div class="printing-col-header">REVERSE</div>
+                <div class="grid-row grid-2" style="row-gap:10px;">
+                  <!-- No of Colors -->
+                  <div class="field-group">
+                    <label class="field-label">No of Colors</label>
+                    <input type="number" class="field-input" id="field-rev-no-colors" name="reverseNoColors" placeholder="0" min="0" />
+                  </div>
+                  <!-- Colour Combination -->
+                  <div class="field-group">
+                    <label class="field-label">Colour Combination</label>
+                    <select class="field-select placeholder" id="field-rev-colour-combo" name="reverseColourCombo">
+                      <option value="" disabled selected>Select an option</option>
+                      <option value="cmyk">CMYK</option>
+                      <option value="spot">Spot</option>
+                      <option value="mixed">Mixed</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- =======================================================
+               SECTION 8 – VARNISHING
+               Fields: Varnishing (toggle), Varnishing Front, UV Type (Front),
+                       Varnishing Reverse, UV Type (Reverse)
+               id: section-varnishing
+               ======================================================= -->
+          <div id="section-varnishing">
+            <div class="section-divider">
+              <div class="section-divider-label">Varnishing</div>
+              <div class="section-divider-line"></div>
+            </div>
+
+            <div class="grid-row grid-5">
+              <!-- Varnishing toggle -->
+              <div class="field-group">
+                <label class="field-label">Varnishing</label>
+                <div class="toggle-wrap" style="height:34px;">
+                  <label class="toggle" id="toggle-varnishing">
+                    <input type="checkbox" id="field-varnishing" name="varnishing" />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+              <!-- Varnishing Front -->
+              <div class="field-group">
+                <label class="field-label">Varnishing Front</label>
+                <input type="text" class="field-input" id="field-varnishing-front" name="varnishingFront" placeholder="" />
+              </div>
+              <!-- UV Type (Front) -->
+              <div class="field-group">
+                <label class="field-label">UV Type</label>
+                <input type="text" class="field-input" id="field-uv-type-front" name="uvTypeFront" placeholder="" />
+              </div>
+              <!-- Varnishing Reverse -->
+              <div class="field-group">
+                <label class="field-label">Varnishing Reverse</label>
+                <input type="text" class="field-input" id="field-varnishing-reverse" name="varnishingReverse" placeholder="" />
+              </div>
+              <!-- UV Type (Reverse) -->
+              <div class="field-group">
+                <label class="field-label">UV Type</label>
+                <input type="text" class="field-input" id="field-uv-type-reverse" name="uvTypeReverse" placeholder="" />
+              </div>
+            </div>
+          </div>
+
+          <!-- =======================================================
+               SECTION 9 – LAMINATION
+               Fields: Lamination (toggle), Lamination Front, Lamination Type (Front),
+                       Lamination Reverse, Lamination Type (Reverse)
+               id: section-lamination
+               ======================================================= -->
+          <div id="section-lamination">
+            <div class="section-divider">
+              <div class="section-divider-label">Lamination</div>
+              <div class="section-divider-line"></div>
+            </div>
+
+            <div class="grid-row grid-5">
+              <!-- Lamination toggle -->
+              <div class="field-group">
+                <label class="field-label">Lamination</label>
+                <div class="toggle-wrap" style="height:34px;">
+                  <label class="toggle" id="toggle-lamination">
+                    <input type="checkbox" id="field-lamination" name="lamination" />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+              <!-- Lamination Front -->
+              <div class="field-group">
+                <label class="field-label">Lamination Front</label>
+                <input type="text" class="field-input" id="field-lamination-front" name="laminationFront" placeholder="" />
+              </div>
+              <!-- Lamination Type (Front) -->
+              <div class="field-group">
+                <label class="field-label">Lamination Type</label>
+                <input type="text" class="field-input" id="field-lamination-type-front" name="laminationTypeFront" placeholder="" />
+              </div>
+              <!-- Lamination Reverse -->
+              <div class="field-group">
+                <label class="field-label">Lamination Reverse</label>
+                <input type="text" class="field-input" id="field-lamination-reverse" name="laminationReverse" placeholder="" />
+              </div>
+              <!-- Lamination Type (Reverse) -->
+              <div class="field-group">
+                <label class="field-label">Lamination Type</label>
+                <input type="text" class="field-input" id="field-lamination-type-reverse" name="laminationTypeReverse" placeholder="" />
+              </div>
+            </div>
+          </div>
+
+          <!-- =======================================================
+               SECTION 10 – TIEP / ASSEMBLY / ARTWORK
+               Fields: TIEP, Assemble?, Artwork? (toggles)
+                       No of Artworks?, No. of Colour Breakdown,
+                       No. of Letter Breakdown
+               id: section-tiep-artwork
+               ======================================================= -->
+          <div id="section-tiep-artwork">
+            <div class="section-divider">
+              <div class="section-divider-label">TIEP / Artwork</div>
+              <div class="section-divider-line"></div>
+            </div>
+
+            <div class="grid-row grid-6">
+              <!-- TIEP -->
+              <div class="field-group">
+                <label class="field-label">TIEP</label>
+                <div class="toggle-wrap" style="height:34px;">
+                  <label class="toggle toggle-accent" id="toggle-tiep">
+                    <input type="checkbox" id="field-tiep" name="tiep" checked />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+              <!-- Assemble? -->
+              <div class="field-group">
+                <label class="field-label">Assemble?</label>
+                <div class="toggle-wrap" style="height:34px;">
+                  <label class="toggle toggle-accent" id="toggle-assemble">
+                    <input type="checkbox" id="field-assemble" name="assemble" checked />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+              <!-- Artwork? -->
+              <div class="field-group">
+                <label class="field-label">Artwork?</label>
+                <div class="toggle-wrap" style="height:34px;">
+                  <label class="toggle" id="toggle-artwork">
+                    <input type="checkbox" id="field-artwork" name="artwork" />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+              <!-- No of Artworks? -->
+              <div class="field-group">
+                <label class="field-label">No of Artworks?</label>
+                <input type="number" class="field-input" id="field-no-artworks" name="noArtworks" placeholder="0" min="0" />
+              </div>
+              <!-- No. of Colour Breakdown -->
+              <div class="field-group">
+                <label class="field-label">No. of Colour Breakdown</label>
+                <input type="number" class="field-input" id="field-colour-breakdown" name="colourBreakdown" placeholder="0" min="0" />
+              </div>
+              <!-- No. of Letter Breakdown -->
+              <div class="field-group">
+                <label class="field-label">No. of Letter Breakdown</label>
+                <input type="number" class="field-input" id="field-letter-breakdown" name="letterBreakdown" placeholder="0" min="0" />
+              </div>
+            </div>
+          </div>
+
+          <!-- =======================================================
+               SECTION 11 – FINISHING
+               Toggle fields: Debossing, Pasting, Foiling, Die Cutting, Embossing
+               Dropdowns: Ink Coated?, Ink Substrate Factor Description,
+                          Rev. Coated?, Rev. Substrate Factor Description
+               id: section-finishing
+               ======================================================= -->
+          <div id="section-finishing">
+            <div class="section-divider">
+              <div class="section-divider-label">Finishing</div>
+              <div class="section-divider-line"></div>
+            </div>
+
+            <!-- Finishing toggles row -->
+            <div class="finishing-toggles" id="finishing-toggles-row">
+
+              <div class="toggle-field">
+                <span class="field-label">Debossing</span>
+                <label class="toggle" id="toggle-debossing">
+                  <input type="checkbox" id="field-debossing" name="debossing" />
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+
+              <div class="toggle-field">
+                <span class="field-label">Pasting</span>
+                <label class="toggle" id="toggle-pasting">
+                  <input type="checkbox" id="field-pasting" name="pasting" />
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+
+              <div class="toggle-field">
+                <span class="field-label">Foiling</span>
+                <label class="toggle" id="toggle-foiling">
+                  <input type="checkbox" id="field-foiling" name="foiling" />
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+
+              <div class="toggle-field">
+                <span class="field-label">Die Cutting</span>
+                <label class="toggle" id="toggle-die-cutting">
+                  <input type="checkbox" id="field-die-cutting" name="dieCutting" />
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+
+              <div class="toggle-field">
+                <span class="field-label">Embossing</span>
+                <label class="toggle" id="toggle-embossing">
+                  <input type="checkbox" id="field-embossing" name="embossing" />
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+
+            </div>
+
+            <!-- Ink / Rev. Coated dropdowns -->
+            <div class="grid-row grid-4" style="margin-top:14px;">
+              <div class="field-group">
+                <label class="field-label">Ink Coated?</label>
+                <select class="field-select placeholder" id="field-ink-coated" name="inkCoated">
+                  <option value="" disabled selected>Select an option</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label class="field-label">Ink Substrate Factor Description</label>
+                <select class="field-select placeholder" id="field-ink-substrate" name="inkSubstrate">
+                  <option value="" disabled selected>Select an option</option>
+                  <option value="f1">Factor A</option>
+                  <option value="f2">Factor B</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label class="field-label">Rev. Coated?</label>
+                <select class="field-select placeholder" id="field-rev-coated" name="revCoated">
+                  <option value="" disabled selected>Select an option</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label class="field-label">Rev. Substrate Factor Description</label>
+                <select class="field-select placeholder" id="field-rev-substrate" name="revSubstrate">
+                  <option value="" disabled selected>Select an option</option>
+                  <option value="f1">Factor A</option>
+                  <option value="f2">Factor B</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- =======================================================
+               SECTION 12 – SLAB QUANTITIES
+               Rows: Slab 2–5 (Qty, Impression, Qty With Wastage)
+               Slab 4 row also has Confirm? toggle
+               id: section-slab-quantities
+               ======================================================= -->
+          <div id="section-slab-quantities">
+            <div class="section-divider">
+              <div class="section-divider-label">Slab Quantities</div>
+              <div class="section-divider-line"></div>
+            </div>
+
+            <!-- Header row -->
+            <div class="slab-grid" id="slab-table">
+              <div class="slab-header-cell">Slab Qty</div>
+              <div class="slab-header-cell">Impression</div>
+              <div class="slab-header-cell">Qty With Wastage</div>
+              <div class="slab-header-cell" style="color:transparent;">—</div>
+
+              <!-- SLAB 2 -->
+              <div class="field-group">
+                <label class="field-label">Slab 2 Qty</label>
+                <input type="number" class="field-input has-value" id="field-slab2-qty" name="slab2Qty" value="10000.00" step="0.01" />
+              </div>
+              <div class="field-group">
+                <label class="field-label">Slab 2 Impression</label>
+                <input type="number" class="field-input" id="field-slab2-impr" name="slab2Impression" placeholder="0" />
+              </div>
+              <div class="field-group">
+                <label class="field-label">Slab 2 Qty With Wastage</label>
+                <input type="number" class="field-input" id="field-slab2-qty-wastage" name="slab2QtyWastage" placeholder="0" readonly />
+              </div>
+              <div></div><!-- empty 4th cell -->
+
+              <!-- SLAB 3 -->
+              <div class="field-group">
+                <label class="field-label">Slab 3 Qty</label>
+                <input type="number" class="field-input has-value" id="field-slab3-qty" name="slab3Qty" value="25000.00" step="0.01" />
+              </div>
+              <div class="field-group">
+                <label class="field-label">Slab 3 Impression</label>
+                <input type="number" class="field-input" id="field-slab3-impr" name="slab3Impression" placeholder="0" />
+              </div>
+              <div class="field-group">
+                <label class="field-label">Slab 3 Qty With Wastage</label>
+                <input type="number" class="field-input" id="field-slab3-qty-wastage" name="slab3QtyWastage" placeholder="0" readonly />
+              </div>
+              <div></div>
+
+              <!-- SLAB 4 -->
+              <div class="field-group">
+                <label class="field-label">Slab 4 Qty</label>
+                <input type="number" class="field-input has-value" id="field-slab4-qty" name="slab4Qty" value="50000.00" step="0.01" />
+              </div>
+              <div class="field-group">
+                <label class="field-label">Slab 4 Impression</label>
+                <input type="number" class="field-input" id="field-slab4-impr" name="slab4Impression" placeholder="0" />
+              </div>
+              <div class="field-group">
+                <label class="field-label">Slab 4 Qty With Wastage</label>
+                <input type="number" class="field-input" id="field-slab4-qty-wastage" name="slab4QtyWastage" placeholder="0" readonly />
+              </div>
+              <!-- Confirm toggle (only on Slab 4 row) -->
+              <div class="field-group" id="field-confirm-wrap">
+                <label class="field-label">Confirm?</label>
+                <div class="toggle-wrap" style="height:34px;">
+                  <label class="toggle" id="toggle-confirm">
+                    <input type="checkbox" id="field-confirm" name="confirm" />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- SLAB 5 -->
+              <div class="field-group">
+                <label class="field-label">Slab 5 Qty</label>
+                <input type="number" class="field-input has-value" id="field-slab5-qty" name="slab5Qty" value="100000.00" step="0.01" />
+              </div>
+              <div class="field-group">
+                <label class="field-label">Slab 5 Impressions</label>
+                <input type="number" class="field-input" id="field-slab5-impr" name="slab5Impression" placeholder="0" />
+              </div>
+              <div class="field-group">
+                <label class="field-label">Slab 5 Qty With Wastage</label>
+                <input type="number" class="field-input" id="field-slab5-qty-wastage" name="slab5QtyWastage" placeholder="0" readonly />
+              </div>
+              <div></div>
+
+            </div><!-- /slab-table -->
+          </div>
+
+          <!-- =======================================================
+               SECTION 13 – REMARKS & ROUTING WASTE
+               Fields: Price Enquiry Remarks (textarea),
+                       Routing Waste %, wastepercentrouting
+               id: section-remarks
+               ======================================================= -->
+          <div id="section-remarks">
+            <div class="section-divider">
+              <div class="section-divider-label">Remarks &amp; Routing</div>
+              <div class="section-divider-line"></div>
+            </div>
+
+            <div class="field-group" style="margin-bottom:14px;">
+              <label class="field-label">Price Enquiry Remarks</label>
+              <textarea class="field-textarea" id="field-price-enquiry-remarks" name="priceEnquiryRemarks" rows="3" placeholder="Enter remarks here…"></textarea>
+            </div>
+
+            <div class="grid-row grid-2">
+              <div class="field-group">
+                <label class="field-label">Routing Waste %</label>
+                <input type="number" class="field-input" id="field-routing-waste-pct" name="routingWastePct" placeholder="0.00" step="0.01" />
+              </div>
+              <div class="field-group">
+                <label class="field-label">wastepercentrouting</label>
+                <input type="number" class="field-input" id="field-waste-percent-routing" name="wastePercentRouting" placeholder="0.00" step="0.01" readonly />
+              </div>
+            </div>
+          </div>
+
+          <!-- =======================================================
+               TABS PLACEHOLDER
+               The detail tabs (Pre Press Details, Route Cost,
+               Board/Paper Details, etc.) will be inserted here.
+               id: tabs-container
+               ======================================================= -->
+          <div class="tabs-placeholder" id="tabs-container">
+            <div class="tabs-placeholder-title">Detail Tabs Area</div>
+            <p>Pre Press Details · Route Cost · Board/Paper Details · Corrugated Paper Details · Ink Material · Adhesive · Foil Material · Varnishing Details</p>
+            <p style="margin-top:6px;font-size:11px;color:#94a3b8;">Tabs will be connected here in the next phase.</p>
+          </div>
+
+        </div><!-- /form-body -->
+
+        <!-- ---------------------------------------------------------
+             FORM FOOTER
+             id: form-footer
+             Contains: Submit button, New button
+             --------------------------------------------------------- -->
+        <div class="form-footer" id="form-footer">
+          <button class="btn btn-outline" id="btn-new" onclick="handleNew()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+            New
+          </button>
+          <button class="btn btn-primary" id="btn-submit" onclick="handleSubmit()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>
+            Submit
+          </button>
+        </div>
+
+      </div><!-- /form-card -->
+
+    </div><!-- /content-scroll -->
+  </div><!-- /main-area -->
+</div><!-- /app-shell -->
+
+
+<!-- ================================================================
+     JAVASCRIPT
+     All interactive behaviour is here.
+     Functions are named clearly and documented inline.
+     ================================================================ -->
+<script>
+  /* ----------------------------------------------------------------
+     UTILITY: Get field value by ID
+     ---------------------------------------------------------------- */
+  function getVal(id) {
+    const el = document.getElementById(id);
+    return el ? el.value : '';
+  }
+
+  /* ----------------------------------------------------------------
+     UTILITY: Set field value by ID
+     ---------------------------------------------------------------- */
+  function setVal(id, val) {
+    const el = document.getElementById(id);
+    if (el) el.value = val;
+  }
+
+  /* ----------------------------------------------------------------
+     UTILITY: Toggle has-value class based on input content
+     ---------------------------------------------------------------- */
+  function bindHasValue(inputId) {
+    const el = document.getElementById(inputId);
+    if (!el) return;
+    el.addEventListener('input', () => {
+      el.classList.toggle('has-value', el.value.trim() !== '');
+    });
+  }
+
+  /* ----------------------------------------------------------------
+     UTILITY: Auto-compute area (Full Sheet W × L)
+     ---------------------------------------------------------------- */
+  function computeFullSheetArea() {
+    const w = parseFloat(getVal('field-fs-w')) || 0;
+    const l = parseFloat(getVal('field-fs-l')) || 0;
+    setVal('field-fs-area', w && l ? (w * l).toFixed(4) : '');
+  }
+  document.getElementById('field-fs-w').addEventListener('input', computeFullSheetArea);
+  document.getElementById('field-fs-l').addEventListener('input', computeFullSheetArea);
+
+  /* ----------------------------------------------------------------
+     UTILITY: Sync FG Qty → Qty (mirrored fields)
+     ---------------------------------------------------------------- */
+  document.getElementById('field-fg-qty').addEventListener('input', function () {
+    setVal('field-qty', this.value);
+  });
+
+  /* ----------------------------------------------------------------
+     HANDLER: Select placeholder class management
+     Keeps placeholder colour when no value selected
+     ---------------------------------------------------------------- */
+  document.querySelectorAll('.field-select').forEach(sel => {
+    sel.addEventListener('change', function () {
+      this.classList.toggle('placeholder', this.value === '');
+    });
+  });
+
+  /* ----------------------------------------------------------------
+     HANDLER: Select "clear" (×) buttons
+     ---------------------------------------------------------------- */
+  document.querySelectorAll('.select-clear').forEach(btn => {
+    btn.addEventListener('click', function () {
+      const sel = this.closest('.select-wrap').querySelector('.field-select');
+      if (sel) {
+        sel.selectedIndex = 0;
+        sel.classList.add('placeholder');
+        sel.dispatchEvent(new Event('change'));
+      }
+    });
+  });
+
+  /* ----------------------------------------------------------------
+     HANDLER: New Entry button
+     Resets the form (except doc-id and auto fields)
+     ---------------------------------------------------------------- */
+  function handleNew() {
+    if (confirm('Clear form and create a new entry?')) {
+      document.querySelectorAll('.form-body input:not([readonly]):not([disabled]), .form-body textarea').forEach(el => {
+        if (el.type === 'checkbox') el.checked = false;
+        else if (el.type === 'date') el.value = new Date().toISOString().split('T')[0];
+        else el.value = '';
+        el.classList.remove('has-value');
+      });
+      document.querySelectorAll('.form-body select').forEach(sel => {
+        sel.selectedIndex = 0;
+        sel.classList.add('placeholder');
+      });
+    }
+  }
+
+  /* ----------------------------------------------------------------
+     HANDLER: Submit button
+     Collects form data and logs it (replace with API call as needed)
+     ---------------------------------------------------------------- */
+  function handleSubmit() {
+    const payload = collectFormData();
+    console.log('[PreCosting] Submit payload:', payload);
+    /* TODO: Replace with fetch('/api/precosting', { method:'POST', body: JSON.stringify(payload) }) */
+    alert('Form submitted. Check console for payload. (Wire up API endpoint to replace this.)');
+  }
+
+  /* ----------------------------------------------------------------
+     HANDLER: Close button
+     ---------------------------------------------------------------- */
+  function handleFormClose() {
+    if (confirm('Close this form? Unsaved changes will be lost.')) {
+      window.history.back();
+    }
+  }
+
+  /* ----------------------------------------------------------------
+     HANDLER: New list entry (sidebar +)
+     ---------------------------------------------------------------- */
+  function handleNewEntry() {
+    handleNew();
+  }
+
+  /* ----------------------------------------------------------------
+     HANDLER: Sidebar list item selection
+     ---------------------------------------------------------------- */
+  function selectEntry(el) {
+    document.querySelectorAll('.list-panel-item').forEach(i => i.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  /* ----------------------------------------------------------------
+     COLLECT FORM DATA
+     Returns a plain object with all form field values.
+     Extend this function when new fields are added.
+     ---------------------------------------------------------------- */
+  function collectFormData() {
+    return {
+      /* Document Info */
+      company:            getVal('field-company'),
+      pcDate:             getVal('field-pc-date'),
+      enquiryNo:          getVal('field-enq-no'),
+
+      /* Customer & Sales */
+      customer:           getVal('field-customer'),
+      salesType:          getVal('field-sales-type'),
+      currency:           getVal('field-currency'),
+      exRate:             getVal('field-ex-rate'),
+      productDesc:        getVal('field-product-desc'),
+
+      /* FG Product */
+      fgQty:              getVal('field-fg-qty'),
+      fgDesc:             getVal('field-fg-desc'),
+      productCode:        getVal('field-product-code'),
+      uom:                getVal('field-uom'),
+      qty:                getVal('field-qty'),
+
+      /* Full Sheet */
+      fsUom:              getVal('field-fs-uom'),
+      fsW:                getVal('field-fs-w'),
+      fsL:                getVal('field-fs-l'),
+      fsOuts:             getVal('field-fs-outs'),
+      fsArea:             getVal('field-fs-area'),
+
+      /* Cut Sheet */
+      csW:                getVal('field-cs-w'),
+      csL:                getVal('field-cs-l'),
+      csUps:              getVal('field-cs-ups'),
+      csImpressions:      getVal('field-cs-impr'),
+
+      /* Routing */
+      routeCode:          getVal('field-route-code'),
+      wastageType:        getVal('field-wastage-type'),
+      noSheets:           getVal('field-no-sheets'),
+      totalRoutingWaste:  getVal('field-total-routing-waste'),
+      additionalWastage:  getVal('field-additional-wastage'),
+
+      /* Material */
+      mainBoard:          getVal('field-main-board'),
+      boardBrand:         getVal('field-board-brand'),
+      gsm:                getVal('field-gsm'),
+      fluting:            document.getElementById('field-fluting').checked,
+      paperCombination:   getVal('field-paper-combination'),
+
+      /* Printing */
+      mellowColour:       document.getElementById('field-mellow-colour').checked,
+      frontColour:        document.getElementById('field-front-colour').checked,
+      frontNoColors:      getVal('field-front-no-colors'),
+      frontColourCombo:   getVal('field-front-colour-combo'),
+      reverseNoColors:    getVal('field-rev-no-colors'),
+      reverseColourCombo: getVal('field-rev-colour-combo'),
+
+      /* Varnishing */
+      varnishing:         document.getElementById('field-varnishing').checked,
+      varnishingFront:    getVal('field-varnishing-front'),
+      uvTypeFront:        getVal('field-uv-type-front'),
+      varnishingReverse:  getVal('field-varnishing-reverse'),
+      uvTypeReverse:      getVal('field-uv-type-reverse'),
+
+      /* Lamination */
+      lamination:             document.getElementById('field-lamination').checked,
+      laminationFront:        getVal('field-lamination-front'),
+      laminationTypeFront:    getVal('field-lamination-type-front'),
+      laminationReverse:      getVal('field-lamination-reverse'),
+      laminationTypeReverse:  getVal('field-lamination-type-reverse'),
+
+      /* TIEP / Artwork */
+      tiep:               document.getElementById('field-tiep').checked,
+      assemble:           document.getElementById('field-assemble').checked,
+      artwork:            document.getElementById('field-artwork').checked,
+      noArtworks:         getVal('field-no-artworks'),
+      colourBreakdown:    getVal('field-colour-breakdown'),
+      letterBreakdown:    getVal('field-letter-breakdown'),
+
+      /* Finishing */
+      debossing:          document.getElementById('field-debossing').checked,
+      pasting:            document.getElementById('field-pasting').checked,
+      foiling:            document.getElementById('field-foiling').checked,
+      dieCutting:         document.getElementById('field-die-cutting').checked,
+      embossing:          document.getElementById('field-embossing').checked,
+      inkCoated:          getVal('field-ink-coated'),
+      inkSubstrate:       getVal('field-ink-substrate'),
+      revCoated:          getVal('field-rev-coated'),
+      revSubstrate:       getVal('field-rev-substrate'),
+
+      /* Slabs */
+      slab2Qty:           getVal('field-slab2-qty'),
+      slab2Impression:    getVal('field-slab2-impr'),
+      slab3Qty:           getVal('field-slab3-qty'),
+      slab3Impression:    getVal('field-slab3-impr'),
+      slab4Qty:           getVal('field-slab4-qty'),
+      slab4Impression:    getVal('field-slab4-impr'),
+      confirm:            document.getElementById('field-confirm').checked,
+      slab5Qty:           getVal('field-slab5-qty'),
+      slab5Impression:    getVal('field-slab5-impr'),
+
+      /* Remarks */
+      priceEnquiryRemarks: getVal('field-price-enquiry-remarks'),
+      routingWastePct:     getVal('field-routing-waste-pct'),
+      wastePercentRouting: getVal('field-waste-percent-routing'),
+    };
+  }
+</script>
+
+</body>
+</html>
