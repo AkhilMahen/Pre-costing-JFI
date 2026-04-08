@@ -1153,6 +1153,261 @@
     .collapsible-trigger { display: none !important; }
 
     /* ================================================================
+       FORM-VIEW / DETAIL-VIEW TOGGLE
+       ================================================================ */
+    #form-body.detail-active #form-view-label { display: none; }
+    #form-body.detail-active #horiz-tab-bar   { display: none; }
+    #form-body.detail-active .collapsible-section { display: none !important; }
+    #form-body.detail-active .form-section-body { padding: 0; background: transparent; }
+
+    /* ================================================================
+       DETAIL PANEL COMPONENTS (dpanel)
+       ================================================================ */
+    .dpanel-hdr {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 0 14px;
+      margin-bottom: 18px;
+      border-bottom: 2px solid var(--color-primary);
+    }
+    .dpanel-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--color-primary);
+      letter-spacing: -0.01em;
+    }
+    .dpanel-actions { display: flex; gap: 6px; }
+    .dpanel-form {
+      background: #fff;
+      border: 1px solid #e0e6f0;
+      border-radius: var(--radius-lg);
+      padding: 18px 20px;
+      margin-bottom: 16px;
+    }
+    .dpanel-section-title {
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-text-muted);
+      margin: 18px 0 10px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid #e8ecf4;
+    }
+    .dpanel-section-title:first-child { margin-top: 0; }
+    /* 4-column field grid */
+    .detail-fg {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px 16px;
+    }
+    .detail-fg.fg-3 { grid-template-columns: repeat(3, 1fr); }
+    .fg-2 { grid-column: span 2; }
+    .fg-3 { grid-column: span 3; }
+    .fg-4 { grid-column: span 4; }
+    /* readonly field styling */
+    .field-input.f-ro,
+    .detail-fg input[readonly] {
+      background: #f4f6fb !important;
+      color: #6b7490 !important;
+      cursor: default;
+    }
+    /* Entries list */
+    .dpanel-list {
+      background: #fff;
+      border: 1px solid #e0e6f0;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    .dpanel-list-hdr {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #f4f6fb;
+      padding: 9px 14px;
+      border-bottom: 1px solid #e0e6f0;
+    }
+    .dpanel-list-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--color-primary);
+    }
+    .dpanel-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11.5px;
+    }
+    .dpanel-table th {
+      background: #f0f2f8;
+      padding: 7px 12px;
+      font-size: 10.5px;
+      font-weight: 600;
+      color: #3a4a72;
+      border: 1px solid #e0e6f0;
+      text-align: left;
+      white-space: nowrap;
+    }
+    .dpanel-table td {
+      padding: 8px 12px;
+      border: 1px solid #e8ecf4;
+      font-size: 11.5px;
+      color: var(--color-text);
+    }
+    .dpanel-table tr:hover td { background: #f8f9fc; }
+    .dpanel-empty {
+      text-align: center;
+      padding: 22px;
+      font-size: 12px;
+      color: var(--color-text-muted);
+      font-style: italic;
+    }
+
+    /* ================================================================
+       DETAIL TABS – buttons & panels
+       ================================================================ */
+    .detail-tabs-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 8px;
+      margin-top: 8px;
+    }
+    .detail-tab-btn {
+      padding: 7px 15px;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--color-primary);
+      background: #fff;
+      border: 1.5px solid #d0d8ea;
+      border-radius: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+      letter-spacing: 0.01em;
+      transition: background 0.14s, border-color 0.14s, color 0.14s, box-shadow 0.14s;
+    }
+    .detail-tab-btn:hover { background: #eef1fa; border-color: var(--color-primary); }
+    .detail-tab-btn.active {
+      background: var(--color-primary);
+      color: #fff;
+      border-color: var(--color-primary);
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(27,47,94,0.18);
+    }
+    /* Detail panels */
+    .detail-panel { display: none; }
+    .detail-panel.active { display: block; }
+    /* Grid toolbar */
+    .dg-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 10px 4px 8px;
+      border-bottom: 1px solid #e8ecf4;
+    }
+    .dg-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 28px;
+      height: 28px;
+      padding: 0 6px;
+      font-size: 13px;
+      border: 1px solid #d0d8ea;
+      border-radius: 4px;
+      background: #fff;
+      cursor: pointer;
+      color: var(--color-text);
+      transition: background 0.12s, border-color 0.12s;
+    }
+    .dg-btn:hover { background: #eef1fa; border-color: var(--color-primary); }
+    /* Grid table */
+    .dg-wrap { overflow-x: auto; }
+    .dg-table {
+      border-collapse: collapse;
+      font-size: 11.5px;
+      min-width: max-content;
+      width: 100%;
+    }
+    .dg-table th {
+      background: #f0f2f8;
+      color: #3a4a72;
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      padding: 7px 10px;
+      border: 1px solid #dde3f0;
+      white-space: nowrap;
+      text-align: left;
+      user-select: none;
+    }
+    .dg-table th.rq { color: #c0392b; }
+    .dg-table th.rq::before { content: '| '; font-weight: 700; }
+    .dg-table td {
+      padding: 5px 7px;
+      border: 1px solid #e8ecf4;
+      background: #fff;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+    .dg-table input[type="number"] {
+      width: 72px;
+      padding: 3px 5px;
+      border: 1px solid #d0d8ea;
+      border-radius: 3px;
+      font-size: 11px;
+      text-align: right;
+      background: #fafbfc;
+    }
+    .dg-table input[type="number"][readonly] { background: #f0f2f8; color: #6b7490; }
+    .dg-table input[type="text"] {
+      width: 110px;
+      padding: 3px 5px;
+      border: 1px solid #d0d8ea;
+      border-radius: 3px;
+      font-size: 11px;
+    }
+    .dg-table select {
+      min-width: 120px;
+      max-width: 200px;
+      padding: 3px 5px;
+      border: 1px solid #d0d8ea;
+      border-radius: 3px;
+      font-size: 11px;
+      color: #94a3b8;
+    }
+    .dg-table .dg-chk { width: 28px; text-align: center; }
+    .dg-table .dg-sno { width: 36px; text-align: center; color: #6b7490; font-size: 11px; }
+    .dg-table .dg-rmk input[type="text"] { width: 140px; }
+    /* Cost Details summary form */
+    .cost-details-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px 24px;
+      padding: 4px 0 8px;
+    }
+    .cost-item { display: flex; flex-direction: column; gap: 4px; }
+    .cost-item-label { font-size: 11px; font-weight: 600; color: var(--color-text); }
+    .cost-item-value {
+      height: 32px;
+      border: 1px solid #d0d8ea;
+      border-radius: 4px;
+      background: #f4f6fb;
+      padding: 0 8px;
+      font-size: 12px;
+      color: var(--color-text);
+      display: flex;
+      align-items: center;
+    }
+    .cost-slab-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px 24px;
+      margin-top: 8px;
+      padding-top: 14px;
+      border-top: 1px solid #e8ecf4;
+    }
+
+    /* ================================================================
        SCROLLBAR STYLING
        ================================================================ */
     ::-webkit-scrollbar { width: 5px; height: 5px; }
@@ -1353,7 +1608,7 @@
           </div>
 
           <!-- FORM SECTION LABEL -->
-          <div class="page-section-label">Form</div>
+          <div class="page-section-label" id="form-view-label">Form</div>
 
           <!-- =======================================================
                HORIZONTAL SECTION TABS BAR
@@ -2227,6 +2482,696 @@
             </div></div>
           </div>
 
+          <!-- ═══════════════════════════════════════════════════════
+               DETAIL TAB PANELS  (shown when a detail-tab-btn is clicked)
+               ═══════════════════════════════════════════════════════ -->
+
+          <!-- 1. Pre Press Details -->
+          <div id="detail-panel-pre-press" class="detail-panel">
+            <div class="dpanel-hdr">
+              <span class="dpanel-title">Pre Press Details</span>
+              <div class="dpanel-actions">
+                <button class="dg-btn">+ Add</button>
+                <button class="dg-btn">Delete</button>
+                <button class="dg-btn">Clone</button>
+                <button class="dg-btn">Export</button>
+              </div>
+            </div>
+            <div class="dpanel-form">
+              <div class="detail-fg">
+                <div class="field-group fg-2"><label class="field-label required">Pre Press Description</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">Qty</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Rate</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Amount (Rs)</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group fg-3"><label class="field-label">Remarks</label><input type="text" class="field-input"/></div>
+              </div>
+            </div>
+            <div class="dpanel-list">
+              <div class="dpanel-list-hdr"><span class="dpanel-list-title">Entries</span></div>
+              <table class="dpanel-table">
+                <thead><tr><th>S.No</th><th>Pre Press Description</th><th>Qty</th><th>Rate</th><th>Amount (Rs)</th></tr></thead>
+                <tbody><tr><td colspan="5" class="dpanel-empty">No entries yet. Fill the form above and click + Add to begin.</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- 2. Route Cost -->
+          <div id="detail-panel-route-cost" class="detail-panel">
+            <div class="dpanel-hdr">
+              <span class="dpanel-title">Route Cost</span>
+              <div class="dpanel-actions">
+                <button class="dg-btn">+ Add</button>
+                <button class="dg-btn">Delete</button>
+                <button class="dg-btn">Clone</button>
+                <button class="dg-btn">Export</button>
+              </div>
+            </div>
+            <div class="dpanel-form">
+              <p class="dpanel-section-title">Operation</p>
+              <div class="detail-fg">
+                <div class="field-group fg-2"><label class="field-label required">Operation</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">Work Centre</label><input type="text" class="field-input"/></div>
+                <div class="field-group"><label class="field-label">Machine</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+              </div>
+              <p class="dpanel-section-title">Machine Hours</p>
+              <div class="detail-fg">
+                <div class="field-group"><label class="field-label">Min Machine Hours</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Output Per Hour</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Rate Per Hour</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Initial Make Ready Hours</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">No Of Machine Hours</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">No of Additional Make Ready</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Additional Make Ready Time</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Total Addl. Make Ready Hrs</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Total Make Ready Hours</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Total Machine Hours</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Cost (LKR)</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Remarks</label><input type="text" class="field-input"/></div>
+              </div>
+              <p class="dpanel-section-title">Slab Costs</p>
+              <div class="detail-fg">
+                <div class="field-group"><label class="field-label">S2 Hours</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">S3 Hours</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">S4 Hours</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">S5 Hours</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">S2 Operation Cost</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">S3 Operation Cost</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">S4 Operation Cost</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">S5 Operation Cost</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+              </div>
+            </div>
+            <div class="dpanel-list">
+              <div class="dpanel-list-hdr"><span class="dpanel-list-title">Entries</span></div>
+              <table class="dpanel-table">
+                <thead><tr><th>S.No</th><th>Operation</th><th>Work Centre</th><th>Total Machine Hours</th><th>Cost (LKR)</th></tr></thead>
+                <tbody><tr><td colspan="5" class="dpanel-empty">No entries yet.</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- 3. Board / Paper Details -->
+          <div id="detail-panel-board-paper" class="detail-panel">
+            <div class="dpanel-hdr">
+              <span class="dpanel-title">Board / Paper Details</span>
+              <div class="dpanel-actions">
+                <button class="dg-btn">+ Add</button>
+                <button class="dg-btn">Delete</button>
+                <button class="dg-btn">Clone</button>
+                <button class="dg-btn">Export</button>
+              </div>
+            </div>
+            <div class="dpanel-form">
+              <p class="dpanel-section-title">Material Selection</p>
+              <div class="detail-fg">
+                <div class="field-group"><label class="field-label required">TIEP</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label required">Material Type</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label required">Item Category</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label required">Board / Paper Brand</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">UOM</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">Ref. No.</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">Length</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Reel Width</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+              </div>
+              <p class="dpanel-section-title">Pricing</p>
+              <div class="detail-fg">
+                <div class="field-group"><label class="field-label">Price UOM</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">Currency</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">Ex Rate</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Price per UOM</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">No of PKTs</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Required MT</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Clearing %</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Sheeting Cost (PKT)</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Board Cost (LKR) WO Duty</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Duty %</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Duty Amount</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Board Cost (LKR) S1 Cost</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Value of PKT</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group fg-3"><label class="field-label">Remarks</label><input type="text" class="field-input"/></div>
+              </div>
+              <p class="dpanel-section-title">Slab Costs</p>
+              <div class="detail-fg">
+                <div class="field-group"><label class="field-label">S2 Cost</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">S3 Cost</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">S4 Cost</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">S5 Cost</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+              </div>
+            </div>
+            <div class="dpanel-list">
+              <div class="dpanel-list-hdr"><span class="dpanel-list-title">Entries</span></div>
+              <table class="dpanel-table">
+                <thead><tr><th>S.No</th><th>TIEP</th><th>Material Type</th><th>Board/Paper Brand</th><th>Required MT</th><th>S1 Cost (LKR)</th></tr></thead>
+                <tbody><tr><td colspan="6" class="dpanel-empty">No entries yet.</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- 4. Corrugated Paper Details -->
+          <div id="detail-panel-corrugated" class="detail-panel">
+            <div class="dpanel-hdr">
+              <span class="dpanel-title">Corrugated Paper Details</span>
+              <div class="dpanel-actions">
+                <button class="dg-btn">+ Add</button>
+                <button class="dg-btn">Delete</button>
+                <button class="dg-btn">Clone</button>
+                <button class="dg-btn">Export</button>
+              </div>
+            </div>
+            <div class="dpanel-form">
+              <p class="dpanel-section-title">Material Selection</p>
+              <div class="detail-fg">
+                <div class="field-group"><label class="field-label required">TIEP</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label required">Placement</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">Item Category</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">UOM</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">Placement Factor</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Brand</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label required">Ref. No.</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label required">GSM</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+              </div>
+              <p class="dpanel-section-title">Pricing</p>
+              <div class="detail-fg">
+                <div class="field-group"><label class="field-label">Reel Width</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">No's PKT</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Required MT</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Currency</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">Ex Rate</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Price (MT)</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Duty %</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Duty Amount</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Clearing %</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Total Value (MT) - LKR</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Value of PKT</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Remarks</label><input type="text" class="field-input"/></div>
+              </div>
+              <p class="dpanel-section-title">Slab Costs</p>
+              <div class="detail-fg">
+                <div class="field-group"><label class="field-label">S2 Cost</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">S3 Cost</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">S4 Cost</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">S5 Cost</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+              </div>
+            </div>
+            <div class="dpanel-list">
+              <div class="dpanel-list-hdr"><span class="dpanel-list-title">Entries</span></div>
+              <table class="dpanel-table">
+                <thead><tr><th>S.No</th><th>TIEP</th><th>Placement</th><th>Ref. No.</th><th>GSM</th><th>Total Value (MT) LKR</th></tr></thead>
+                <tbody><tr><td colspan="6" class="dpanel-empty">No entries yet.</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- 5. Ink Material -->
+          <div id="detail-panel-ink" class="detail-panel">
+            <div class="dpanel-hdr">
+              <span class="dpanel-title">Ink Material</span>
+              <div class="dpanel-actions">
+                <button class="dg-btn">+ Add</button>
+                <button class="dg-btn">Delete</button>
+                <button class="dg-btn">Clone</button>
+                <button class="dg-btn">Export</button>
+              </div>
+            </div>
+            <div class="dpanel-form">
+              <p class="dpanel-section-title">Material Selection</p>
+              <div class="detail-fg">
+                <div class="field-group"><label class="field-label required">TIEP</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">Print Side</label><select class="field-select"><option value="" disabled selected>-- Select --</option></select></div>
+                <div class="field-group"><label class="field-label required">Colour</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">Item Category</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">Ink Brand</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">Ref. No.</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">UOM</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label required">Currency</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+              </div>
+              <p class="dpanel-section-title">Consumption &amp; Pricing</p>
+              <div class="detail-fg">
+                <div class="field-group"><label class="field-label">Ex Rate</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">No of Impressions</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Impressions (In 1,000)</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Ink Percentage %</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Coated?</label><div style="padding-top:8px;display:flex;align-items:center;gap:6px;font-size:12px;"><input type="checkbox"/> Yes</div></div>
+                <div class="field-group"><label class="field-label required">Substrate Factor Desc.</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">Substrate Factor</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Ink (Kgs)</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Ink Consumption</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Price [KG]</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Clearance %</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Duty %</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Duty Amount</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Cost (LKR)</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group fg-2"><label class="field-label">Remarks</label><input type="text" class="field-input"/></div>
+              </div>
+              <p class="dpanel-section-title">Slab Costs</p>
+              <div class="detail-fg">
+                <div class="field-group"><label class="field-label">S2 Cost</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">S3 Cost</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">S4 Cost</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">S5 Cost</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+              </div>
+            </div>
+            <div class="dpanel-list">
+              <div class="dpanel-list-hdr"><span class="dpanel-list-title">Entries</span></div>
+              <table class="dpanel-table">
+                <thead><tr><th>S.No</th><th>TIEP</th><th>Colour</th><th>Print Side</th><th>Ink Brand</th><th>Cost (LKR)</th></tr></thead>
+                <tbody><tr><td colspan="6" class="dpanel-empty">No entries yet.</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- 6. Adhesive -->
+          <div id="detail-panel-adhesive" class="detail-panel">
+            <div class="dpanel-hdr">
+              <span class="dpanel-title">Adhesive</span>
+              <div class="dpanel-actions">
+                <button class="dg-btn">+ Add</button>
+                <button class="dg-btn">Delete</button>
+                <button class="dg-btn">Clone</button>
+                <button class="dg-btn">Export</button>
+              </div>
+            </div>
+            <div class="dpanel-form">
+              <p class="dpanel-section-title">Material Selection</p>
+              <div class="detail-fg">
+                <div class="field-group"><label class="field-label">TIEP</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">Item Category</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">Item Brand</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">Ref. No.</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">Currency</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">Ex Rate</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">UOM</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">Pasting Type</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+              </div>
+              <p class="dpanel-section-title">Consumption &amp; Pricing</p>
+              <div class="detail-fg">
+                <div class="field-group"><label class="field-label">Impression</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">No of Sq. Inches / g</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Width (Inch)</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Length (Inch)</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Pasting Area [Sq. Inch]</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Adhesive Consumption</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Price [KG]</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Clearance %</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Duty %</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Duty Amount</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Adhesive Cost [LKR]</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Remarks</label><input type="text" class="field-input"/></div>
+              </div>
+              <p class="dpanel-section-title">Slab Costs</p>
+              <div class="detail-fg">
+                <div class="field-group"><label class="field-label">S2 Cost</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">S3 Cost</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">S4 Cost</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">S5 Cost</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+              </div>
+            </div>
+            <div class="dpanel-list">
+              <div class="dpanel-list-hdr"><span class="dpanel-list-title">Entries</span></div>
+              <table class="dpanel-table">
+                <thead><tr><th>S.No</th><th>TIEP</th><th>Item Brand</th><th>Pasting Type</th><th>Adhesive Cost [LKR]</th></tr></thead>
+                <tbody><tr><td colspan="5" class="dpanel-empty">No entries yet.</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- 7. Foil Material -->
+          <div id="detail-panel-foil" class="detail-panel">
+            <div class="dpanel-hdr">
+              <span class="dpanel-title">Foil Material</span>
+              <div class="dpanel-actions">
+                <button class="dg-btn">+ Add</button>
+                <button class="dg-btn">Delete</button>
+                <button class="dg-btn">Clone</button>
+                <button class="dg-btn">Export</button>
+              </div>
+            </div>
+            <div class="dpanel-form">
+              <p class="dpanel-section-title">Material Selection</p>
+              <div class="detail-fg">
+                <div class="field-group"><label class="field-label required">TIEP</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">Foil Color Code</label><select class="field-select"><option value="" disabled selected>-- Select --</option></select></div>
+                <div class="field-group"><label class="field-label">Item Category</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">Item Brand</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">UOM</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">Ref. No.</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+              </div>
+              <p class="dpanel-section-title">Dimensions &amp; Consumption</p>
+              <div class="detail-fg">
+                <div class="field-group"><label class="field-label">Foil Reel Width (mm)</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Foil Area Width (mm)</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Foil Area Length (mm)</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Pieces From Reel (W)</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Job Qty (PCS) With Wastage</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Pieces From Reel (L)</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Total Pieces From Reel</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Required Meters (640)</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Slitting</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+              </div>
+              <p class="dpanel-section-title">Pricing</p>
+              <div class="detail-fg">
+                <div class="field-group"><label class="field-label">Currency</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">Ex Rate</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Rate</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Other Cost</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Clearance %</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Duty %</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Duty Amount</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Foil Cost [LKR]</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group fg-4"><label class="field-label">Remarks</label><input type="text" class="field-input"/></div>
+              </div>
+              <p class="dpanel-section-title">Slab Costs</p>
+              <div class="detail-fg">
+                <div class="field-group"><label class="field-label">S2 Cost</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">S3 Cost</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">S4 Cost</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">S5 Cost</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+              </div>
+            </div>
+            <div class="dpanel-list">
+              <div class="dpanel-list-hdr"><span class="dpanel-list-title">Entries</span></div>
+              <table class="dpanel-table">
+                <thead><tr><th>S.No</th><th>TIEP</th><th>Foil Color Code</th><th>Item Brand</th><th>Foil Cost [LKR]</th></tr></thead>
+                <tbody><tr><td colspan="5" class="dpanel-empty">No entries yet.</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- 8. Varnishing Details -->
+          <div id="detail-panel-varnishing" class="detail-panel">
+            <div class="dpanel-hdr">
+              <span class="dpanel-title">Varnishing Details</span>
+              <div class="dpanel-actions">
+                <button class="dg-btn">+ Add</button>
+                <button class="dg-btn">Delete</button>
+                <button class="dg-btn">Clone</button>
+                <button class="dg-btn">Export</button>
+              </div>
+            </div>
+            <div class="dpanel-form">
+              <p class="dpanel-section-title">Material Selection</p>
+              <div class="detail-fg">
+                <div class="field-group"><label class="field-label required">TIEP</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">Item Category</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">Item Brand</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">UOM</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">Ref. No.</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label required">Currency</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">Ex Rate</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">No of Impressions</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+              </div>
+              <p class="dpanel-section-title">Consumption &amp; Pricing</p>
+              <div class="detail-fg">
+                <div class="field-group"><label class="field-label">Impressions (In 1,000)</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Area [mm]</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Varnish Percentage %</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Coated?</label><div style="padding-top:8px;display:flex;align-items:center;gap:6px;font-size:12px;"><input type="checkbox"/> Yes</div></div>
+                <div class="field-group"><label class="field-label required">Substrate Factor Desc.</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">Substrate Factor</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Varnish (Kgs)</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Varnish Consumption</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Price [KG]</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Clearance %</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Duty %</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Duty Amount</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group fg-2"><label class="field-label">Varnish Cost [LKR]</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group fg-2"><label class="field-label">Remarks</label><input type="text" class="field-input"/></div>
+              </div>
+              <p class="dpanel-section-title">Slab Costs</p>
+              <div class="detail-fg">
+                <div class="field-group"><label class="field-label">S2 Cost</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">S3 Cost</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">S4 Cost</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">S5 Cost</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+              </div>
+            </div>
+            <div class="dpanel-list">
+              <div class="dpanel-list-hdr"><span class="dpanel-list-title">Entries</span></div>
+              <table class="dpanel-table">
+                <thead><tr><th>S.No</th><th>TIEP</th><th>Item Brand</th><th>Varnish (Kgs)</th><th>Varnish Cost [LKR]</th></tr></thead>
+                <tbody><tr><td colspan="5" class="dpanel-empty">No entries yet.</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- 9. Film Details -->
+          <div id="detail-panel-film" class="detail-panel">
+            <div class="dpanel-hdr">
+              <span class="dpanel-title">Film Details</span>
+              <div class="dpanel-actions">
+                <button class="dg-btn">+ Add</button>
+                <button class="dg-btn">Delete</button>
+                <button class="dg-btn">Clone</button>
+                <button class="dg-btn">Export</button>
+              </div>
+            </div>
+            <div class="dpanel-form">
+              <p class="dpanel-section-title">Material Selection</p>
+              <div class="detail-fg">
+                <div class="field-group"><label class="field-label required">TIEP</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">Item Category</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">Item Brand</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">Ref. No.</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">UOM</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">Currency</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">Ex Rate</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label required">IMP or PCS?</label><select class="field-select"><option value="" disabled selected>-- Select --</option><option>IMP</option><option>PCS</option></select></div>
+              </div>
+              <p class="dpanel-section-title">Dimensions</p>
+              <div class="detail-fg">
+                <div class="field-group"><label class="field-label">Reel L - mm</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Reel W - mm</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Film Length - mm</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Film Width - mm</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Reel Size</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Film Area</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Thickness</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Density</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Sheets From 1 KG</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Req Qty</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+              </div>
+              <p class="dpanel-section-title">Pricing</p>
+              <div class="detail-fg">
+                <div class="field-group"><label class="field-label">Price [KG]</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Slitting Cost</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Clearance %</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Duty %</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Duty Amount</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Film Cost [LKR]</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group fg-2"><label class="field-label">Remarks</label><input type="text" class="field-input"/></div>
+              </div>
+              <p class="dpanel-section-title">Slab Costs</p>
+              <div class="detail-fg">
+                <div class="field-group"><label class="field-label">S2 Cost</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">S3 Cost</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">S4 Cost</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">S5 Cost</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+              </div>
+            </div>
+            <div class="dpanel-list">
+              <div class="dpanel-list-hdr"><span class="dpanel-list-title">Entries</span></div>
+              <table class="dpanel-table">
+                <thead><tr><th>S.No</th><th>TIEP</th><th>Item Category</th><th>IMP or PCS?</th><th>Film Cost [LKR]</th></tr></thead>
+                <tbody><tr><td colspan="5" class="dpanel-empty">No entries yet.</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- 10. Out Sourcing Items -->
+          <div id="detail-panel-outsourcing" class="detail-panel">
+            <div class="dpanel-hdr">
+              <span class="dpanel-title">Out Sourcing Items</span>
+              <div class="dpanel-actions">
+                <button class="dg-btn">+ Add</button>
+                <button class="dg-btn">Delete</button>
+                <button class="dg-btn">Clone</button>
+                <button class="dg-btn">Export</button>
+              </div>
+            </div>
+            <div class="dpanel-form">
+              <div class="detail-fg">
+                <div class="field-group fg-2"><label class="field-label required">Item Description</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">UOM</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">Length</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Width</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Area</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label required">Price</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Recover %</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Freight Cost</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Minimum Charge</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Mount Charge</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">No Of Blocks</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Out Source Cost [LKR]</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group fg-4"><label class="field-label">Remarks</label><input type="text" class="field-input"/></div>
+              </div>
+            </div>
+            <div class="dpanel-list">
+              <div class="dpanel-list-hdr"><span class="dpanel-list-title">Entries</span></div>
+              <table class="dpanel-table">
+                <thead><tr><th>S.No</th><th>Item Description</th><th>UOM</th><th>Price</th><th>Out Source Cost [LKR]</th></tr></thead>
+                <tbody><tr><td colspan="5" class="dpanel-empty">No entries yet.</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- 11. Other Detail -->
+          <div id="detail-panel-other" class="detail-panel">
+            <div class="dpanel-hdr">
+              <span class="dpanel-title">Other Detail</span>
+              <div class="dpanel-actions">
+                <button class="dg-btn">+ Add</button>
+                <button class="dg-btn">Delete</button>
+                <button class="dg-btn">Clone</button>
+                <button class="dg-btn">Export</button>
+              </div>
+            </div>
+            <div class="dpanel-form">
+              <p class="dpanel-section-title">Material Selection</p>
+              <div class="detail-fg">
+                <div class="field-group"><label class="field-label required">TIEP</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">Item Category</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">Item Brand</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">Ref. No.</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">UOM</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label required">Currency</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">Ex Rate</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label required">Qty</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+              </div>
+              <p class="dpanel-section-title">Pricing</p>
+              <div class="detail-fg">
+                <div class="field-group"><label class="field-label required">Price</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Clearance %</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Duty %</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Duty Amount</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group fg-2"><label class="field-label">Other Cost [LKR]</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group fg-2"><label class="field-label">Remarks</label><input type="text" class="field-input"/></div>
+              </div>
+              <p class="dpanel-section-title">Slab Costs</p>
+              <div class="detail-fg">
+                <div class="field-group"><label class="field-label">S2 Cost</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">S3 Cost</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">S4 Cost</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">S5 Cost</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+              </div>
+            </div>
+            <div class="dpanel-list">
+              <div class="dpanel-list-hdr"><span class="dpanel-list-title">Entries</span></div>
+              <table class="dpanel-table">
+                <thead><tr><th>S.No</th><th>TIEP</th><th>Item Category</th><th>Qty</th><th>Other Cost [LKR]</th></tr></thead>
+                <tbody><tr><td colspan="5" class="dpanel-empty">No entries yet.</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- 12. Packing Details -->
+          <div id="detail-panel-packing" class="detail-panel">
+            <div class="dpanel-hdr">
+              <span class="dpanel-title">Packing Details</span>
+              <div class="dpanel-actions">
+                <button class="dg-btn">+ Add</button>
+                <button class="dg-btn">Delete</button>
+                <button class="dg-btn">Clone</button>
+                <button class="dg-btn">Export</button>
+              </div>
+            </div>
+            <div class="dpanel-form">
+              <div class="detail-fg">
+                <div class="field-group"><label class="field-label">Length</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Width</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Height</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label required">Item Category</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label required">Item Brand</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group"><label class="field-label">Packing Method</label><select class="field-select"><option value="" disabled selected>-- Select --</option></select></div>
+                <div class="field-group"><label class="field-label required">PCS / Carton</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Carton Qty</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Excess Carton Qty</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label required">Price</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Packing Cost [LKR]</label><input type="number" class="field-input f-ro" value="0" readonly style="text-align:right"/></div>
+                <div class="field-group"><label class="field-label">Remarks</label><input type="text" class="field-input"/></div>
+              </div>
+            </div>
+            <div class="dpanel-list">
+              <div class="dpanel-list-hdr"><span class="dpanel-list-title">Entries</span></div>
+              <table class="dpanel-table">
+                <thead><tr><th>S.No</th><th>Item Category</th><th>Item Brand</th><th>PCS / Carton</th><th>Packing Cost [LKR]</th></tr></thead>
+                <tbody><tr><td colspan="5" class="dpanel-empty">No entries yet.</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- 13. SFG Details -->
+          <div id="detail-panel-sfg" class="detail-panel">
+            <div class="dpanel-hdr">
+              <span class="dpanel-title">SFG Details</span>
+              <div class="dpanel-actions">
+                <button class="dg-btn">+ Add</button>
+                <button class="dg-btn">Delete</button>
+                <button class="dg-btn">Clone</button>
+                <button class="dg-btn">Export</button>
+              </div>
+            </div>
+            <div class="dpanel-form">
+              <div class="detail-fg">
+                <div class="field-group fg-2"><label class="field-label required">Item Code</label><select class="field-select"><option value="" disabled selected>Select an option</option></select></div>
+                <div class="field-group fg-2"><label class="field-label">Item Name</label><input type="text" class="field-input f-ro" readonly/></div>
+                <div class="field-group"><label class="field-label required">Qty</label><input type="number" class="field-input" value="0" style="text-align:right"/></div>
+                <div class="field-group fg-3"><label class="field-label">Remarks</label><input type="text" class="field-input"/></div>
+              </div>
+            </div>
+            <div class="dpanel-list">
+              <div class="dpanel-list-hdr"><span class="dpanel-list-title">Entries</span></div>
+              <table class="dpanel-table">
+                <thead><tr><th>S.No</th><th>Item Code</th><th>Item Name</th><th>Qty</th></tr></thead>
+                <tbody><tr><td colspan="4" class="dpanel-empty">No entries yet.</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- 14. Cost Details (form summary, not a grid) -->
+          <div id="detail-panel-cost" class="detail-panel">
+            <div class="dpanel-hdr">
+              <span class="dpanel-title">Cost Details</span>
+              <div class="dpanel-actions">
+                <button class="dg-btn">Recalculate</button>
+                <button class="dg-btn">Export</button>
+              </div>
+            </div>
+            <div class="cost-details-grid">
+              <div class="cost-item"><span class="cost-item-label">Total Route Cost</span><div class="cost-item-value"></div></div>
+              <div class="cost-item"><span class="cost-item-label">Route Cost Per Unit</span><div class="cost-item-value"></div></div>
+              <div class="cost-item"><span class="cost-item-label">Route Cost Percentage</span><div class="cost-item-value"></div></div>
+              <div class="cost-item"><span class="cost-item-label">Total Board Cost</span><div class="cost-item-value"></div></div>
+              <div class="cost-item"><span class="cost-item-label">Board Cost Per Unit</span><div class="cost-item-value"></div></div>
+              <div class="cost-item"><span class="cost-item-label">Board Cost Percentage</span><div class="cost-item-value"></div></div>
+              <div class="cost-item"><span class="cost-item-label">Total Paper Cost</span><div class="cost-item-value"></div></div>
+              <div class="cost-item"><span class="cost-item-label">Paper Cost Per Unit</span><div class="cost-item-value"></div></div>
+              <div class="cost-item"><span class="cost-item-label">Paper Cost Percentage</span><div class="cost-item-value"></div></div>
+              <div class="cost-item"><span class="cost-item-label">Total Ink Cost</span><div class="cost-item-value"></div></div>
+              <div class="cost-item"><span class="cost-item-label">Ink Cost Per Unit</span><div class="cost-item-value"></div></div>
+              <div class="cost-item"><span class="cost-item-label">Ink Cost Percentage %</span><div class="cost-item-value"></div></div>
+              <div class="cost-item"><span class="cost-item-label">Other Material Cost</span><div class="cost-item-value"></div></div>
+              <div class="cost-item"><span class="cost-item-label">Other Materials Cost Per Unit</span><div class="cost-item-value"></div></div>
+              <div class="cost-item"><span class="cost-item-label">Other Material Cost Percentage</span><div class="cost-item-value"></div></div>
+              <div class="cost-item"><span class="cost-item-label">Total Prepress Cost</span><div class="cost-item-value"></div></div>
+              <div class="cost-item"><span class="cost-item-label">Prepress Cost Per Unit</span><div class="cost-item-value"></div></div>
+              <div class="cost-item"><span class="cost-item-label">Prepress Cost Percentage</span><div class="cost-item-value"></div></div>
+              <div class="cost-item"><span class="cost-item-label">Total OutSource Cost</span><div class="cost-item-value"></div></div>
+              <div class="cost-item"><span class="cost-item-label">OutSource Cost Per Unit</span><div class="cost-item-value"></div></div>
+              <div class="cost-item"><span class="cost-item-label">OutSource Cost Percentage</span><div class="cost-item-value"></div></div>
+              <div class="cost-item"><span class="cost-item-label">Total Other Cost</span><div class="cost-item-value"></div></div>
+              <div class="cost-item"><span class="cost-item-label">Other Cost Per Unit</span><div class="cost-item-value"></div></div>
+              <div class="cost-item"><span class="cost-item-label">Other Cost Percentage</span><div class="cost-item-value"></div></div>
+              <div class="cost-item"><span class="cost-item-label">Total Cost</span><div class="cost-item-value"></div></div>
+              <div class="cost-item"><span class="cost-item-label">Total Cost Per Unit [LKR]</span><div class="cost-item-value"></div></div>
+              <div class="cost-item"></div>
+            </div>
+            <div class="cost-slab-row">
+              <div class="cost-item"><span class="cost-item-label">Slab 2</span><div class="cost-item-value"></div></div>
+              <div class="cost-item"><span class="cost-item-label">Slab 3</span><div class="cost-item-value"></div></div>
+              <div class="cost-item"><span class="cost-item-label">Slab 4</span><div class="cost-item-value"></div></div>
+              <div class="cost-item"><span class="cost-item-label">Slab 5</span><div class="cost-item-value"></div></div>
+            </div>
+          </div>
+
           </div><!-- /form-section-body -->
 
           <!-- DETAIL TABS SECTION LABEL -->
@@ -2238,13 +3183,22 @@
                Board/Paper Details, etc.) will be inserted here.
                id: tabs-container
                ======================================================= -->
-          <div class="tabs-placeholder" id="tabs-container">
-            <div class="tabs-placeholder-title">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:.5;flex-shrink:0;"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-              Detail Tabs
-            </div>
-            <p class="tabs-placeholder-desc">Pre Press Details &middot; Route Cost &middot; Board/Paper Details &middot; Corrugated Paper Details &middot; Ink Material &middot; Adhesive &middot; Foil Material &middot; Varnishing Details</p>
-            <p class="tabs-placeholder-note">These tabs will be connected in the next phase.</p>
+          <div class="detail-tabs-bar" id="tabs-container">
+            <button class="detail-tab-btn detail-tab-header active" id="detail-tab-header-btn" onclick="showHeaderView()">Header</button>
+            <button class="detail-tab-btn" data-panel="detail-panel-pre-press"    onclick="toggleDetailTab('detail-panel-pre-press')">Pre Press Details</button>
+            <button class="detail-tab-btn" data-panel="detail-panel-route-cost"   onclick="toggleDetailTab('detail-panel-route-cost')">Route Cost</button>
+            <button class="detail-tab-btn" data-panel="detail-panel-board-paper"  onclick="toggleDetailTab('detail-panel-board-paper')">Board / Paper Details</button>
+            <button class="detail-tab-btn" data-panel="detail-panel-corrugated"   onclick="toggleDetailTab('detail-panel-corrugated')">Corrugated Paper Details</button>
+            <button class="detail-tab-btn" data-panel="detail-panel-ink"          onclick="toggleDetailTab('detail-panel-ink')">Ink Material</button>
+            <button class="detail-tab-btn" data-panel="detail-panel-adhesive"     onclick="toggleDetailTab('detail-panel-adhesive')">Adhesive</button>
+            <button class="detail-tab-btn" data-panel="detail-panel-foil"         onclick="toggleDetailTab('detail-panel-foil')">Foil Material</button>
+            <button class="detail-tab-btn" data-panel="detail-panel-varnishing"   onclick="toggleDetailTab('detail-panel-varnishing')">Varnishing Details</button>
+            <button class="detail-tab-btn" data-panel="detail-panel-film"         onclick="toggleDetailTab('detail-panel-film')">Film Details</button>
+            <button class="detail-tab-btn" data-panel="detail-panel-outsourcing"  onclick="toggleDetailTab('detail-panel-outsourcing')">Out Sourcing Items</button>
+            <button class="detail-tab-btn" data-panel="detail-panel-other"        onclick="toggleDetailTab('detail-panel-other')">Other Detail</button>
+            <button class="detail-tab-btn" data-panel="detail-panel-packing"      onclick="toggleDetailTab('detail-panel-packing')">Packing Details</button>
+            <button class="detail-tab-btn" data-panel="detail-panel-sfg"          onclick="toggleDetailTab('detail-panel-sfg')">SFG Details</button>
+            <button class="detail-tab-btn" data-panel="detail-panel-cost"         onclick="toggleDetailTab('detail-panel-cost')">Cost Details</button>
           </div>
 
         </div><!-- /form-body -->
@@ -2462,12 +3416,49 @@
      HORIZONTAL TABS: Toggle section by ID + sync tab active state
      Called by .horiz-tab onclick="toggleSectionById('section-xxx')"
      ---------------------------------------------------------------- */
+  /* ----------------------------------------------------------------
+     DETAIL TABS: Show a data-grid panel; close all form sections.
+     Called by .detail-tab-btn onclick="toggleDetailTab('detail-panel-xxx')"
+     ---------------------------------------------------------------- */
+  function toggleDetailTab(panelId) {
+    /* Deactivate all detail tab buttons */
+    document.querySelectorAll('.detail-tab-btn').forEach(btn => btn.classList.remove('active'));
+    /* Hide all detail panels */
+    document.querySelectorAll('.detail-panel').forEach(p => p.classList.remove('active'));
+    /* Activate detail-active mode (hides form sections) */
+    const formBody = document.getElementById('form-body');
+    if (formBody) formBody.classList.add('detail-active');
+    /* Activate the clicked panel + its button */
+    const panel = document.getElementById(panelId);
+    if (panel) panel.classList.add('active');
+    const btn = document.querySelector(`.detail-tab-btn[data-panel="${panelId}"]`);
+    if (btn) btn.classList.add('active');
+  }
+
+  function showHeaderView() {
+    /* Deactivate all detail tab buttons and panels */
+    document.querySelectorAll('.detail-tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.detail-panel').forEach(p => p.classList.remove('active'));
+    /* Remove detail-active to restore the form view */
+    const formBody = document.getElementById('form-body');
+    if (formBody) formBody.classList.remove('detail-active');
+    /* Mark Header button as active */
+    const hdrBtn = document.getElementById('detail-tab-header-btn');
+    if (hdrBtn) hdrBtn.classList.add('active');
+  }
+
   function toggleSectionById(sectionId) {
     const section = document.getElementById(sectionId);
     if (!section) return;
     const content = section.querySelector('.collapsible-content');
     if (!content) return;
     const isOpen = section.classList.contains('open');
+
+    /* ── Deactivate any active detail tab panel first; restore form view ── */
+    document.querySelectorAll('.detail-tab-btn.active').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.detail-panel.active').forEach(p => p.classList.remove('active'));
+    const formBody = document.getElementById('form-body');
+    if (formBody) formBody.classList.remove('detail-active');
 
     /* ── Close all other open sections first (exclusive tabs) ── */
     if (!isOpen) {
