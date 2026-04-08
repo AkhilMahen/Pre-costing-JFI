@@ -970,6 +970,107 @@
     }
 
     /* ================================================================
+       SUMMARY STRIP  –  full-width compact bar at top of form
+       ================================================================ */
+    .summary-strip {
+      background: linear-gradient(135deg, #f4f6fb 0%, #edf0f8 100%);
+      border-bottom: 2px solid #dde3f0;
+      padding: 12px 24px 14px;
+    }
+    .summary-strip-title {
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: var(--color-primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .summary-strip-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #d0d7ea;
+    }
+    .summary-strip-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
+      gap: 6px 18px;
+    }
+    .sum-item { display: flex; flex-direction: column; gap: 1px; }
+    .sum-item-label {
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #9aa0b4;
+    }
+    .sum-item-value {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--color-text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .sum-item-value.empty {
+      color: #c8cdd8;
+      font-weight: 400;
+      font-style: italic;
+    }
+    .sum-item-value.highlight {
+      color: var(--color-primary);
+    }
+
+    /* ================================================================
+       HORIZONTAL SECTION TABS BAR
+       Replaces the per-section vertical collapsible-trigger dividers.
+       ================================================================ */
+    .horiz-tab-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 2px 3px;
+      padding: 10px 24px 0;
+      background: #f3f5fa;
+      border-bottom: 2px solid #dde3f0;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+    .horiz-tab {
+      padding: 7px 13px 8px;
+      font-size: 11px;
+      font-weight: 500;
+      color: #626c82;
+      background: transparent;
+      border: 1px solid transparent;
+      border-bottom: none;
+      border-radius: 5px 5px 0 0;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.14s, color 0.14s, border-color 0.14s;
+      margin-bottom: -2px;
+      position: relative;
+    }
+    .horiz-tab:hover {
+      background: rgba(27,47,94,0.06);
+      color: var(--color-primary);
+    }
+    .horiz-tab.open {
+      background: #fff;
+      color: var(--color-primary);
+      font-weight: 700;
+      border-color: #dde3f0;
+      border-bottom-color: #fff;
+      z-index: 1;
+    }
+    /* Hide the original per-section accordion divider triggers */
+    .collapsible-trigger { display: none !important; }
+
+    /* ================================================================
        SCROLLBAR STYLING
        ================================================================ */
     ::-webkit-scrollbar { width: 5px; height: 5px; }
@@ -1111,6 +1212,65 @@
         <div class="form-body" id="form-body">
 
           <!-- =======================================================
+               SUMMARY STRIP
+               Live-updating key pre-costing values at a glance.
+               id: summary-strip
+               ======================================================= -->
+          <div class="summary-strip" id="summary-strip">
+            <div class="summary-strip-title">Pre Costing Summary</div>
+            <div class="summary-strip-grid">
+              <div class="sum-item">
+                <div class="sum-item-label">Customer</div>
+                <div class="sum-item-value empty" id="sum-customer">—</div>
+              </div>
+              <div class="sum-item">
+                <div class="sum-item-label">Currency</div>
+                <div class="sum-item-value empty" id="sum-currency">—</div>
+              </div>
+              <div class="sum-item">
+                <div class="sum-item-label">Ex Rate</div>
+                <div class="sum-item-value empty" id="sum-exrate">—</div>
+              </div>
+              <div class="sum-item">
+                <div class="sum-item-label">FG Description</div>
+                <div class="sum-item-value empty" id="sum-product-desc">—</div>
+              </div>
+              <div class="sum-item">
+                <div class="sum-item-label">FG Qty</div>
+                <div class="sum-item-value empty" id="sum-fg-qty">—</div>
+              </div>
+              <div class="sum-item">
+                <div class="sum-item-label">UOM</div>
+                <div class="sum-item-value empty" id="sum-uom">—</div>
+              </div>
+              <div class="sum-item">
+                <div class="sum-item-label">Full Sheet</div>
+                <div class="sum-item-value empty" id="sum-full-sheet">—</div>
+              </div>
+              <div class="sum-item">
+                <div class="sum-item-label">No Of Outs</div>
+                <div class="sum-item-value empty" id="sum-outs">—</div>
+              </div>
+              <div class="sum-item">
+                <div class="sum-item-label">Route Code</div>
+                <div class="sum-item-value empty" id="sum-route-code">—</div>
+              </div>
+              <div class="sum-item">
+                <div class="sum-item-label">No Of Sheets</div>
+                <div class="sum-item-value empty" id="sum-sheets">—</div>
+              </div>
+              <div class="sum-item">
+                <div class="sum-item-label">Total Waste %</div>
+                <div class="sum-item-value empty" id="sum-waste">—</div>
+              </div>
+              <div class="sum-item">
+                <div class="sum-item-label">GSM</div>
+                <div class="sum-item-value empty" id="sum-gsm">—</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- =======================================================
                SECTION 1 – DOCUMENT INFO
                Fields: Company, Pre Costing No, Pre Costing Date,
                        Price Enquiry No, View Price Enquiry
@@ -1225,6 +1385,25 @@
               <label class="field-label">Product Description</label>
               <input type="text" class="field-input has-value" id="field-product-desc" name="productDesc" value="JFI &amp; S ITEM" />
             </div>
+          </div>
+
+          <!-- =======================================================
+               HORIZONTAL SECTION TABS BAR
+               Replaces per-section vertical accordion dividers.
+               id: horiz-tab-bar
+               ======================================================= -->
+          <div class="horiz-tab-bar" id="horiz-tab-bar">
+            <button class="horiz-tab" data-section="section-fg-product"        onclick="toggleSectionById('section-fg-product')">Product</button>
+            <button class="horiz-tab" data-section="section-sheet-dimensions"  onclick="toggleSectionById('section-sheet-dimensions')">Sheet Dimensions</button>
+            <button class="horiz-tab" data-section="section-routing-wastage"   onclick="toggleSectionById('section-routing-wastage')">Routing &amp; Wastage</button>
+            <button class="horiz-tab" data-section="section-material"          onclick="toggleSectionById('section-material')">Board / Paper</button>
+            <button class="horiz-tab" data-section="section-printing"          onclick="toggleSectionById('section-printing')">Printing</button>
+            <button class="horiz-tab" data-section="section-varnishing"        onclick="toggleSectionById('section-varnishing')">Varnishing</button>
+            <button class="horiz-tab" data-section="section-lamination"        onclick="toggleSectionById('section-lamination')">Lamination</button>
+            <button class="horiz-tab" data-section="section-tiep-artwork"      onclick="toggleSectionById('section-tiep-artwork')">TIEP / Artwork</button>
+            <button class="horiz-tab" data-section="section-finishing"         onclick="toggleSectionById('section-finishing')">Finishing</button>
+            <button class="horiz-tab" data-section="section-slab-quantities"   onclick="toggleSectionById('section-slab-quantities')">Slab Quantities</button>
+            <button class="horiz-tab" data-section="section-remarks"           onclick="toggleSectionById('section-remarks')">Remarks</button>
           </div>
 
           <!-- =======================================================
@@ -2171,6 +2350,127 @@
     });
   }
   document.addEventListener('DOMContentLoaded', initCollapsible);
+
+  /* ----------------------------------------------------------------
+     HORIZONTAL TABS: Toggle section by ID + sync tab active state
+     Called by .horiz-tab onclick="toggleSectionById('section-xxx')"
+     ---------------------------------------------------------------- */
+  function toggleSectionById(sectionId) {
+    const section = document.getElementById(sectionId);
+    if (!section) return;
+    const content = section.querySelector('.collapsible-content');
+    if (!content) return;
+    const isOpen = section.classList.contains('open');
+    if (isOpen) {
+      content.style.height  = content.scrollHeight + 'px';
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        content.style.height  = '0';
+        content.style.opacity = '0';
+      }));
+      section.classList.remove('open');
+    } else {
+      section.classList.add('open');
+      const h = content.scrollHeight;
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        content.style.height  = h + 'px';
+        content.style.opacity = '1';
+      }));
+      content.addEventListener('transitionend', function handler(e) {
+        if (e.propertyName === 'height' && section.classList.contains('open')) {
+          content.style.height = 'auto';
+          content.removeEventListener('transitionend', handler);
+        }
+      });
+      /* Scroll the newly opened section into view */
+      setTimeout(() => section.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 80);
+    }
+    syncHorizTab(sectionId);
+  }
+
+  function syncHorizTab(sectionId) {
+    const isOpen = document.getElementById(sectionId)?.classList.contains('open');
+    document.querySelectorAll(`.horiz-tab[data-section="${sectionId}"]`)
+      .forEach(tab => tab.classList.toggle('open', !!isOpen));
+  }
+
+  /* Initialise all tab active states on page load */
+  function initHorizTabs() {
+    document.querySelectorAll('.collapsible-section').forEach(sec => syncHorizTab(sec.id));
+  }
+  document.addEventListener('DOMContentLoaded', initHorizTabs);
+
+  /* ----------------------------------------------------------------
+     SUMMARY STRIP: Live field bindings
+     Reflect key form values into the summary bar at the top.
+     ---------------------------------------------------------------- */
+  function initSummary() {
+    const bind = (sumId, fieldId) => {
+      const field = document.getElementById(fieldId);
+      const el    = document.getElementById(sumId);
+      if (!field || !el) return;
+      const refresh = () => {
+        const v = (field.value || '').trim();
+        el.textContent = v || '—';
+        el.classList.toggle('empty', !v);
+      };
+      field.addEventListener('input',  refresh);
+      field.addEventListener('change', refresh);
+      refresh();
+    };
+    bind('sum-currency',     'field-currency');
+    bind('sum-exrate',       'field-ex-rate');
+    bind('sum-product-desc', 'field-product-desc');
+    bind('sum-fg-qty',       'field-fg-qty');
+    bind('sum-uom',          'field-fg-uom');
+    bind('sum-outs',         'field-full-outs');
+    bind('sum-sheets',       'field-no-of-sheets');
+    bind('sum-waste',        'field-total-waste');
+    bind('sum-gsm',          'field-gsm');
+
+    /* Full Sheet W × L composite */
+    const refreshFS = () => {
+      const w  = (document.getElementById('field-full-w')?.value  || '').trim();
+      const l  = (document.getElementById('field-full-l')?.value  || '').trim();
+      const el = document.getElementById('sum-full-sheet');
+      if (!el) return;
+      const v = (w && l) ? `${w} × ${l}` : '';
+      el.textContent = v || '—';
+      el.classList.toggle('empty', !v);
+    };
+    ['field-full-w', 'field-full-l'].forEach(id =>
+      document.getElementById(id)?.addEventListener('input', refreshFS));
+    refreshFS();
+
+    /* Customer select */
+    const custSel = document.getElementById('field-customer');
+    const custEl  = document.getElementById('sum-customer');
+    if (custSel && custEl) {
+      const refreshCust = () => {
+        const v = custSel.value?.trim() || custSel.options?.[custSel.selectedIndex]?.text || '';
+        const empty = !v || custSel.selectedIndex === 0;
+        custEl.textContent = empty ? '—' : v;
+        custEl.classList.toggle('empty', empty);
+      };
+      custSel.addEventListener('change', refreshCust);
+      custSel.addEventListener('input',  refreshCust);
+      refreshCust();
+    }
+
+    /* Route Code select */
+    const routeSel = document.getElementById('field-route-code');
+    const routeEl  = document.getElementById('sum-route-code');
+    if (routeSel && routeEl) {
+      const refreshRoute = () => {
+        const v = routeSel.value?.trim() || '';
+        const empty = !v || routeSel.selectedIndex === 0;
+        routeEl.textContent = empty ? '—' : v;
+        routeEl.classList.toggle('empty', empty);
+      };
+      routeSel.addEventListener('change', refreshRoute);
+      refreshRoute();
+    }
+  }
+  document.addEventListener('DOMContentLoaded', initSummary);
 
   /* ----------------------------------------------------------------
      VISUAL EFFECT: Button ripple
