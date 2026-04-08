@@ -734,8 +734,8 @@
        TABS PLACEHOLDER  –  Will be populated later
        ================================================================ */
     .tabs-placeholder {
-      margin-top: 24px;
-      border: 2px dashed var(--color-border);
+      margin-top: 8px;
+      border: 2px dashed #c8d0e4;
       border-radius: var(--radius-lg);
       padding: 28px 24px;
       text-align: center;
@@ -952,12 +952,37 @@
     /* -- Tabs placeholder: polished hover --------------------------- */
     .tabs-placeholder {
       background: linear-gradient(135deg, #f8f9fc, #f1f4f9);
-      border-color: #c8cdd8;
+      border-color: #c8d0e4;
       transition: border-color var(--transition), box-shadow var(--transition);
+      padding: 22px 24px;
+      text-align: center;
     }
     .tabs-placeholder:hover {
-      border-color: #a8b4c8;
+      border-color: #a0aec8;
       box-shadow: 0 2px 12px rgba(27,47,94,0.07);
+    }
+    .tabs-placeholder-title {
+      font-size: 12.5px !important;
+      font-weight: 700 !important;
+      color: var(--color-primary) !important;
+      margin-bottom: 8px !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      letter-spacing: 0.02em;
+    }
+    .tabs-placeholder-desc {
+      font-size: 11.5px;
+      color: var(--color-text-muted);
+      line-height: 1.6;
+      margin-top: 6px;
+    }
+    .tabs-placeholder-note {
+      font-size: 10.5px;
+      color: #94a3b8;
+      margin-top: 8px;
+      font-style: italic;
     }
 
     /* -- Sidebar list panel: glass border --------------------------- */
@@ -970,58 +995,98 @@
     }
 
     /* ================================================================
-       SUMMARY STRIP  –  full-width compact bar at top of form
+       SUMMARY STRIP  –  full-bleed navy banner at top of form
        ================================================================ */
     .summary-strip {
-      background: linear-gradient(135deg, #f4f6fb 0%, #edf0f8 100%);
-      border-bottom: 2px solid #dde3f0;
-      padding: 12px 24px 14px;
+      background: linear-gradient(135deg, #1b2f5e 0%, #243a72 100%);
+      border-bottom: 3px solid var(--color-accent);
+      padding: 0;
+      margin: -20px -24px 0;   /* bleed to form-card edges */
     }
     .summary-strip-title {
-      font-size: 9.5px;
+      padding: 11px 24px 9px;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .summary-strip-title::before {
+      content: '';
+      width: 3px;
+      height: 11px;
+      background: var(--color-accent);
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    .summary-strip-title::after { display: none; }
+    .summary-strip-grid {
+      padding: 12px 24px 16px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+      gap: 10px 20px;
+    }
+    .sum-item { display: flex; flex-direction: column; gap: 2px; }
+    .sum-item-label {
+      font-size: 8.5px;
       font-weight: 700;
-      letter-spacing: 0.13em;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.42);
+    }
+    .sum-item-value {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #ffffff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      letter-spacing: 0.01em;
+    }
+    .sum-item-value.empty {
+      color: rgba(255,255,255,0.18);
+      font-weight: 400;
+      font-style: italic;
+      font-size: 11px;
+    }
+    .sum-item-value.highlight {
+      color: var(--color-accent);
+    }
+
+    /* ================================================================
+       PAGE SECTION LABELS  –  "Form" and "Detail Tabs" headings
+       ================================================================ */
+    .page-section-label {
+      padding: 16px 0 8px;
+      font-size: 9.5px;
+      font-weight: 800;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
       color: var(--color-primary);
       display: flex;
       align-items: center;
       gap: 10px;
-      margin-bottom: 10px;
+      pointer-events: none;
+      user-select: none;
     }
-    .summary-strip-title::after {
+    .page-section-label::before {
+      content: '';
+      width: 3px;
+      height: 13px;
+      background: var(--color-accent);
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    .page-section-label::after {
       content: '';
       flex: 1;
       height: 1px;
-      background: #d0d7ea;
-    }
-    .summary-strip-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
-      gap: 6px 18px;
-    }
-    .sum-item { display: flex; flex-direction: column; gap: 1px; }
-    .sum-item-label {
-      font-size: 9px;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: #9aa0b4;
-    }
-    .sum-item-value {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--color-text);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .sum-item-value.empty {
-      color: #c8cdd8;
-      font-weight: 400;
-      font-style: italic;
-    }
-    .sum-item-value.highlight {
-      color: var(--color-primary);
+      background: linear-gradient(to right, #dde3f0, transparent);
     }
 
     /* ================================================================
@@ -1032,40 +1097,61 @@
       display: flex;
       flex-wrap: wrap;
       align-items: flex-end;
-      gap: 2px 3px;
-      padding: 10px 24px 0;
-      background: #f3f5fa;
-      border-bottom: 2px solid #dde3f0;
+      gap: 2px 1px;
+      padding: 6px 8px 0;
+      background: #f0f2f8;
+      border: 1.5px solid #dde3f0;
+      border-bottom: 2.5px solid var(--color-primary);
+      border-radius: 8px 8px 0 0;
+      margin: 0 0 0;
       position: sticky;
       top: 0;
       z-index: 20;
     }
     .horiz-tab {
-      padding: 7px 13px 8px;
+      padding: 8px 15px 9px;
       font-size: 11px;
       font-weight: 500;
-      color: #626c82;
+      color: #6b7490;
       background: transparent;
-      border: 1px solid transparent;
+      border: 1.5px solid transparent;
       border-bottom: none;
-      border-radius: 5px 5px 0 0;
+      border-radius: 6px 6px 0 0;
       cursor: pointer;
       white-space: nowrap;
-      transition: background 0.14s, color 0.14s, border-color 0.14s;
-      margin-bottom: -2px;
+      transition: background 0.14s, color 0.14s, border-color 0.14s, box-shadow 0.14s;
+      margin-bottom: -2.5px;
       position: relative;
+      letter-spacing: 0.01em;
     }
     .horiz-tab:hover {
       background: rgba(27,47,94,0.06);
       color: var(--color-primary);
     }
     .horiz-tab.open {
-      background: #fff;
+      background: #ffffff;
       color: var(--color-primary);
       font-weight: 700;
-      border-color: #dde3f0;
-      border-bottom-color: #fff;
+      border-color: #d0d8ea;
+      border-bottom-color: #ffffff;
+      box-shadow: 0 -2px 6px rgba(27,47,94,0.08);
       z-index: 1;
+    }
+    /* Form content area below the tab bar */
+    .form-section-body {
+      background: #ffffff;
+      border: 1.5px solid #dde3f0;
+      border-top: none;
+      border-radius: 0 0 8px 8px;
+      min-height: 40px;
+    }
+    /* Collapsible panels inside form-section-body get proper inner spacing */
+    .form-section-body .collapsible-content-inner {
+      padding: 20px 22px 26px;
+    }
+    /* Header section (sits outside form-section-body) keeps its own padding */
+    #section-header .collapsible-content-inner {
+      padding: 0 0 6px;
     }
     /* Hide the original per-section accordion divider triggers */
     .collapsible-trigger { display: none !important; }
@@ -1270,6 +1356,9 @@
             </div>
           </div>
 
+          <!-- FORM SECTION LABEL -->
+          <div class="page-section-label">Form</div>
+
           <!-- =======================================================
                HORIZONTAL SECTION TABS BAR
                id: horiz-tab-bar
@@ -1416,6 +1505,9 @@
 
             </div></div><!-- /section-header: collapsible-content-inner + collapsible-content -->
           </div><!-- /section-header -->
+
+          <!-- form-section-body wraps all collapsible content panels -->
+          <div class="form-section-body">
 
           <!-- =======================================================
                SECTION 3 – FG PRODUCT
@@ -2139,6 +2231,11 @@
             </div></div>
           </div>
 
+          </div><!-- /form-section-body -->
+
+          <!-- DETAIL TABS SECTION LABEL -->
+          <div class="page-section-label">Detail Tabs</div>
+
           <!-- =======================================================
                TABS PLACEHOLDER
                The detail tabs (Pre Press Details, Route Cost,
@@ -2146,9 +2243,12 @@
                id: tabs-container
                ======================================================= -->
           <div class="tabs-placeholder" id="tabs-container">
-            <div class="tabs-placeholder-title">Detail Tabs Area</div>
-            <p>Pre Press Details · Route Cost · Board/Paper Details · Corrugated Paper Details · Ink Material · Adhesive · Foil Material · Varnishing Details</p>
-            <p style="margin-top:6px;font-size:11px;color:#94a3b8;">Tabs will be connected here in the next phase.</p>
+            <div class="tabs-placeholder-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:.5;flex-shrink:0;"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+              Detail Tabs
+            </div>
+            <p class="tabs-placeholder-desc">Pre Press Details &middot; Route Cost &middot; Board/Paper Details &middot; Corrugated Paper Details &middot; Ink Material &middot; Adhesive &middot; Foil Material &middot; Varnishing Details</p>
+            <p class="tabs-placeholder-note">These tabs will be connected in the next phase.</p>
           </div>
 
         </div><!-- /form-body -->
