@@ -1188,9 +1188,35 @@
     .collapsible-trigger { display: none !important; }
 
     /* ================================================================
+       MODE SWITCHER  –  [Header] / [Details] pill buttons
+       ================================================================ */
+    .mode-switcher {
+      display: flex;
+      gap: 8px;
+      padding: 0 0 18px;
+    }
+    .mode-btn {
+      padding: 7px 26px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 20px;
+      cursor: pointer;
+      border: 1.5px solid var(--color-primary);
+      color: var(--color-primary);
+      background: transparent;
+      transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+      letter-spacing: 0.01em;
+    }
+    .mode-btn.active {
+      background: var(--color-primary);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(27,47,94,0.22);
+    }
+    .mode-btn:hover:not(.active) { background: rgba(27,47,94,0.06); }
+
+    /* ================================================================
        FORM-VIEW / DETAIL-VIEW TOGGLE
        ================================================================ */
-    #form-body.detail-active #form-view-label { display: none; }
     #form-body.detail-active #horiz-tab-bar   { display: none; }
     #form-body.detail-active .collapsible-section { display: none !important; }
     #form-body.detail-active .form-section-body { padding: 0; background: transparent; border: none; min-height: 0; }
@@ -1350,11 +1376,12 @@
        DETAIL TABS – buttons & panels
        ================================================================ */
     .detail-tabs-bar {
-      display: flex;
+      display: none;
       flex-wrap: wrap;
       gap: 6px 8px;
-      margin-top: 8px;
+      margin: 0 0 18px;
     }
+    #form-body.detail-active .detail-tabs-bar { display: flex; }
     .detail-tab-btn {
       padding: 7px 15px;
       font-size: 11px;
@@ -1672,9 +1699,10 @@
              --------------------------------------------------------- -->
         <div class="form-body" id="form-body">
 
-          <!-- FORM SECTION LABEL -->
-          <div class="dpanel-hdr" id="form-view-label">
-            <span class="dpanel-title">Header</span>
+          <!-- MODE SWITCHER -->
+          <div class="mode-switcher">
+            <button class="mode-btn active" id="mode-btn-header" onclick="switchMode('header')">Header</button>
+            <button class="mode-btn" id="mode-btn-details" onclick="switchMode('details')">Details</button>
           </div>
 
           <!-- =======================================================
@@ -1682,8 +1710,7 @@
                id: horiz-tab-bar
                ======================================================= -->
           <div class="horiz-tab-bar" id="horiz-tab-bar">
-            <button class="horiz-tab" data-section="section-header"           onclick="toggleSectionById('section-header')">Header</button>
-            <button class="horiz-tab" data-section="section-fg-product"        onclick="toggleSectionById('section-fg-product')">Product</button>
+            <button class="horiz-tab" data-section="section-fg-product"        onclick="openProductSections()">Product</button>
             <button class="horiz-tab" data-section="section-sheet-dimensions"  onclick="toggleSectionById('section-sheet-dimensions')">Sheet Dimensions</button>
             <button class="horiz-tab" data-section="section-routing-wastage"   onclick="toggleSectionById('section-routing-wastage')">Routing &amp; Wastage</button>
             <button class="horiz-tab" data-section="section-material"          onclick="toggleSectionById('section-material')">Board / Paper</button>
@@ -2549,6 +2576,24 @@
             </div></div>
           </div>
 
+          <!-- Detail panel selector bar (visible in Details mode) -->
+          <div class="detail-tabs-bar" id="tabs-container">
+            <button class="detail-tab-btn" data-panel="detail-panel-pre-press"    onclick="toggleDetailTab('detail-panel-pre-press')">Pre Press Details</button>
+            <button class="detail-tab-btn" data-panel="detail-panel-route-cost"   onclick="toggleDetailTab('detail-panel-route-cost')">Route Cost</button>
+            <button class="detail-tab-btn" data-panel="detail-panel-board-paper"  onclick="toggleDetailTab('detail-panel-board-paper')">Board / Paper Details</button>
+            <button class="detail-tab-btn" data-panel="detail-panel-corrugated"   onclick="toggleDetailTab('detail-panel-corrugated')">Corrugated Paper Details</button>
+            <button class="detail-tab-btn" data-panel="detail-panel-ink"          onclick="toggleDetailTab('detail-panel-ink')">Ink Material</button>
+            <button class="detail-tab-btn" data-panel="detail-panel-adhesive"     onclick="toggleDetailTab('detail-panel-adhesive')">Adhesive</button>
+            <button class="detail-tab-btn" data-panel="detail-panel-foil"         onclick="toggleDetailTab('detail-panel-foil')">Foil Material</button>
+            <button class="detail-tab-btn" data-panel="detail-panel-varnishing"   onclick="toggleDetailTab('detail-panel-varnishing')">Varnishing Details</button>
+            <button class="detail-tab-btn" data-panel="detail-panel-film"         onclick="toggleDetailTab('detail-panel-film')">Film Details</button>
+            <button class="detail-tab-btn" data-panel="detail-panel-outsourcing"  onclick="toggleDetailTab('detail-panel-outsourcing')">Out Sourcing Items</button>
+            <button class="detail-tab-btn" data-panel="detail-panel-other"        onclick="toggleDetailTab('detail-panel-other')">Other Detail</button>
+            <button class="detail-tab-btn" data-panel="detail-panel-packing"      onclick="toggleDetailTab('detail-panel-packing')">Packing Details</button>
+            <button class="detail-tab-btn" data-panel="detail-panel-sfg"          onclick="toggleDetailTab('detail-panel-sfg')">SFG Details</button>
+            <button class="detail-tab-btn" data-panel="detail-panel-cost"         onclick="toggleDetailTab('detail-panel-cost')">Cost Details</button>
+          </div>
+
           <!-- ═══════════════════════════════════════════════════════
                DETAIL TAB PANELS  (shown when a detail-tab-btn is clicked)
                ═══════════════════════════════════════════════════════ -->
@@ -3150,32 +3195,6 @@
 
           </div><!-- /form-section-body -->
 
-          <!-- DETAIL TABS SECTION LABEL -->
-          <div class="page-section-label">Detail Tabs</div>
-
-          <!-- =======================================================
-               TABS PLACEHOLDER
-               The detail tabs (Pre Press Details, Route Cost,
-               Board/Paper Details, etc.) will be inserted here.
-               id: tabs-container
-               ======================================================= -->
-          <div class="detail-tabs-bar" id="tabs-container">
-            <button class="detail-tab-btn detail-tab-header active" id="detail-tab-header-btn" onclick="showHeaderView()">Header</button>
-            <button class="detail-tab-btn" data-panel="detail-panel-pre-press"    onclick="toggleDetailTab('detail-panel-pre-press')">Pre Press Details</button>
-            <button class="detail-tab-btn" data-panel="detail-panel-route-cost"   onclick="toggleDetailTab('detail-panel-route-cost')">Route Cost</button>
-            <button class="detail-tab-btn" data-panel="detail-panel-board-paper"  onclick="toggleDetailTab('detail-panel-board-paper')">Board / Paper Details</button>
-            <button class="detail-tab-btn" data-panel="detail-panel-corrugated"   onclick="toggleDetailTab('detail-panel-corrugated')">Corrugated Paper Details</button>
-            <button class="detail-tab-btn" data-panel="detail-panel-ink"          onclick="toggleDetailTab('detail-panel-ink')">Ink Material</button>
-            <button class="detail-tab-btn" data-panel="detail-panel-adhesive"     onclick="toggleDetailTab('detail-panel-adhesive')">Adhesive</button>
-            <button class="detail-tab-btn" data-panel="detail-panel-foil"         onclick="toggleDetailTab('detail-panel-foil')">Foil Material</button>
-            <button class="detail-tab-btn" data-panel="detail-panel-varnishing"   onclick="toggleDetailTab('detail-panel-varnishing')">Varnishing Details</button>
-            <button class="detail-tab-btn" data-panel="detail-panel-film"         onclick="toggleDetailTab('detail-panel-film')">Film Details</button>
-            <button class="detail-tab-btn" data-panel="detail-panel-outsourcing"  onclick="toggleDetailTab('detail-panel-outsourcing')">Out Sourcing Items</button>
-            <button class="detail-tab-btn" data-panel="detail-panel-other"        onclick="toggleDetailTab('detail-panel-other')">Other Detail</button>
-            <button class="detail-tab-btn" data-panel="detail-panel-packing"      onclick="toggleDetailTab('detail-panel-packing')">Packing Details</button>
-            <button class="detail-tab-btn" data-panel="detail-panel-sfg"          onclick="toggleDetailTab('detail-panel-sfg')">SFG Details</button>
-            <button class="detail-tab-btn" data-panel="detail-panel-cost"         onclick="toggleDetailTab('detail-panel-cost')">Cost Details</button>
-          </div>
 
         </div><!-- /form-body -->
 
@@ -3383,31 +3402,79 @@
      DETAIL TABS: Show a data-grid panel; close all form sections.
      Called by .detail-tab-btn onclick="toggleDetailTab('detail-panel-xxx')"
      ---------------------------------------------------------------- */
-  function toggleDetailTab(panelId) {
-    /* Deactivate all detail tab buttons */
-    document.querySelectorAll('.detail-tab-btn').forEach(btn => btn.classList.remove('active'));
-    /* Hide all detail panels */
-    document.querySelectorAll('.detail-panel').forEach(p => p.classList.remove('active'));
-    /* Activate detail-active mode (hides form sections) */
+  /* ----------------------------------------------------------------
+     MODE SWITCHER: toggle between Header form view and Details panels
+     ---------------------------------------------------------------- */
+  function switchMode(mode) {
     const formBody = document.getElementById('form-body');
-    if (formBody) formBody.classList.add('detail-active');
-    /* Activate the clicked panel + its button */
+    const btnHeader = document.getElementById('mode-btn-header');
+    const btnDetails = document.getElementById('mode-btn-details');
+    if (mode === 'header') {
+      formBody.classList.remove('detail-active');
+      btnHeader.classList.add('active');
+      btnDetails.classList.remove('active');
+      document.querySelectorAll('.detail-tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.detail-panel').forEach(p => p.classList.remove('active'));
+    } else {
+      formBody.classList.add('detail-active');
+      btnHeader.classList.remove('active');
+      btnDetails.classList.add('active');
+      /* Default: open Pre Press Details */
+      document.querySelectorAll('.detail-tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.detail-panel').forEach(p => p.classList.remove('active'));
+      const defPanel = document.getElementById('detail-panel-pre-press');
+      if (defPanel) defPanel.classList.add('active');
+      const defBtn = document.querySelector('.detail-tab-btn[data-panel="detail-panel-pre-press"]');
+      if (defBtn) defBtn.classList.add('active');
+    }
+  }
+
+  function toggleDetailTab(panelId) {
+    switchMode('details');
+    document.querySelectorAll('.detail-tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.detail-panel').forEach(p => p.classList.remove('active'));
     const panel = document.getElementById(panelId);
     if (panel) panel.classList.add('active');
     const btn = document.querySelector(`.detail-tab-btn[data-panel="${panelId}"]`);
     if (btn) btn.classList.add('active');
   }
 
-  function showHeaderView() {
-    /* Deactivate all detail tab buttons and panels */
-    document.querySelectorAll('.detail-tab-btn').forEach(btn => btn.classList.remove('active'));
-    document.querySelectorAll('.detail-panel').forEach(p => p.classList.remove('active'));
-    /* Remove detail-active to restore the form view */
-    const formBody = document.getElementById('form-body');
-    if (formBody) formBody.classList.remove('detail-active');
-    /* Mark Header button as active */
-    const hdrBtn = document.getElementById('detail-tab-header-btn');
-    if (hdrBtn) hdrBtn.classList.add('active');
+  function showHeaderView() { switchMode('header'); }
+
+  /* ----------------------------------------------------------------
+     Open the combined Product tab (Header info + FG Product fields)
+     ---------------------------------------------------------------- */
+  function openProductSections() {
+    switchMode('header');
+    const ids = ['section-header', 'section-fg-product'];
+    /* Close all other sections */
+    document.querySelectorAll('.collapsible-section.open').forEach(sec => {
+      if (ids.includes(sec.id)) return;
+      const oc = sec.querySelector('.collapsible-content');
+      if (!oc) return;
+      oc.style.height = oc.scrollHeight + 'px';
+      requestAnimationFrame(() => requestAnimationFrame(() => { oc.style.height = '0'; oc.style.opacity = '0'; }));
+      sec.classList.remove('open');
+    });
+    /* Open both target sections */
+    ids.forEach(id => {
+      const sec = document.getElementById(id);
+      if (!sec) return;
+      const c = sec.querySelector('.collapsible-content');
+      if (!c || sec.classList.contains('open')) return;
+      sec.classList.add('open');
+      const h = c.scrollHeight;
+      requestAnimationFrame(() => requestAnimationFrame(() => { c.style.height = h + 'px'; c.style.opacity = '1'; }));
+      c.addEventListener('transitionend', function handler(e) {
+        if (e.propertyName === 'height' && sec.classList.contains('open')) {
+          c.style.height = 'auto'; c.removeEventListener('transitionend', handler);
+        }
+      });
+    });
+    /* Mark Product tab active */
+    document.querySelectorAll('.horiz-tab').forEach(t => t.classList.remove('open'));
+    const prodTab = document.querySelector('.horiz-tab[data-section="section-fg-product"]');
+    if (prodTab) prodTab.classList.add('open');
   }
 
   function toggleSectionById(sectionId) {
@@ -3417,14 +3484,8 @@
     if (!content) return;
     const isOpen = section.classList.contains('open');
 
-    /* ── Deactivate any active detail tab panel first; restore form view ── */
-    document.querySelectorAll('.detail-tab-btn.active').forEach(btn => btn.classList.remove('active'));
-    document.querySelectorAll('.detail-panel.active').forEach(p => p.classList.remove('active'));
-    const formBody = document.getElementById('form-body');
-    if (formBody) formBody.classList.remove('detail-active');
-    /* Re-mark Header button as active since we're showing the form/header view */
-    const hdrBtn = document.getElementById('detail-tab-header-btn');
-    if (hdrBtn) hdrBtn.classList.add('active');
+    /* ── Switch to header mode (hides detail panels, shows form) ── */
+    switchMode('header');
 
     /* ── Close all other open sections first (exclusive tabs) ── */
     if (!isOpen) {
@@ -3474,12 +3535,13 @@
       .forEach(tab => tab.classList.toggle('open', !!isOpen));
   }
 
-  /* On page load: open only section-header, close everything else */
+  /* On page load: open section-header + section-fg-product (combined Product tab) */
   function initHorizTabs() {
+    const productIds = ['section-header', 'section-fg-product'];
     document.querySelectorAll('.collapsible-section').forEach(sec => {
       const content = sec.querySelector('.collapsible-content');
       if (!content) return;
-      if (sec.id === 'section-header') {
+      if (productIds.includes(sec.id)) {
         sec.classList.add('open');
         content.style.height  = 'auto';
         content.style.opacity = '1';
@@ -3488,8 +3550,10 @@
         content.style.height  = '0';
         content.style.opacity = '0';
       }
-      syncHorizTab(sec.id);
     });
+    /* Mark the Product tab active */
+    const prodTab = document.querySelector('.horiz-tab[data-section="section-fg-product"]');
+    if (prodTab) prodTab.classList.add('open');
   }
   document.addEventListener('DOMContentLoaded', initHorizTabs);
 
