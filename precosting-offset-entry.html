@@ -230,13 +230,22 @@
     .content-scroll {
       flex: 1;
       overflow-y: auto;
-      padding: 20px;
+      padding: 8px 20px 20px;
     }
 
     /* ================================================================
        FORM CARD
        ================================================================ */
     .form-card {
+      background: transparent;
+      border-radius: 0;
+      box-shadow: none;
+      overflow: visible;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .form-inner-card {
       background: var(--color-card);
       border-radius: var(--radius-lg);
       box-shadow: var(--shadow-card);
@@ -282,6 +291,32 @@
     }
     .hdr-btn:hover { background: rgba(255,255,255,0.2); color: #fff; }
     .hdr-btn.hdr-btn-close:hover { background: rgba(220,50,50,0.7); }
+    /* New / Submit in the header bar */
+    .hdr-action-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 14px;
+      font-size: 11.5px;
+      font-weight: 600;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+    .hdr-action-btn.btn-new {
+      background: rgba(255,255,255,0.1);
+      border: 1.5px solid rgba(255,255,255,0.3);
+      color: rgba(255,255,255,0.9);
+    }
+    .hdr-action-btn.btn-new:hover { background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.6); color: #fff; }
+    .hdr-action-btn.btn-submit {
+      background: var(--color-accent);
+      border: 1.5px solid var(--color-accent);
+      color: #1b2f5e;
+    }
+    .hdr-action-btn.btn-submit:hover { background: #d9a94a; border-color: #d9a94a; }
+    .hdr-divider { width: 1px; height: 20px; background: rgba(255,255,255,0.2); margin: 0 6px; }
 
     /* ----------------------------------------------------------------
        FORM CARD  –  Body
@@ -999,9 +1034,9 @@
        ================================================================ */
     .summary-strip {
       background: linear-gradient(135deg, #1b2f5e 0%, #243a72 100%);
-      border-bottom: 3px solid var(--color-accent);
       padding: 0;
-      margin: -20px -24px 0;   /* bleed to form-card edges */
+      margin: 0;
+      border-radius: var(--radius-lg);
     }
     .summary-strip-title {
       padding: 11px 24px 9px;
@@ -1009,12 +1044,12 @@
       font-weight: 800;
       letter-spacing: 0.18em;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.5);
+      color: rgba(255,255,255,0.75);
       display: flex;
       align-items: center;
       gap: 8px;
       margin-bottom: 0;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
+      border-bottom: 1px solid rgba(255,255,255,0.12);
     }
     .summary-strip-title::before {
       content: '';
@@ -1037,7 +1072,7 @@
       font-weight: 700;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.42);
+      color: rgba(255,255,255,0.65);
     }
     .sum-item-value {
       font-size: 12.5px;
@@ -1049,7 +1084,7 @@
       letter-spacing: 0.01em;
     }
     .sum-item-value.empty {
-      color: rgba(255,255,255,0.18);
+      color: rgba(255,255,255,0.40);
       font-weight: 400;
       font-style: italic;
       font-size: 11px;
@@ -1158,7 +1193,7 @@
     #form-body.detail-active #form-view-label { display: none; }
     #form-body.detail-active #horiz-tab-bar   { display: none; }
     #form-body.detail-active .collapsible-section { display: none !important; }
-    #form-body.detail-active .form-section-body { padding: 0; background: transparent; }
+    #form-body.detail-active .form-section-body { padding: 0; background: transparent; border: none; min-height: 0; }
 
     /* ================================================================
        DETAIL PANEL COMPONENTS (dpanel)
@@ -1179,10 +1214,10 @@
     }
     .dpanel-actions { display: flex; gap: 6px; }
     .dpanel-form {
-      background: #fff;
-      border: 1px solid #e0e6f0;
-      border-radius: var(--radius-lg);
-      padding: 22px 26px;
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      padding: 0;
       margin-bottom: 0;
     }
     .dpanel-section-title {
@@ -1196,6 +1231,54 @@
       border-bottom: 1px solid #e8ecf4;
     }
     .dpanel-section-title:first-child { margin-top: 0; }
+    /* Inner section tab bar (built by JS inside dpanel-form)
+       Mirrors .horiz-tab-bar / .horiz-tab styling for consistency */
+    .dpanel-inner-tabbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 2px 1px;
+      padding: 6px 8px 0;
+      background: #f0f2f8;
+      border: 1.5px solid #dde3f0;
+      border-bottom: 2.5px solid var(--color-primary);
+      border-radius: 8px 8px 0 0;
+    }
+    .dpanel-inner-tab {
+      padding: 8px 15px 9px;
+      font-size: 11px;
+      font-weight: 500;
+      color: #6b7490;
+      background: transparent;
+      border: 1.5px solid transparent;
+      border-bottom: none;
+      border-radius: 6px 6px 0 0;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.14s, color 0.14s, border-color 0.14s, box-shadow 0.14s;
+      margin-bottom: -2.5px;
+      position: relative;
+      letter-spacing: 0.01em;
+    }
+    .dpanel-inner-tab:hover { background: rgba(27,47,94,0.06); color: var(--color-primary); }
+    .dpanel-inner-tab.active {
+      background: #ffffff;
+      color: var(--color-primary);
+      font-weight: 700;
+      border-color: #d0d8ea;
+      border-bottom-color: #ffffff;
+      box-shadow: 0 -2px 6px rgba(27,47,94,0.08);
+      z-index: 1;
+    }
+    .dpanel-inner-section { display: none; }
+    .dpanel-inner-section.active {
+      display: block;
+      background: #ffffff;
+      border: 1.5px solid #dde3f0;
+      border-top: none;
+      border-radius: 0 0 8px 8px;
+      padding: 20px 22px 24px;
+    }
     /* 4-column field grid */
     .detail-fg {
       display: grid;
@@ -1297,7 +1380,7 @@
     .detail-panel { display: none; }
     .detail-panel.active {
       display: block;
-      padding: 22px 28px 28px;
+      padding: 0;
     }
     /* Grid toolbar */
     .dg-toolbar {
@@ -1447,23 +1530,6 @@
       </div>
     </div>
 
-    <!-- Module navigation -->
-    <div class="sidebar-section-label">Modules</div>
-    <div class="sidebar-item"><span class="item-icon">⚙</span> Production</div>
-    <div class="sidebar-item"><span class="item-icon">🛒</span> Purchase</div>
-    <div class="sidebar-item"><span class="item-icon">📊</span> Sales</div>
-
-    <!-- Pre Costing sub-menu (expanded) -->
-    <div class="sidebar-item active" style="padding-left:28px;"><span class="item-icon">📋</span> Pre Costing</div>
-    <div class="sidebar-sub-item">Pending Price Enquiry · SDPC01</div>
-    <div class="sidebar-sub-item">Pre Costing Price Card · SDPC02</div>
-    <div class="sidebar-sub-item active">Pre Costing – Offset Entry · SDPC04</div>
-    <div class="sidebar-sub-item">Pre Costing Summary · SDPC05</div>
-    <div class="sidebar-sub-item">Pre Costing Flexible II</div>
-
-    <div class="sidebar-item"><span class="item-icon">📦</span> Sales Quotation</div>
-    <div class="sidebar-item"><span class="item-icon">🚚</span> Sales Delivery</div>
-
     <!-- Quick Entry List Panel -->
     <div class="list-panel" id="list-panel">
       <div class="list-panel-header">
@@ -1509,6 +1575,51 @@
            =========================================================== -->
       <div class="form-card" id="form-card-main">
 
+        <!-- =======================================================
+             SUMMARY STRIP
+             Live-updating key pre-costing values at a glance.
+             id: summary-strip
+             ======================================================= -->
+        <div class="summary-strip" id="summary-strip">
+          <div class="summary-strip-title">Pre Costing Summary</div>
+          <div class="summary-strip-grid">
+            <div class="sum-item">
+              <div class="sum-item-label">Enq No</div>
+              <div class="sum-item-value empty" id="sum-enq-no">—</div>
+            </div>
+            <div class="sum-item">
+              <div class="sum-item-label">Board Cost</div>
+              <div class="sum-item-value empty" id="sum-board-cost">0.00</div>
+            </div>
+            <div class="sum-item">
+              <div class="sum-item-label">Corrugated Material Cost</div>
+              <div class="sum-item-value empty" id="sum-corrugated-cost">0.00</div>
+            </div>
+            <div class="sum-item">
+              <div class="sum-item-label">Other Material Cost</div>
+              <div class="sum-item-value empty" id="sum-other-material-cost">0.00</div>
+            </div>
+            <div class="sum-item">
+              <div class="sum-item-label">Machine Cost</div>
+              <div class="sum-item-value empty" id="sum-machine-cost">0.00</div>
+            </div>
+            <div class="sum-item">
+              <div class="sum-item-label">Prepress Cost</div>
+              <div class="sum-item-value empty" id="sum-prepress-cost">0.00</div>
+            </div>
+            <div class="sum-item">
+              <div class="sum-item-label">Outsource Cost</div>
+              <div class="sum-item-value empty" id="sum-outsource-cost">0.00</div>
+            </div>
+            <div class="sum-item">
+              <div class="sum-item-label">Total Cost</div>
+              <div class="sum-item-value empty" id="sum-total-cost">0.00</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-inner-card">
+
         <!-- ---------------------------------------------------------
              FORM CARD HEADER
              id: form-header
@@ -1519,6 +1630,16 @@
             Pre Costing – Offset Entry &nbsp;–&nbsp; <span id="form-doc-id">SDPC04</span>
           </div>
           <div class="form-header-actions">
+            <!-- New + Submit -->
+            <button class="hdr-action-btn btn-new" id="btn-new" onclick="handleNew()">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+              New
+            </button>
+            <button class="hdr-action-btn btn-submit" id="btn-submit" onclick="handleSubmit()">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>
+              Submit
+            </button>
+            <div class="hdr-divider"></div>
             <!-- Search -->
             <button class="hdr-btn" title="Search" id="btn-search">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
@@ -1551,72 +1672,9 @@
              --------------------------------------------------------- -->
         <div class="form-body" id="form-body">
 
-          <!-- =======================================================
-               SUMMARY STRIP
-               Live-updating key pre-costing values at a glance.
-               id: summary-strip
-               ======================================================= -->
-          <div class="summary-strip" id="summary-strip">
-            <div class="summary-strip-title">Pre Costing Summary</div>
-            <div class="summary-strip-grid">
-              <div class="sum-item">
-                <div class="sum-item-label">Customer</div>
-                <div class="sum-item-value empty" id="sum-customer">—</div>
-              </div>
-              <div class="sum-item">
-                <div class="sum-item-label">Currency</div>
-                <div class="sum-item-value empty" id="sum-currency">—</div>
-              </div>
-              <div class="sum-item">
-                <div class="sum-item-label">Ex Rate</div>
-                <div class="sum-item-value empty" id="sum-exrate">—</div>
-              </div>
-              <div class="sum-item">
-                <div class="sum-item-label">FG Description</div>
-                <div class="sum-item-value empty" id="sum-product-desc">—</div>
-              </div>
-              <div class="sum-item">
-                <div class="sum-item-label">FG Qty</div>
-                <div class="sum-item-value empty" id="sum-fg-qty">—</div>
-              </div>
-              <div class="sum-item">
-                <div class="sum-item-label">UOM</div>
-                <div class="sum-item-value empty" id="sum-uom">—</div>
-              </div>
-              <div class="sum-item">
-                <div class="sum-item-label">Full Sheet</div>
-                <div class="sum-item-value empty" id="sum-full-sheet">—</div>
-              </div>
-              <div class="sum-item">
-                <div class="sum-item-label">No Of Outs</div>
-                <div class="sum-item-value empty" id="sum-outs">—</div>
-              </div>
-              <div class="sum-item">
-                <div class="sum-item-label">Route Code</div>
-                <div class="sum-item-value empty" id="sum-route-code">—</div>
-              </div>
-              <div class="sum-item">
-                <div class="sum-item-label">No Of Sheets</div>
-                <div class="sum-item-value empty" id="sum-sheets">—</div>
-              </div>
-              <div class="sum-item">
-                <div class="sum-item-label">Total Waste %</div>
-                <div class="sum-item-value empty" id="sum-waste">—</div>
-              </div>
-              <div class="sum-item">
-                <div class="sum-item-label">GSM</div>
-                <div class="sum-item-value empty" id="sum-gsm">—</div>
-              </div>
-            </div>
-          </div>
-
           <!-- FORM SECTION LABEL -->
           <div class="dpanel-hdr" id="form-view-label">
             <span class="dpanel-title">Header</span>
-            <div class="dpanel-actions">
-              <button class="dg-btn" onclick="handleSubmit()">Submit</button>
-              <button class="dg-btn" onclick="handleNew()">New</button>
-            </div>
           </div>
 
           <!-- =======================================================
@@ -3121,21 +3179,8 @@
 
         </div><!-- /form-body -->
 
-        <!-- ---------------------------------------------------------
-             FORM FOOTER
-             id: form-footer
-             Contains: Submit button, New button
-             --------------------------------------------------------- -->
-        <div class="form-footer" id="form-footer">
-          <button class="btn btn-outline" id="btn-new" onclick="handleNew()">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
-            New
-          </button>
-          <button class="btn btn-primary" id="btn-submit" onclick="handleSubmit()">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>
-            Submit
-          </button>
-        </div>
+        </div><!-- /form-inner-card -->
+
 
       </div><!-- /form-card -->
 
@@ -3377,6 +3422,9 @@
     document.querySelectorAll('.detail-panel.active').forEach(p => p.classList.remove('active'));
     const formBody = document.getElementById('form-body');
     if (formBody) formBody.classList.remove('detail-active');
+    /* Re-mark Header button as active since we're showing the form/header view */
+    const hdrBtn = document.getElementById('detail-tab-header-btn');
+    if (hdrBtn) hdrBtn.classList.add('active');
 
     /* ── Close all other open sections first (exclusive tabs) ── */
     if (!isOpen) {
@@ -3444,6 +3492,54 @@
     });
   }
   document.addEventListener('DOMContentLoaded', initHorizTabs);
+
+  /* ----------------------------------------------------------------
+     DETAIL PANEL INNER TABS
+     Reads .dpanel-section-title elements from each .dpanel-form,
+     builds a tab bar, and wraps each section content in a switchable div.
+     ---------------------------------------------------------------- */
+  function initDPanelTabs() {
+    document.querySelectorAll('.dpanel-form').forEach(form => {
+      const titles = Array.from(form.querySelectorAll('.dpanel-section-title'));
+      if (!titles.length) return;
+
+      const tabbar  = document.createElement('div');
+      tabbar.className = 'dpanel-inner-tabbar';
+      const sections = [];
+
+      titles.forEach((title, i) => {
+        /* Collect sibling content until the next section title */
+        const secEl = document.createElement('div');
+        secEl.className = 'dpanel-inner-section' + (i === 0 ? ' active' : '');
+        let next = title.nextElementSibling;
+        while (next && !next.classList.contains('dpanel-section-title')) {
+          const tmp = next.nextElementSibling;
+          secEl.appendChild(next);
+          next = tmp;
+        }
+        sections.push(secEl);
+
+        /* Build tab button */
+        const btn = document.createElement('button');
+        btn.className = 'dpanel-inner-tab' + (i === 0 ? ' active' : '');
+        btn.textContent = title.textContent.trim();
+        btn.addEventListener('click', () => {
+          tabbar.querySelectorAll('.dpanel-inner-tab').forEach(t => t.classList.remove('active'));
+          form.querySelectorAll('.dpanel-inner-section').forEach(s => s.classList.remove('active'));
+          btn.classList.add('active');
+          secEl.classList.add('active');
+        });
+        tabbar.appendChild(btn);
+        title.remove();
+      });
+
+      /* Re-build form: tabbar first, then section wrappers */
+      form.innerHTML = '';
+      form.appendChild(tabbar);
+      sections.forEach(s => form.appendChild(s));
+    });
+  }
+  document.addEventListener('DOMContentLoaded', initDPanelTabs);
 
   /* ----------------------------------------------------------------
      SUMMARY STRIP: Live field bindings
