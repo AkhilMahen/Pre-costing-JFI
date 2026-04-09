@@ -1710,8 +1710,7 @@
                id: horiz-tab-bar
                ======================================================= -->
           <div class="horiz-tab-bar" id="horiz-tab-bar">
-            <button class="horiz-tab" data-section="section-header"           onclick="toggleSectionById('section-header')">Header</button>
-            <button class="horiz-tab" data-section="section-fg-product"        onclick="toggleSectionById('section-fg-product')">Product</button>
+            <button class="horiz-tab" data-section="section-fg-product"        onclick="openProductSections()">Product</button>
             <button class="horiz-tab" data-section="section-sheet-dimensions"  onclick="toggleSectionById('section-sheet-dimensions')">Sheet Dimensions</button>
             <button class="horiz-tab" data-section="section-routing-wastage"   onclick="toggleSectionById('section-routing-wastage')">Routing &amp; Wastage</button>
             <button class="horiz-tab" data-section="section-material"          onclick="toggleSectionById('section-material')">Board / Paper</button>
@@ -3442,6 +3441,42 @@
 
   function showHeaderView() { switchMode('header'); }
 
+  /* ----------------------------------------------------------------
+     Open the combined Product tab (Header info + FG Product fields)
+     ---------------------------------------------------------------- */
+  function openProductSections() {
+    switchMode('header');
+    const ids = ['section-header', 'section-fg-product'];
+    /* Close all other sections */
+    document.querySelectorAll('.collapsible-section.open').forEach(sec => {
+      if (ids.includes(sec.id)) return;
+      const oc = sec.querySelector('.collapsible-content');
+      if (!oc) return;
+      oc.style.height = oc.scrollHeight + 'px';
+      requestAnimationFrame(() => requestAnimationFrame(() => { oc.style.height = '0'; oc.style.opacity = '0'; }));
+      sec.classList.remove('open');
+    });
+    /* Open both target sections */
+    ids.forEach(id => {
+      const sec = document.getElementById(id);
+      if (!sec) return;
+      const c = sec.querySelector('.collapsible-content');
+      if (!c || sec.classList.contains('open')) return;
+      sec.classList.add('open');
+      const h = c.scrollHeight;
+      requestAnimationFrame(() => requestAnimationFrame(() => { c.style.height = h + 'px'; c.style.opacity = '1'; }));
+      c.addEventListener('transitionend', function handler(e) {
+        if (e.propertyName === 'height' && sec.classList.contains('open')) {
+          c.style.height = 'auto'; c.removeEventListener('transitionend', handler);
+        }
+      });
+    });
+    /* Mark Product tab active */
+    document.querySelectorAll('.horiz-tab').forEach(t => t.classList.remove('open'));
+    const prodTab = document.querySelector('.horiz-tab[data-section="section-fg-product"]');
+    if (prodTab) prodTab.classList.add('open');
+  }
+
   function toggleSectionById(sectionId) {
     const section = document.getElementById(sectionId);
     if (!section) return;
@@ -3500,12 +3535,13 @@
       .forEach(tab => tab.classList.toggle('open', !!isOpen));
   }
 
-  /* On page load: open only section-header, close everything else */
+  /* On page load: open section-header + section-fg-product (combined Product tab) */
   function initHorizTabs() {
+    const productIds = ['section-header', 'section-fg-product'];
     document.querySelectorAll('.collapsible-section').forEach(sec => {
       const content = sec.querySelector('.collapsible-content');
       if (!content) return;
-      if (sec.id === 'section-header') {
+      if (productIds.includes(sec.id)) {
         sec.classList.add('open');
         content.style.height  = 'auto';
         content.style.opacity = '1';
@@ -3514,8 +3550,10 @@
         content.style.height  = '0';
         content.style.opacity = '0';
       }
-      syncHorizTab(sec.id);
     });
+    /* Mark the Product tab active */
+    const prodTab = document.querySelector('.horiz-tab[data-section="section-fg-product"]');
+    if (prodTab) prodTab.classList.add('open');
   }
   document.addEventListener('DOMContentLoaded', initHorizTabs);
 
