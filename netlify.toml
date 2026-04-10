@@ -1,0 +1,7 @@
+[build]
+  publish = "."
+
+[[redirects]]
+  from = "/"
+  to   = "/precosting-offset-entry.html"
+  status = 200
