@@ -803,7 +803,7 @@
 
     /* -- Form header: diagonal gradient ------------------------------ */
     .form-header {
-      background: linear-gradient(135deg, #172952 0%, #253f82 100%);
+      background: linear-gradient(135deg, #1b2f5e 0%, #243a72 100%);
     }
     .form-header-title {
       text-shadow: 0 1px 3px rgba(0,0,0,0.20);
@@ -1030,10 +1030,62 @@
     }
 
     /* ================================================================
+       INTERMEDIATE PRE-COSTING SUMMARY  –  light blue strip
+       ================================================================ */
+    .inter-summary-strip {
+      background: linear-gradient(135deg, #1b2f5e 0%, #243a72 100%);
+      padding: 0;
+      margin: 0;
+      border-radius: var(--radius-lg);
+    }
+    .inter-summary-title {
+      padding: 11px 24px 9px;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.80);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 0;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+    }
+    .inter-summary-title::before {
+      content: '';
+      width: 3px;
+      height: 11px;
+      background: rgba(255,255,255,0.7);
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    .inter-summary-grid {
+      padding: 12px 24px 16px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 10px 20px;
+    }
+    .isum-item { display: flex; flex-direction: column; gap: 2px; }
+    .isum-label {
+      font-size: 8.5px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+    }
+    .isum-value {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #ffffff;
+      white-space: nowrap;
+    }
+    .isum-value.empty { color: rgba(255,255,255,0.35); }
+
+    /* ================================================================
        SUMMARY STRIP  –  full-bleed navy banner at top of form
        ================================================================ */
     .summary-strip {
-      background: linear-gradient(135deg, #1b2f5e 0%, #243a72 100%);
+      background: linear-gradient(135deg, #2563a8 0%, #3178c6 100%);
       padding: 0;
       margin: 0;
       border-radius: var(--radius-lg);
@@ -1641,6 +1693,69 @@
             <div class="sum-item">
               <div class="sum-item-label">Total Cost</div>
               <div class="sum-item-value empty" id="sum-total-cost">0.00</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Intermediate Pre-Costing Summary -->
+        <div class="inter-summary-strip" id="inter-summary-strip">
+          <div class="inter-summary-title">Intermediate Pre-Costing Summary</div>
+          <div class="inter-summary-grid">
+            <div class="isum-item">
+              <div class="isum-label">Total Route Cost</div>
+              <div class="isum-value empty" id="isum-route-cost">0.00</div>
+            </div>
+            <div class="isum-item">
+              <div class="isum-label">Total Board Cost</div>
+              <div class="isum-value empty" id="isum-board-cost">0.00</div>
+            </div>
+            <div class="isum-item">
+              <div class="isum-label">Total Paper Cost</div>
+              <div class="isum-value empty" id="isum-paper-cost">0.00</div>
+            </div>
+            <div class="isum-item">
+              <div class="isum-label">Total Ink Cost</div>
+              <div class="isum-value empty" id="isum-ink-cost">0.00</div>
+            </div>
+            <div class="isum-item">
+              <div class="isum-label">Other Material Cost</div>
+              <div class="isum-value empty" id="isum-other-material">0.00</div>
+            </div>
+            <div class="isum-item">
+              <div class="isum-label">Total Prepress Cost</div>
+              <div class="isum-value empty" id="isum-prepress-cost">0.00</div>
+            </div>
+            <div class="isum-item">
+              <div class="isum-label">Total OutSource Cost</div>
+              <div class="isum-value empty" id="isum-outsource-cost">0.00</div>
+            </div>
+            <div class="isum-item">
+              <div class="isum-label">Total Other Cost</div>
+              <div class="isum-value empty" id="isum-other-cost">0.00</div>
+            </div>
+            <div class="isum-item">
+              <div class="isum-label">Total Cost</div>
+              <div class="isum-value empty" id="isum-total-cost">0.00</div>
+            </div>
+            <div class="isum-item">
+              <div class="isum-label">Total Cost Per Unit [LKR]</div>
+              <div class="isum-value empty" id="isum-cost-per-unit">0.00</div>
+            </div>
+            <div class="isum-item">
+              <div class="isum-label">Slab 2</div>
+              <div class="isum-value empty" id="isum-slab2">0.00</div>
+            </div>
+            <div class="isum-item">
+              <div class="isum-label">Slab 3</div>
+              <div class="isum-value empty" id="isum-slab3">0.00</div>
+            </div>
+            <div class="isum-item">
+              <div class="isum-label">Slab 4</div>
+              <div class="isum-value empty" id="isum-slab4">0.00</div>
+            </div>
+            <div class="isum-item">
+              <div class="isum-label">Slab 5</div>
+              <div class="isum-value empty" id="isum-slab5">0.00</div>
             </div>
           </div>
         </div>
