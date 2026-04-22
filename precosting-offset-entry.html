@@ -3591,27 +3591,31 @@
       'section-other'
     ];
 
-    let swipeLocked  = false;
-    let accumulated  = 0;
-    let resetTimer   = null;
-    const THRESHOLD  = 60;
+    let accumulated     = 0;
+    let resetTimer      = null;
+    let lastTrigger     = 0;
+    const THRESHOLD     = 60;
+    const COOLDOWN      = 900;   /* ms — long enough to outlast trackpad momentum */
 
     document.addEventListener('wheel', function (e) {
       /* Ignore if mostly vertical */
       if (Math.abs(e.deltaX) < Math.abs(e.deltaY) * 0.5) return;
-      if (swipeLocked) { e.preventDefault(); return; }
-
       e.preventDefault();
+
+      const now = Date.now();
+      if (now - lastTrigger < COOLDOWN) return;   /* still in cooldown, eat the event */
+
       accumulated += e.deltaX;
 
-      /* Reset accumulator if user pauses */
+      /* Reset accumulator if user pauses mid-gesture */
       clearTimeout(resetTimer);
       resetTimer = setTimeout(() => { accumulated = 0; }, 200);
 
       if (Math.abs(accumulated) < THRESHOLD) return;
 
       const direction = accumulated > 0 ? 1 : -1;
-      accumulated = 0;
+      accumulated  = 0;
+      lastTrigger  = now;   /* lock from this moment */
 
       /* Find the currently active tab */
       const activeBtn = document.querySelector('.horiz-tab.open');
@@ -3621,9 +3625,6 @@
 
       const nextIdx = idx + direction;
       if (nextIdx < 0 || nextIdx >= TAB_ORDER.length) return;
-
-      swipeLocked = true;
-      setTimeout(() => { swipeLocked = false; }, 400);
 
       const nextId = TAB_ORDER[nextIdx];
       if (nextId === 'section-fg-product') {
