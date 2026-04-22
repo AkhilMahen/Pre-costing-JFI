@@ -900,19 +900,6 @@
     }
     .btn-outline:active { transform: translateY(0); }
 
-    /* -- Button ripple (spawned by JS) ------------------------------- */
-    .btn-ripple {
-      position: absolute;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.28);
-      transform: scale(0);
-      animation: ripple-anim 0.52s linear;
-      pointer-events: none;
-    }
-    .btn-outline .btn-ripple { background: rgba(27,47,94,0.10); }
-    @keyframes ripple-anim {
-      to { transform: scale(1); opacity: 0; }
-    }
 
     /* -- Toggle: soft glow when ON ----------------------------------- */
     .toggle input:checked + .toggle-slider {
@@ -1183,7 +1170,7 @@
        ================================================================ */
     .horiz-tab-bar {
       display: flex;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
       align-items: flex-end;
       gap: 2px 1px;
       padding: 6px 8px 0;
@@ -1195,7 +1182,12 @@
       position: sticky;
       top: 0;
       z-index: 20;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
     }
+    .horiz-tab-bar::-webkit-scrollbar { display: none; }
     .horiz-tab {
       padding: 8px 15px 9px;
       font-size: 11px;
@@ -1207,6 +1199,8 @@
       border-radius: 6px 6px 0 0;
       cursor: pointer;
       white-space: nowrap;
+      flex-shrink: 0;
+      scroll-snap-align: start;
       transition: background 0.14s, color 0.14s, border-color 0.14s, box-shadow 0.14s;
       margin-bottom: -2.5px;
       position: relative;
@@ -3353,26 +3347,6 @@
   }
 
   /* ----------------------------------------------------------------
-     HANDLER: Submit button
-     Collects form data and logs it (replace with API call as needed)
-     ---------------------------------------------------------------- */
-  function handleSubmit() {
-    const payload = collectFormData();
-    console.log('[PreCosting] Submit payload:', payload);
-    /* TODO: Replace with fetch('/api/precosting', { method:'POST', body: JSON.stringify(payload) }) */
-    alert('Form submitted. Check console for payload. (Wire up API endpoint to replace this.)');
-  }
-
-  /* ----------------------------------------------------------------
-     HANDLER: Close button
-     ---------------------------------------------------------------- */
-  function handleFormClose() {
-    if (confirm('Close this form? Unsaved changes will be lost.')) {
-      window.history.back();
-    }
-  }
-
-  /* ----------------------------------------------------------------
      HANDLER: New list entry (sidebar +)
      ---------------------------------------------------------------- */
   function handleNewEntry() {
@@ -3608,6 +3582,63 @@
   document.addEventListener('DOMContentLoaded', initHorizTabs);
 
   /* ----------------------------------------------------------------
+     TAB BAR: Two-finger horizontal swipe → switch to next / prev tab
+     ---------------------------------------------------------------- */
+  document.addEventListener('DOMContentLoaded', function () {
+    const TAB_ORDER = [
+      'section-fg-product',
+      'section-sheet-dimensions',
+      'section-routing-wastage',
+      'section-material',
+      'section-printing',
+      'section-slab-quantities',
+      'section-other'
+    ];
+
+    let swipeLocked  = false;
+    let accumulated  = 0;
+    let resetTimer   = null;
+    const THRESHOLD  = 60;
+
+    document.addEventListener('wheel', function (e) {
+      /* Ignore if mostly vertical */
+      if (Math.abs(e.deltaX) < Math.abs(e.deltaY) * 0.5) return;
+      if (swipeLocked) { e.preventDefault(); return; }
+
+      e.preventDefault();
+      accumulated += e.deltaX;
+
+      /* Reset accumulator if user pauses */
+      clearTimeout(resetTimer);
+      resetTimer = setTimeout(() => { accumulated = 0; }, 200);
+
+      if (Math.abs(accumulated) < THRESHOLD) return;
+
+      const direction = accumulated > 0 ? 1 : -1;
+      accumulated = 0;
+
+      /* Find the currently active tab */
+      const activeBtn = document.querySelector('.horiz-tab.open');
+      const currentId = activeBtn ? activeBtn.dataset.section : TAB_ORDER[0];
+      const idx       = TAB_ORDER.indexOf(currentId);
+      if (idx === -1) return;
+
+      const nextIdx = idx + direction;
+      if (nextIdx < 0 || nextIdx >= TAB_ORDER.length) return;
+
+      swipeLocked = true;
+      setTimeout(() => { swipeLocked = false; }, 400);
+
+      const nextId = TAB_ORDER[nextIdx];
+      if (nextId === 'section-fg-product') {
+        openProductSections();
+      } else {
+        toggleSectionById(nextId);
+      }
+    }, { passive: false });
+  });
+
+  /* ----------------------------------------------------------------
      DETAIL PANEL INNER TABS
      Reads .dpanel-section-title elements from each .dpanel-form,
      builds a tab bar, and wraps each section content in a switchable div.
@@ -3655,208 +3686,6 @@
   }
   document.addEventListener('DOMContentLoaded', initDPanelTabs);
 
-  /* ----------------------------------------------------------------
-     SUMMARY STRIP: Live field bindings
-     Reflect key form values into the summary bar at the top.
-     ---------------------------------------------------------------- */
-  function initSummary() {
-    const bind = (sumId, fieldId) => {
-      const field = document.getElementById(fieldId);
-      const el    = document.getElementById(sumId);
-      if (!field || !el) return;
-      const refresh = () => {
-        const v = (field.value || '').trim();
-        el.textContent = v || '—';
-        el.classList.toggle('empty', !v);
-      };
-      field.addEventListener('input',  refresh);
-      field.addEventListener('change', refresh);
-      refresh();
-    };
-    bind('sum-currency',     'field-currency');
-    bind('sum-exrate',       'field-ex-rate');
-    bind('sum-product-desc', 'field-product-desc');
-    bind('sum-fg-qty',       'field-fg-qty');
-    bind('sum-uom',          'field-fg-uom');
-    bind('sum-outs',         'field-full-outs');
-    bind('sum-sheets',       'field-no-of-sheets');
-    bind('sum-waste',        'field-total-waste');
-    bind('sum-gsm',          'field-gsm');
-
-    /* Full Sheet W × L composite */
-    const refreshFS = () => {
-      const w  = (document.getElementById('field-full-w')?.value  || '').trim();
-      const l  = (document.getElementById('field-full-l')?.value  || '').trim();
-      const el = document.getElementById('sum-full-sheet');
-      if (!el) return;
-      const v = (w && l) ? `${w} × ${l}` : '';
-      el.textContent = v || '—';
-      el.classList.toggle('empty', !v);
-    };
-    ['field-full-w', 'field-full-l'].forEach(id =>
-      document.getElementById(id)?.addEventListener('input', refreshFS));
-    refreshFS();
-
-    /* Customer select */
-    const custSel = document.getElementById('field-customer');
-    const custEl  = document.getElementById('sum-customer');
-    if (custSel && custEl) {
-      const refreshCust = () => {
-        const v = custSel.value?.trim() || custSel.options?.[custSel.selectedIndex]?.text || '';
-        const empty = !v || custSel.selectedIndex === 0;
-        custEl.textContent = empty ? '—' : v;
-        custEl.classList.toggle('empty', empty);
-      };
-      custSel.addEventListener('change', refreshCust);
-      custSel.addEventListener('input',  refreshCust);
-      refreshCust();
-    }
-
-    /* Route Code select */
-    const routeSel = document.getElementById('field-route-code');
-    const routeEl  = document.getElementById('sum-route-code');
-    if (routeSel && routeEl) {
-      const refreshRoute = () => {
-        const v = routeSel.value?.trim() || '';
-        const empty = !v || routeSel.selectedIndex === 0;
-        routeEl.textContent = empty ? '—' : v;
-        routeEl.classList.toggle('empty', empty);
-      };
-      routeSel.addEventListener('change', refreshRoute);
-      refreshRoute();
-    }
-  }
-  document.addEventListener('DOMContentLoaded', initSummary);
-
-  /* ----------------------------------------------------------------
-     VISUAL EFFECT: Button ripple
-     Adds an expanding circle on click for all .btn elements.
-     ---------------------------------------------------------------- */
-  document.querySelectorAll('.btn').forEach(btn => {
-    btn.addEventListener('click', function (e) {
-      const rect   = btn.getBoundingClientRect();
-      const size   = Math.max(rect.width, rect.height) * 1.5;
-      const x      = e.clientX - rect.left - size / 2;
-      const y      = e.clientY - rect.top  - size / 2;
-      const ripple = document.createElement('span');
-      ripple.className = 'btn-ripple';
-      ripple.style.cssText = `width:${size}px;height:${size}px;left:${x}px;top:${y}px`;
-      btn.appendChild(ripple);
-      ripple.addEventListener('animationend', () => ripple.remove());
-    });
-  });
-
-  /* ----------------------------------------------------------------
-     COLLECT FORM DATA
-     Returns a plain object with all form field values.
-     Extend this function when new fields are added.
-     ---------------------------------------------------------------- */
-  function collectFormData() {
-    return {
-      /* Document Info */
-      company:            getVal('field-company'),
-      pcDate:             getVal('field-pc-date'),
-      enquiryNo:          getVal('field-enq-no'),
-
-      /* Customer & Sales */
-      customer:           getVal('field-customer'),
-      salesType:          getVal('field-sales-type'),
-      currency:           getVal('field-currency'),
-      exRate:             getVal('field-ex-rate'),
-      productDesc:        getVal('field-product-desc'),
-
-      /* FG Product */
-      fgQty:              getVal('field-fg-qty'),
-      fgDesc:             getVal('field-fg-desc'),
-      productCode:        getVal('field-product-code'),
-      uom:                getVal('field-uom'),
-      qty:                getVal('field-qty'),
-
-      /* Full Sheet */
-      fsUom:              getVal('field-fs-uom'),
-      fsW:                getVal('field-fs-w'),
-      fsL:                getVal('field-fs-l'),
-      fsOuts:             getVal('field-fs-outs'),
-      fsArea:             getVal('field-fs-area'),
-
-      /* Cut Sheet */
-      csW:                getVal('field-cs-w'),
-      csL:                getVal('field-cs-l'),
-      csUps:              getVal('field-cs-ups'),
-      csImpressions:      getVal('field-cs-impr'),
-
-      /* Routing */
-      routeCode:          getVal('field-route-code'),
-      wastageType:        getVal('field-wastage-type'),
-      noSheets:           getVal('field-no-sheets'),
-      totalRoutingWaste:  getVal('field-total-routing-waste'),
-      additionalWastage:  getVal('field-additional-wastage'),
-
-      /* Material */
-      mainBoard:          getVal('field-main-board'),
-      boardBrand:         getVal('field-board-brand'),
-      gsm:                getVal('field-gsm'),
-      fluting:            document.getElementById('field-fluting').checked,
-      paperCombination:   getVal('field-paper-combination'),
-
-      /* Printing */
-      mellowColour:       document.getElementById('field-mellow-colour').checked,
-      frontColour:        document.getElementById('field-front-colour').checked,
-      frontNoColors:      getVal('field-front-no-colors'),
-      frontColourCombo:   getVal('field-front-colour-combo'),
-      reverseNoColors:    getVal('field-rev-no-colors'),
-      reverseColourCombo: getVal('field-rev-colour-combo'),
-
-      /* Varnishing */
-      varnishing:         document.getElementById('field-varnishing').checked,
-      varnishingFront:    getVal('field-varnishing-front'),
-      uvTypeFront:        getVal('field-uv-type-front'),
-      varnishingReverse:  getVal('field-varnishing-reverse'),
-      uvTypeReverse:      getVal('field-uv-type-reverse'),
-
-      /* Lamination */
-      lamination:             document.getElementById('field-lamination').checked,
-      laminationFront:        getVal('field-lamination-front'),
-      laminationTypeFront:    getVal('field-lamination-type-front'),
-      laminationReverse:      getVal('field-lamination-reverse'),
-      laminationTypeReverse:  getVal('field-lamination-type-reverse'),
-
-      /* TIEP / Artwork */
-      tiep:               document.getElementById('field-tiep').checked,
-      assemble:           document.getElementById('field-assemble').checked,
-      artwork:            document.getElementById('field-artwork').checked,
-      noArtworks:         getVal('field-no-artworks'),
-      colourBreakdown:    getVal('field-colour-breakdown'),
-      letterBreakdown:    getVal('field-letter-breakdown'),
-
-      /* Finishing */
-      debossing:          document.getElementById('field-debossing').checked,
-      pasting:            document.getElementById('field-pasting').checked,
-      foiling:            document.getElementById('field-foiling').checked,
-      dieCutting:         document.getElementById('field-die-cutting').checked,
-      embossing:          document.getElementById('field-embossing').checked,
-      inkCoated:          getVal('field-ink-coated'),
-      inkSubstrate:       getVal('field-ink-substrate'),
-      revCoated:          getVal('field-rev-coated'),
-      revSubstrate:       getVal('field-rev-substrate'),
-
-      /* Slabs */
-      slab2Qty:           getVal('field-slab2-qty'),
-      slab2Impression:    getVal('field-slab2-impr'),
-      slab3Qty:           getVal('field-slab3-qty'),
-      slab3Impression:    getVal('field-slab3-impr'),
-      slab4Qty:           getVal('field-slab4-qty'),
-      slab4Impression:    getVal('field-slab4-impr'),
-      confirm:            document.getElementById('field-confirm').checked,
-      slab5Qty:           getVal('field-slab5-qty'),
-      slab5Impression:    getVal('field-slab5-impr'),
-
-      /* Remarks */
-      priceEnquiryRemarks: getVal('field-price-enquiry-remarks'),
-      routingWastePct:     getVal('field-routing-waste-pct'),
-      wastePercentRouting: getVal('field-waste-percent-routing'),
-    };
-  }
 </script>
 
 </body>
