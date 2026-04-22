@@ -602,6 +602,7 @@
 
     .col-2   { grid-column: span 2; }
     .col-3   { grid-column: span 3; }
+    .col-4   { grid-column: span 4; }
 
     /* ================================================================
        SHEET INFO BLOCK  (FULL SHEET / CUT SHEET)
@@ -899,19 +900,6 @@
     }
     .btn-outline:active { transform: translateY(0); }
 
-    /* -- Button ripple (spawned by JS) ------------------------------- */
-    .btn-ripple {
-      position: absolute;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.28);
-      transform: scale(0);
-      animation: ripple-anim 0.52s linear;
-      pointer-events: none;
-    }
-    .btn-outline .btn-ripple { background: rgba(27,47,94,0.10); }
-    @keyframes ripple-anim {
-      to { transform: scale(1); opacity: 0; }
-    }
 
     /* -- Toggle: soft glow when ON ----------------------------------- */
     .toggle input:checked + .toggle-slider {
@@ -1182,7 +1170,7 @@
        ================================================================ */
     .horiz-tab-bar {
       display: flex;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
       align-items: flex-end;
       gap: 2px 1px;
       padding: 6px 8px 0;
@@ -1194,7 +1182,12 @@
       position: sticky;
       top: 0;
       z-index: 20;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
     }
+    .horiz-tab-bar::-webkit-scrollbar { display: none; }
     .horiz-tab {
       padding: 8px 15px 9px;
       font-size: 11px;
@@ -1206,6 +1199,8 @@
       border-radius: 6px 6px 0 0;
       cursor: pointer;
       white-space: nowrap;
+      flex-shrink: 0;
+      scroll-snap-align: start;
       transition: background 0.14s, color 0.14s, border-color 0.14s, box-shadow 0.14s;
       margin-bottom: -2.5px;
       position: relative;
@@ -1830,12 +1825,8 @@
             <button class="horiz-tab" data-section="section-routing-wastage"   onclick="toggleSectionById('section-routing-wastage')">Routing &amp; Wastage</button>
             <button class="horiz-tab" data-section="section-material"          onclick="toggleSectionById('section-material')">Board / Paper</button>
             <button class="horiz-tab" data-section="section-printing"          onclick="toggleSectionById('section-printing')">Printing</button>
-            <button class="horiz-tab" data-section="section-varnishing"        onclick="toggleSectionById('section-varnishing')">Varnishing</button>
-            <button class="horiz-tab" data-section="section-lamination"        onclick="toggleSectionById('section-lamination')">Lamination</button>
-            <button class="horiz-tab" data-section="section-tiep-artwork"      onclick="toggleSectionById('section-tiep-artwork')">TIEP / Artwork</button>
-            <button class="horiz-tab" data-section="section-finishing"         onclick="toggleSectionById('section-finishing')">Finishing</button>
             <button class="horiz-tab" data-section="section-slab-quantities"   onclick="toggleSectionById('section-slab-quantities')">Slab Quantities</button>
-            <button class="horiz-tab" data-section="section-remarks"           onclick="toggleSectionById('section-remarks')">Remarks</button>
+            <button class="horiz-tab" data-section="section-other"            onclick="toggleSectionById('section-other')">Material Details</button>
           </div>
 
           <!-- form-section-body wraps ALL collapsible panels (Header + Form sections) -->
@@ -2021,6 +2012,34 @@
                 <input type="number" class="field-input has-value input-required" id="field-qty" name="qty" value="5000" />
               </div>
 
+              <!-- TIEP -->
+              <div class="field-group">
+                <label class="field-label">TIEP</label>
+                <div class="toggle-wrap" style="height:34px;">
+                  <label class="toggle" id="toggle-tiep">
+                    <input type="checkbox" id="field-tiep" name="tiep" checked />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Assemble? -->
+              <div class="field-group">
+                <label class="field-label">Assemble?</label>
+                <div class="toggle-wrap" style="height:34px;">
+                  <label class="toggle" id="toggle-assemble">
+                    <input type="checkbox" id="field-assemble" name="assemble" checked />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Price Enquiry Remarks -->
+              <div class="field-group col-4">
+                <label class="field-label">Price Enquiry Remarks</label>
+                <textarea class="field-textarea" id="field-price-enquiry-remarks" name="priceEnquiryRemarks" rows="1" placeholder="Enter remarks here…" style="resize:none;"></textarea>
+              </div>
+
             </div>
             </div></div>
           </div>
@@ -2151,6 +2170,14 @@
               <div class="field-group">
                 <label class="field-label">Qty With Wastage</label>
                 <input type="number" class="field-input" id="field-qty-wastage" name="qtyWithWastage" placeholder="0" readonly />
+              </div>
+            </div>
+
+            <!-- Row C: Routing Waste % -->
+            <div class="grid-row grid-2" style="margin-top:12px;">
+              <div class="field-group">
+                <label class="field-label">Routing Waste %</label>
+                <input type="number" class="field-input" id="field-routing-waste-pct" name="routingWastePct" placeholder="0.00" step="0.01" />
               </div>
             </div>
             </div></div>
@@ -2301,233 +2328,8 @@
               </div>
 
             </div>
-            </div></div>
-          </div>
 
-          <!-- =======================================================
-               SECTION 8 – VARNISHING
-               Fields: Varnishing (toggle), Varnishing Front, UV Type (Front),
-                       Varnishing Reverse, UV Type (Reverse)
-               id: section-varnishing
-               ======================================================= -->
-          <div id="section-varnishing" class="collapsible-section">
-            <div class="section-divider collapsible-trigger" onclick="toggleSection(this)">
-              <div class="section-divider-label">Varnishing</div>
-              <div class="section-divider-line"></div>
-              <div class="section-chevron"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></div>
-            </div>
-            <div class="collapsible-content"><div class="collapsible-content-inner">
-
-            <div class="grid-row grid-5">
-              <!-- Varnishing toggle -->
-              <div class="field-group">
-                <label class="field-label">Varnishing</label>
-                <div class="toggle-wrap" style="height:34px;">
-                  <label class="toggle" id="toggle-varnishing">
-                    <input type="checkbox" id="field-varnishing" name="varnishing" />
-                    <span class="toggle-slider"></span>
-                  </label>
-                </div>
-              </div>
-              <!-- Varnishing Front -->
-              <div class="field-group">
-                <label class="field-label">Varnishing Front</label>
-                <input type="text" class="field-input" id="field-varnishing-front" name="varnishingFront" placeholder="" />
-              </div>
-              <!-- UV Type (Front) -->
-              <div class="field-group">
-                <label class="field-label">UV Type</label>
-                <input type="text" class="field-input" id="field-uv-type-front" name="uvTypeFront" placeholder="" />
-              </div>
-              <!-- Varnishing Reverse -->
-              <div class="field-group">
-                <label class="field-label">Varnishing Reverse</label>
-                <input type="text" class="field-input" id="field-varnishing-reverse" name="varnishingReverse" placeholder="" />
-              </div>
-              <!-- UV Type (Reverse) -->
-              <div class="field-group">
-                <label class="field-label">UV Type</label>
-                <input type="text" class="field-input" id="field-uv-type-reverse" name="uvTypeReverse" placeholder="" />
-              </div>
-            </div>
-            </div></div>
-          </div>
-
-          <!-- =======================================================
-               SECTION 9 – LAMINATION
-               Fields: Lamination (toggle), Lamination Front, Lamination Type (Front),
-                       Lamination Reverse, Lamination Type (Reverse)
-               id: section-lamination
-               ======================================================= -->
-          <div id="section-lamination" class="collapsible-section">
-            <div class="section-divider collapsible-trigger" onclick="toggleSection(this)">
-              <div class="section-divider-label">Lamination</div>
-              <div class="section-divider-line"></div>
-              <div class="section-chevron"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></div>
-            </div>
-            <div class="collapsible-content"><div class="collapsible-content-inner">
-
-            <div class="grid-row grid-5">
-              <!-- Lamination toggle -->
-              <div class="field-group">
-                <label class="field-label">Lamination</label>
-                <div class="toggle-wrap" style="height:34px;">
-                  <label class="toggle" id="toggle-lamination">
-                    <input type="checkbox" id="field-lamination" name="lamination" />
-                    <span class="toggle-slider"></span>
-                  </label>
-                </div>
-              </div>
-              <!-- Lamination Front -->
-              <div class="field-group">
-                <label class="field-label">Lamination Front</label>
-                <input type="text" class="field-input" id="field-lamination-front" name="laminationFront" placeholder="" />
-              </div>
-              <!-- Lamination Type (Front) -->
-              <div class="field-group">
-                <label class="field-label">Lamination Type</label>
-                <input type="text" class="field-input" id="field-lamination-type-front" name="laminationTypeFront" placeholder="" />
-              </div>
-              <!-- Lamination Reverse -->
-              <div class="field-group">
-                <label class="field-label">Lamination Reverse</label>
-                <input type="text" class="field-input" id="field-lamination-reverse" name="laminationReverse" placeholder="" />
-              </div>
-              <!-- Lamination Type (Reverse) -->
-              <div class="field-group">
-                <label class="field-label">Lamination Type</label>
-                <input type="text" class="field-input" id="field-lamination-type-reverse" name="laminationTypeReverse" placeholder="" />
-              </div>
-            </div>
-            </div></div>
-          </div>
-
-          <!-- =======================================================
-               SECTION 10 – TIEP / ASSEMBLY / ARTWORK
-               Fields: TIEP, Assemble?, Artwork? (toggles)
-                       No of Artworks?, No. of Colour Breakdown,
-                       No. of Letter Breakdown
-               id: section-tiep-artwork
-               ======================================================= -->
-          <div id="section-tiep-artwork" class="collapsible-section">
-            <div class="section-divider collapsible-trigger" onclick="toggleSection(this)">
-              <div class="section-divider-label">TIEP / Artwork</div>
-              <div class="section-divider-line"></div>
-              <div class="section-chevron"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></div>
-            </div>
-            <div class="collapsible-content"><div class="collapsible-content-inner">
-
-            <div class="grid-row grid-6">
-              <!-- TIEP -->
-              <div class="field-group">
-                <label class="field-label">TIEP</label>
-                <div class="toggle-wrap" style="height:34px;">
-                  <label class="toggle" id="toggle-tiep">
-                    <input type="checkbox" id="field-tiep" name="tiep" checked />
-                    <span class="toggle-slider"></span>
-                  </label>
-                </div>
-              </div>
-              <!-- Assemble? -->
-              <div class="field-group">
-                <label class="field-label">Assemble?</label>
-                <div class="toggle-wrap" style="height:34px;">
-                  <label class="toggle" id="toggle-assemble">
-                    <input type="checkbox" id="field-assemble" name="assemble" checked />
-                    <span class="toggle-slider"></span>
-                  </label>
-                </div>
-              </div>
-              <!-- Artwork? -->
-              <div class="field-group">
-                <label class="field-label">Artwork?</label>
-                <div class="toggle-wrap" style="height:34px;">
-                  <label class="toggle" id="toggle-artwork">
-                    <input type="checkbox" id="field-artwork" name="artwork" />
-                    <span class="toggle-slider"></span>
-                  </label>
-                </div>
-              </div>
-              <!-- No of Artworks? -->
-              <div class="field-group">
-                <label class="field-label">No of Artworks?</label>
-                <input type="number" class="field-input" id="field-no-artworks" name="noArtworks" placeholder="0" min="0" />
-              </div>
-              <!-- No. of Colour Breakdown -->
-              <div class="field-group">
-                <label class="field-label">No. of Colour Breakdown</label>
-                <input type="number" class="field-input" id="field-colour-breakdown" name="colourBreakdown" placeholder="0" min="0" />
-              </div>
-              <!-- No. of Letter Breakdown -->
-              <div class="field-group">
-                <label class="field-label">No. of Letter Breakdown</label>
-                <input type="number" class="field-input" id="field-letter-breakdown" name="letterBreakdown" placeholder="0" min="0" />
-              </div>
-            </div>
-            </div></div>
-          </div>
-
-          <!-- =======================================================
-               SECTION 11 – FINISHING
-               Toggle fields: Debossing, Pasting, Foiling, Die Cutting, Embossing
-               Dropdowns: Ink Coated?, Ink Substrate Factor Description,
-                          Rev. Coated?, Rev. Substrate Factor Description
-               id: section-finishing
-               ======================================================= -->
-          <div id="section-finishing" class="collapsible-section">
-            <div class="section-divider collapsible-trigger" onclick="toggleSection(this)">
-              <div class="section-divider-label">Finishing</div>
-              <div class="section-divider-line"></div>
-              <div class="section-chevron"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></div>
-            </div>
-            <div class="collapsible-content"><div class="collapsible-content-inner">
-
-            <!-- Finishing toggles row -->
-            <div class="finishing-toggles" id="finishing-toggles-row">
-
-              <div class="toggle-field">
-                <span class="field-label">Debossing</span>
-                <label class="toggle" id="toggle-debossing">
-                  <input type="checkbox" id="field-debossing" name="debossing" />
-                  <span class="toggle-slider"></span>
-                </label>
-              </div>
-
-              <div class="toggle-field">
-                <span class="field-label">Pasting</span>
-                <label class="toggle" id="toggle-pasting">
-                  <input type="checkbox" id="field-pasting" name="pasting" />
-                  <span class="toggle-slider"></span>
-                </label>
-              </div>
-
-              <div class="toggle-field">
-                <span class="field-label">Foiling</span>
-                <label class="toggle" id="toggle-foiling">
-                  <input type="checkbox" id="field-foiling" name="foiling" />
-                  <span class="toggle-slider"></span>
-                </label>
-              </div>
-
-              <div class="toggle-field">
-                <span class="field-label">Die Cutting</span>
-                <label class="toggle" id="toggle-die-cutting">
-                  <input type="checkbox" id="field-die-cutting" name="dieCutting" />
-                  <span class="toggle-slider"></span>
-                </label>
-              </div>
-
-              <div class="toggle-field">
-                <span class="field-label">Embossing</span>
-                <label class="toggle" id="toggle-embossing">
-                  <input type="checkbox" id="field-embossing" name="embossing" />
-                  <span class="toggle-slider"></span>
-                </label>
-              </div>
-
-            </div>
-
-            <!-- Ink / Rev. Coated dropdowns -->
+            <!-- Ink / Rev. Coated -->
             <div class="grid-row grid-4" style="margin-top:14px;">
               <div class="field-group">
                 <label class="field-label">Ink Coated?</label>
@@ -2562,6 +2364,160 @@
                 </select>
               </div>
             </div>
+            </div></div>
+          </div>
+
+          <!-- =======================================================
+               SECTION 8 – OTHER
+               Contains: Varnishing, Lamination, Artwork, Finishing
+               id: section-other
+               ======================================================= -->
+          <div id="section-other" class="collapsible-section">
+            <div class="section-divider collapsible-trigger" onclick="toggleSection(this)">
+              <div class="section-divider-label">Material Details</div>
+              <div class="section-divider-line"></div>
+              <div class="section-chevron"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></div>
+            </div>
+            <div class="collapsible-content"><div class="collapsible-content-inner">
+
+            <!-- VARNISHING ----------------------------------------- -->
+            <div class="section-divider accent" style="margin-top:0;">
+              <span class="section-divider-label">Varnishing</span>
+              <div class="section-divider-line"></div>
+            </div>
+            <div class="grid-row grid-5" style="margin-bottom:18px;">
+              <div class="field-group">
+                <label class="field-label">Varnishing</label>
+                <div class="toggle-wrap" style="height:34px;">
+                  <label class="toggle" id="toggle-varnishing">
+                    <input type="checkbox" id="field-varnishing" name="varnishing" />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+              <div class="field-group">
+                <label class="field-label">Varnishing Front</label>
+                <input type="text" class="field-input" id="field-varnishing-front" name="varnishingFront" placeholder="" />
+              </div>
+              <div class="field-group">
+                <label class="field-label">UV Type (Front)</label>
+                <input type="text" class="field-input" id="field-uv-type-front" name="uvTypeFront" placeholder="" />
+              </div>
+              <div class="field-group">
+                <label class="field-label">Varnishing Reverse</label>
+                <input type="text" class="field-input" id="field-varnishing-reverse" name="varnishingReverse" placeholder="" />
+              </div>
+              <div class="field-group">
+                <label class="field-label">UV Type (Reverse)</label>
+                <input type="text" class="field-input" id="field-uv-type-reverse" name="uvTypeReverse" placeholder="" />
+              </div>
+            </div>
+
+            <!-- LAMINATION ----------------------------------------- -->
+            <div class="section-divider accent">
+              <span class="section-divider-label">Lamination</span>
+              <div class="section-divider-line"></div>
+            </div>
+            <div class="grid-row grid-5" style="margin-bottom:18px;">
+              <div class="field-group">
+                <label class="field-label">Lamination</label>
+                <div class="toggle-wrap" style="height:34px;">
+                  <label class="toggle" id="toggle-lamination">
+                    <input type="checkbox" id="field-lamination" name="lamination" />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+              <div class="field-group">
+                <label class="field-label">Lamination Front</label>
+                <input type="text" class="field-input" id="field-lamination-front" name="laminationFront" placeholder="" />
+              </div>
+              <div class="field-group">
+                <label class="field-label">Lamination Type (Front)</label>
+                <input type="text" class="field-input" id="field-lamination-type-front" name="laminationTypeFront" placeholder="" />
+              </div>
+              <div class="field-group">
+                <label class="field-label">Lamination Reverse</label>
+                <input type="text" class="field-input" id="field-lamination-reverse" name="laminationReverse" placeholder="" />
+              </div>
+              <div class="field-group">
+                <label class="field-label">Lamination Type (Reverse)</label>
+                <input type="text" class="field-input" id="field-lamination-type-reverse" name="laminationTypeReverse" placeholder="" />
+              </div>
+            </div>
+
+            <!-- ARTWORK -------------------------------------------- -->
+            <div class="section-divider accent">
+              <span class="section-divider-label">Artwork</span>
+              <div class="section-divider-line"></div>
+            </div>
+            <div class="grid-row grid-4" style="margin-bottom:18px;">
+              <div class="field-group">
+                <label class="field-label">Artwork?</label>
+                <div class="toggle-wrap" style="height:34px;">
+                  <label class="toggle" id="toggle-artwork">
+                    <input type="checkbox" id="field-artwork" name="artwork" />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+              <div class="field-group">
+                <label class="field-label">No of Artworks?</label>
+                <input type="number" class="field-input" id="field-no-artworks" name="noArtworks" placeholder="0" min="0" />
+              </div>
+              <div class="field-group">
+                <label class="field-label">No. of Colour Breakdown</label>
+                <input type="number" class="field-input" id="field-colour-breakdown" name="colourBreakdown" placeholder="0" min="0" />
+              </div>
+              <div class="field-group">
+                <label class="field-label">No. of Letter Breakdown</label>
+                <input type="number" class="field-input" id="field-letter-breakdown" name="letterBreakdown" placeholder="0" min="0" />
+              </div>
+            </div>
+
+            <!-- FINISHING ------------------------------------------ -->
+            <div class="section-divider accent">
+              <span class="section-divider-label">Finishing</span>
+              <div class="section-divider-line"></div>
+            </div>
+            <div class="finishing-toggles" id="finishing-toggles-row">
+              <div class="toggle-field">
+                <span class="field-label">Debossing</span>
+                <label class="toggle" id="toggle-debossing">
+                  <input type="checkbox" id="field-debossing" name="debossing" />
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+              <div class="toggle-field">
+                <span class="field-label">Pasting</span>
+                <label class="toggle" id="toggle-pasting">
+                  <input type="checkbox" id="field-pasting" name="pasting" />
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+              <div class="toggle-field">
+                <span class="field-label">Foiling</span>
+                <label class="toggle" id="toggle-foiling">
+                  <input type="checkbox" id="field-foiling" name="foiling" />
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+              <div class="toggle-field">
+                <span class="field-label">Die Cutting</span>
+                <label class="toggle" id="toggle-die-cutting">
+                  <input type="checkbox" id="field-die-cutting" name="dieCutting" />
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+              <div class="toggle-field">
+                <span class="field-label">Embossing</span>
+                <label class="toggle" id="toggle-embossing">
+                  <input type="checkbox" id="field-embossing" name="embossing" />
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+
             </div></div>
           </div>
 
@@ -2659,37 +2615,6 @@
             </div></div>
           </div>
 
-          <!-- =======================================================
-               SECTION 13 – REMARKS & ROUTING WASTE
-               Fields: Price Enquiry Remarks (textarea),
-                       Routing Waste %, wastepercentrouting
-               id: section-remarks
-               ======================================================= -->
-          <div id="section-remarks" class="collapsible-section open">
-            <div class="section-divider collapsible-trigger" onclick="toggleSection(this)">
-              <div class="section-divider-label">Remarks &amp; Routing</div>
-              <div class="section-divider-line"></div>
-              <div class="section-chevron"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></div>
-            </div>
-            <div class="collapsible-content"><div class="collapsible-content-inner">
-
-            <div class="field-group" style="margin-bottom:14px;">
-              <label class="field-label">Price Enquiry Remarks</label>
-              <textarea class="field-textarea" id="field-price-enquiry-remarks" name="priceEnquiryRemarks" rows="3" placeholder="Enter remarks here…"></textarea>
-            </div>
-
-            <div class="grid-row grid-2">
-              <div class="field-group">
-                <label class="field-label">Routing Waste %</label>
-                <input type="number" class="field-input" id="field-routing-waste-pct" name="routingWastePct" placeholder="0.00" step="0.01" />
-              </div>
-              <div class="field-group">
-                <label class="field-label">wastepercentrouting</label>
-                <input type="number" class="field-input" id="field-waste-percent-routing" name="wastePercentRouting" placeholder="0.00" step="0.01" readonly />
-              </div>
-            </div>
-            </div></div>
-          </div>
 
           <!-- Detail panel selector bar (visible in Details mode) -->
           <div class="detail-tabs-bar" id="tabs-container">
@@ -3418,26 +3343,6 @@
   }
 
   /* ----------------------------------------------------------------
-     HANDLER: Submit button
-     Collects form data and logs it (replace with API call as needed)
-     ---------------------------------------------------------------- */
-  function handleSubmit() {
-    const payload = collectFormData();
-    console.log('[PreCosting] Submit payload:', payload);
-    /* TODO: Replace with fetch('/api/precosting', { method:'POST', body: JSON.stringify(payload) }) */
-    alert('Form submitted. Check console for payload. (Wire up API endpoint to replace this.)');
-  }
-
-  /* ----------------------------------------------------------------
-     HANDLER: Close button
-     ---------------------------------------------------------------- */
-  function handleFormClose() {
-    if (confirm('Close this form? Unsaved changes will be lost.')) {
-      window.history.back();
-    }
-  }
-
-  /* ----------------------------------------------------------------
      HANDLER: New list entry (sidebar +)
      ---------------------------------------------------------------- */
   function handleNewEntry() {
@@ -3673,6 +3578,64 @@
   document.addEventListener('DOMContentLoaded', initHorizTabs);
 
   /* ----------------------------------------------------------------
+     TAB BAR: Two-finger horizontal swipe → switch to next / prev tab
+     ---------------------------------------------------------------- */
+  document.addEventListener('DOMContentLoaded', function () {
+    const TAB_ORDER = [
+      'section-fg-product',
+      'section-sheet-dimensions',
+      'section-routing-wastage',
+      'section-material',
+      'section-printing',
+      'section-slab-quantities',
+      'section-other'
+    ];
+
+    let accumulated     = 0;
+    let resetTimer      = null;
+    let lastTrigger     = 0;
+    const THRESHOLD     = 60;
+    const COOLDOWN      = 900;   /* ms — long enough to outlast trackpad momentum */
+
+    document.addEventListener('wheel', function (e) {
+      /* Ignore if mostly vertical */
+      if (Math.abs(e.deltaX) < Math.abs(e.deltaY) * 0.5) return;
+      e.preventDefault();
+
+      const now = Date.now();
+      if (now - lastTrigger < COOLDOWN) return;   /* still in cooldown, eat the event */
+
+      accumulated += e.deltaX;
+
+      /* Reset accumulator if user pauses mid-gesture */
+      clearTimeout(resetTimer);
+      resetTimer = setTimeout(() => { accumulated = 0; }, 200);
+
+      if (Math.abs(accumulated) < THRESHOLD) return;
+
+      const direction = accumulated > 0 ? 1 : -1;
+      accumulated  = 0;
+      lastTrigger  = now;   /* lock from this moment */
+
+      /* Find the currently active tab */
+      const activeBtn = document.querySelector('.horiz-tab.open');
+      const currentId = activeBtn ? activeBtn.dataset.section : TAB_ORDER[0];
+      const idx       = TAB_ORDER.indexOf(currentId);
+      if (idx === -1) return;
+
+      const nextIdx = idx + direction;
+      if (nextIdx < 0 || nextIdx >= TAB_ORDER.length) return;
+
+      const nextId = TAB_ORDER[nextIdx];
+      if (nextId === 'section-fg-product') {
+        openProductSections();
+      } else {
+        toggleSectionById(nextId);
+      }
+    }, { passive: false });
+  });
+
+  /* ----------------------------------------------------------------
      DETAIL PANEL INNER TABS
      Reads .dpanel-section-title elements from each .dpanel-form,
      builds a tab bar, and wraps each section content in a switchable div.
@@ -3720,208 +3683,6 @@
   }
   document.addEventListener('DOMContentLoaded', initDPanelTabs);
 
-  /* ----------------------------------------------------------------
-     SUMMARY STRIP: Live field bindings
-     Reflect key form values into the summary bar at the top.
-     ---------------------------------------------------------------- */
-  function initSummary() {
-    const bind = (sumId, fieldId) => {
-      const field = document.getElementById(fieldId);
-      const el    = document.getElementById(sumId);
-      if (!field || !el) return;
-      const refresh = () => {
-        const v = (field.value || '').trim();
-        el.textContent = v || '—';
-        el.classList.toggle('empty', !v);
-      };
-      field.addEventListener('input',  refresh);
-      field.addEventListener('change', refresh);
-      refresh();
-    };
-    bind('sum-currency',     'field-currency');
-    bind('sum-exrate',       'field-ex-rate');
-    bind('sum-product-desc', 'field-product-desc');
-    bind('sum-fg-qty',       'field-fg-qty');
-    bind('sum-uom',          'field-fg-uom');
-    bind('sum-outs',         'field-full-outs');
-    bind('sum-sheets',       'field-no-of-sheets');
-    bind('sum-waste',        'field-total-waste');
-    bind('sum-gsm',          'field-gsm');
-
-    /* Full Sheet W × L composite */
-    const refreshFS = () => {
-      const w  = (document.getElementById('field-full-w')?.value  || '').trim();
-      const l  = (document.getElementById('field-full-l')?.value  || '').trim();
-      const el = document.getElementById('sum-full-sheet');
-      if (!el) return;
-      const v = (w && l) ? `${w} × ${l}` : '';
-      el.textContent = v || '—';
-      el.classList.toggle('empty', !v);
-    };
-    ['field-full-w', 'field-full-l'].forEach(id =>
-      document.getElementById(id)?.addEventListener('input', refreshFS));
-    refreshFS();
-
-    /* Customer select */
-    const custSel = document.getElementById('field-customer');
-    const custEl  = document.getElementById('sum-customer');
-    if (custSel && custEl) {
-      const refreshCust = () => {
-        const v = custSel.value?.trim() || custSel.options?.[custSel.selectedIndex]?.text || '';
-        const empty = !v || custSel.selectedIndex === 0;
-        custEl.textContent = empty ? '—' : v;
-        custEl.classList.toggle('empty', empty);
-      };
-      custSel.addEventListener('change', refreshCust);
-      custSel.addEventListener('input',  refreshCust);
-      refreshCust();
-    }
-
-    /* Route Code select */
-    const routeSel = document.getElementById('field-route-code');
-    const routeEl  = document.getElementById('sum-route-code');
-    if (routeSel && routeEl) {
-      const refreshRoute = () => {
-        const v = routeSel.value?.trim() || '';
-        const empty = !v || routeSel.selectedIndex === 0;
-        routeEl.textContent = empty ? '—' : v;
-        routeEl.classList.toggle('empty', empty);
-      };
-      routeSel.addEventListener('change', refreshRoute);
-      refreshRoute();
-    }
-  }
-  document.addEventListener('DOMContentLoaded', initSummary);
-
-  /* ----------------------------------------------------------------
-     VISUAL EFFECT: Button ripple
-     Adds an expanding circle on click for all .btn elements.
-     ---------------------------------------------------------------- */
-  document.querySelectorAll('.btn').forEach(btn => {
-    btn.addEventListener('click', function (e) {
-      const rect   = btn.getBoundingClientRect();
-      const size   = Math.max(rect.width, rect.height) * 1.5;
-      const x      = e.clientX - rect.left - size / 2;
-      const y      = e.clientY - rect.top  - size / 2;
-      const ripple = document.createElement('span');
-      ripple.className = 'btn-ripple';
-      ripple.style.cssText = `width:${size}px;height:${size}px;left:${x}px;top:${y}px`;
-      btn.appendChild(ripple);
-      ripple.addEventListener('animationend', () => ripple.remove());
-    });
-  });
-
-  /* ----------------------------------------------------------------
-     COLLECT FORM DATA
-     Returns a plain object with all form field values.
-     Extend this function when new fields are added.
-     ---------------------------------------------------------------- */
-  function collectFormData() {
-    return {
-      /* Document Info */
-      company:            getVal('field-company'),
-      pcDate:             getVal('field-pc-date'),
-      enquiryNo:          getVal('field-enq-no'),
-
-      /* Customer & Sales */
-      customer:           getVal('field-customer'),
-      salesType:          getVal('field-sales-type'),
-      currency:           getVal('field-currency'),
-      exRate:             getVal('field-ex-rate'),
-      productDesc:        getVal('field-product-desc'),
-
-      /* FG Product */
-      fgQty:              getVal('field-fg-qty'),
-      fgDesc:             getVal('field-fg-desc'),
-      productCode:        getVal('field-product-code'),
-      uom:                getVal('field-uom'),
-      qty:                getVal('field-qty'),
-
-      /* Full Sheet */
-      fsUom:              getVal('field-fs-uom'),
-      fsW:                getVal('field-fs-w'),
-      fsL:                getVal('field-fs-l'),
-      fsOuts:             getVal('field-fs-outs'),
-      fsArea:             getVal('field-fs-area'),
-
-      /* Cut Sheet */
-      csW:                getVal('field-cs-w'),
-      csL:                getVal('field-cs-l'),
-      csUps:              getVal('field-cs-ups'),
-      csImpressions:      getVal('field-cs-impr'),
-
-      /* Routing */
-      routeCode:          getVal('field-route-code'),
-      wastageType:        getVal('field-wastage-type'),
-      noSheets:           getVal('field-no-sheets'),
-      totalRoutingWaste:  getVal('field-total-routing-waste'),
-      additionalWastage:  getVal('field-additional-wastage'),
-
-      /* Material */
-      mainBoard:          getVal('field-main-board'),
-      boardBrand:         getVal('field-board-brand'),
-      gsm:                getVal('field-gsm'),
-      fluting:            document.getElementById('field-fluting').checked,
-      paperCombination:   getVal('field-paper-combination'),
-
-      /* Printing */
-      mellowColour:       document.getElementById('field-mellow-colour').checked,
-      frontColour:        document.getElementById('field-front-colour').checked,
-      frontNoColors:      getVal('field-front-no-colors'),
-      frontColourCombo:   getVal('field-front-colour-combo'),
-      reverseNoColors:    getVal('field-rev-no-colors'),
-      reverseColourCombo: getVal('field-rev-colour-combo'),
-
-      /* Varnishing */
-      varnishing:         document.getElementById('field-varnishing').checked,
-      varnishingFront:    getVal('field-varnishing-front'),
-      uvTypeFront:        getVal('field-uv-type-front'),
-      varnishingReverse:  getVal('field-varnishing-reverse'),
-      uvTypeReverse:      getVal('field-uv-type-reverse'),
-
-      /* Lamination */
-      lamination:             document.getElementById('field-lamination').checked,
-      laminationFront:        getVal('field-lamination-front'),
-      laminationTypeFront:    getVal('field-lamination-type-front'),
-      laminationReverse:      getVal('field-lamination-reverse'),
-      laminationTypeReverse:  getVal('field-lamination-type-reverse'),
-
-      /* TIEP / Artwork */
-      tiep:               document.getElementById('field-tiep').checked,
-      assemble:           document.getElementById('field-assemble').checked,
-      artwork:            document.getElementById('field-artwork').checked,
-      noArtworks:         getVal('field-no-artworks'),
-      colourBreakdown:    getVal('field-colour-breakdown'),
-      letterBreakdown:    getVal('field-letter-breakdown'),
-
-      /* Finishing */
-      debossing:          document.getElementById('field-debossing').checked,
-      pasting:            document.getElementById('field-pasting').checked,
-      foiling:            document.getElementById('field-foiling').checked,
-      dieCutting:         document.getElementById('field-die-cutting').checked,
-      embossing:          document.getElementById('field-embossing').checked,
-      inkCoated:          getVal('field-ink-coated'),
-      inkSubstrate:       getVal('field-ink-substrate'),
-      revCoated:          getVal('field-rev-coated'),
-      revSubstrate:       getVal('field-rev-substrate'),
-
-      /* Slabs */
-      slab2Qty:           getVal('field-slab2-qty'),
-      slab2Impression:    getVal('field-slab2-impr'),
-      slab3Qty:           getVal('field-slab3-qty'),
-      slab3Impression:    getVal('field-slab3-impr'),
-      slab4Qty:           getVal('field-slab4-qty'),
-      slab4Impression:    getVal('field-slab4-impr'),
-      confirm:            document.getElementById('field-confirm').checked,
-      slab5Qty:           getVal('field-slab5-qty'),
-      slab5Impression:    getVal('field-slab5-impr'),
-
-      /* Remarks */
-      priceEnquiryRemarks: getVal('field-price-enquiry-remarks'),
-      routingWastePct:     getVal('field-routing-waste-pct'),
-      wastePercentRouting: getVal('field-waste-percent-routing'),
-    };
-  }
 </script>
 
 </body>
