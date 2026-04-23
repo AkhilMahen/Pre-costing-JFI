@@ -1106,12 +1106,8 @@
             <button class="horiz-tab" data-section="section-routing-wastage"   onclick="toggleSectionById('section-routing-wastage')">Routing &amp; Wastage</button>
             <button class="horiz-tab" data-section="section-material"          onclick="toggleSectionById('section-material')">Board / Paper</button>
             <button class="horiz-tab" data-section="section-printing"          onclick="toggleSectionById('section-printing')">Printing</button>
-            <button class="horiz-tab" data-section="section-varnishing"        onclick="toggleSectionById('section-varnishing')">Varnishing</button>
-            <button class="horiz-tab" data-section="section-lamination"        onclick="toggleSectionById('section-lamination')">Lamination</button>
-            <button class="horiz-tab" data-section="section-tiep-artwork"      onclick="toggleSectionById('section-tiep-artwork')">TIEP / Artwork</button>
-            <button class="horiz-tab" data-section="section-finishing"         onclick="toggleSectionById('section-finishing')">Finishing</button>
             <button class="horiz-tab" data-section="section-slab-quantities"   onclick="toggleSectionById('section-slab-quantities')">Slab Quantities</button>
-            <button class="horiz-tab" data-section="section-remarks"           onclick="toggleSectionById('section-remarks')">Remarks</button>
+            <button class="horiz-tab" data-section="section-other"             onclick="toggleSectionById('section-other')">Material Details</button>
           </div>
 
           <!-- form-section-body wraps ALL collapsible panels (Header + Form sections) -->
@@ -1226,6 +1222,17 @@
           <div id="section-slab-quantities" class="collapsible-section">
             <div class="section-divider collapsible-trigger" onclick="toggleSection(this)">
               <div class="section-divider-label">Slab Quantities</div>
+              <div class="section-divider-line"></div>
+              <div class="section-chevron"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></div>
+            </div>
+            <div class="collapsible-content"><div class="collapsible-content-inner">
+            </div></div>
+          </div>
+
+          <!-- section-other: Material Details (Varnishing, Lamination, Artwork, Finishing) -->
+          <div id="section-other" class="collapsible-section">
+            <div class="section-divider collapsible-trigger" onclick="toggleSection(this)">
+              <div class="section-divider-label">Material Details</div>
               <div class="section-divider-line"></div>
               <div class="section-chevron"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></div>
             </div>
