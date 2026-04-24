@@ -767,8 +767,7 @@
     /* ================================================================
        FORM-VIEW / DETAIL-VIEW TOGGLE
        ================================================================ */
-    #form-body.detail-active #horiz-tab-bar   { display: none; }
-    #form-body.detail-active .collapsible-section { display: none !important; }
+    #form-body.detail-active #header-iframe-wrapper { display: none; }
     #form-body.detail-active .form-section-body { padding: 0; background: transparent; border: none; min-height: 0; }
 
     /* ================================================================

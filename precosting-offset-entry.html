@@ -184,159 +184,15 @@
             <button class="mode-btn" id="mode-btn-details" onclick="switchMode('details')">Details</button>
           </div>
 
-          <!-- =======================================================
-               HORIZONTAL SECTION TABS BAR
-               id: horiz-tab-bar
-               ======================================================= -->
-          <div class="horiz-tab-bar" id="horiz-tab-bar">
-            <button class="horiz-tab" data-section="section-fg-product"        onclick="openProductSections()">Product</button>
-            <button class="horiz-tab" data-section="section-sheet-dimensions"  onclick="toggleSectionById('section-sheet-dimensions')">Sheet Dimensions</button>
-            <button class="horiz-tab" data-section="section-routing-wastage"   onclick="toggleSectionById('section-routing-wastage')">Routing &amp; Wastage</button>
-            <button class="horiz-tab" data-section="section-material"          onclick="toggleSectionById('section-material')">Board / Paper</button>
-            <button class="horiz-tab" data-section="section-printing"          onclick="toggleSectionById('section-printing')">Printing</button>
-            <button class="horiz-tab" data-section="section-slab-quantities"   onclick="toggleSectionById('section-slab-quantities')">Slab Quantities</button>
-            <button class="horiz-tab" data-section="section-other"             onclick="toggleSectionById('section-other')">Material Details</button>
-          </div>
-
-          <!-- form-section-body wraps ALL collapsible panels (Header + Form sections) -->
+          <!-- form-section-body: Header iframe + Detail panels -->
           <div class="form-section-body">
 
-          <!-- section-header: Doc Info + Customer Info + Product Description -->
-          <div id="section-header" class="collapsible-section">
-            <div class="collapsible-content"><div class="collapsible-content-inner">
-            </div></div>
-          </div><!-- /section-header -->
-
-          <!-- section-fg-product: FG Qty, FG/SFG Product Description, Product Code, UOM, Qty -->
-          <div id="section-fg-product" class="collapsible-section">
-            <div class="section-divider collapsible-trigger" onclick="toggleSection(this)">
-              <div class="section-divider-label">Product</div>
-              <div class="section-divider-line"></div>
-              <div class="section-chevron"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></div>
-            </div>
-            <div class="collapsible-content"><div class="collapsible-content-inner">
-            </div></div>
-          </div>
-
-          <!-- section-sheet-dimensions: Full Sheet + Cut Sheet -->
-          <div id="section-sheet-dimensions" class="collapsible-section">
-            <div class="section-divider collapsible-trigger" onclick="toggleSection(this)">
-              <div class="section-divider-label">Sheet Dimensions</div>
-              <div class="section-divider-line"></div>
-              <div class="section-chevron"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></div>
-            </div>
-            <div class="collapsible-content"><div class="collapsible-content-inner">
-            </div></div>
-          </div>
-
-          <!-- section-routing-wastage: Route Code, Wastage Type, Sheets, Waste %, Impressions, Qty -->
-          <div id="section-routing-wastage" class="collapsible-section">
-            <div class="section-divider collapsible-trigger" onclick="toggleSection(this)">
-              <div class="section-divider-label">Routing &amp; Wastage</div>
-              <div class="section-divider-line"></div>
-              <div class="section-chevron"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></div>
-            </div>
-            <div class="collapsible-content"><div class="collapsible-content-inner">
-            </div></div>
-          </div>
-
-          <!-- section-material: Main Board, Brand, GSM, Fluting, Paper Combination -->
-          <div id="section-material" class="collapsible-section">
-            <div class="section-divider collapsible-trigger" onclick="toggleSection(this)">
-              <div class="section-divider-label">Board / Paper Material</div>
-              <div class="section-divider-line"></div>
-              <div class="section-chevron"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></div>
-            </div>
-            <div class="collapsible-content"><div class="collapsible-content-inner">
-            </div></div>
-          </div>
-
-          <!-- section-printing: Mellow Colour, Front/Reverse colours -->
-          <div id="section-printing" class="collapsible-section">
-            <div class="section-divider collapsible-trigger" onclick="toggleSection(this)">
-              <div class="section-divider-label">Printing</div>
-              <div class="section-divider-line"></div>
-              <div class="section-chevron"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></div>
-            </div>
-            <div class="collapsible-content"><div class="collapsible-content-inner">
-            </div></div>
-          </div>
-
-          <!-- section-varnishing: Varnishing toggle, Front/Reverse fields, UV Types -->
-          <div id="section-varnishing" class="collapsible-section">
-            <div class="section-divider collapsible-trigger" onclick="toggleSection(this)">
-              <div class="section-divider-label">Varnishing</div>
-              <div class="section-divider-line"></div>
-              <div class="section-chevron"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></div>
-            </div>
-            <div class="collapsible-content"><div class="collapsible-content-inner">
-            </div></div>
-          </div>
-
-          <!-- section-lamination: Lamination toggle, Front/Reverse fields -->
-          <div id="section-lamination" class="collapsible-section">
-            <div class="section-divider collapsible-trigger" onclick="toggleSection(this)">
-              <div class="section-divider-label">Lamination</div>
-              <div class="section-divider-line"></div>
-              <div class="section-chevron"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></div>
-            </div>
-            <div class="collapsible-content"><div class="collapsible-content-inner">
-            </div></div>
-          </div>
-
-          <!-- section-tiep-artwork: TIEP, Assemble, Artwork toggles + breakdown fields -->
-          <div id="section-tiep-artwork" class="collapsible-section">
-            <div class="section-divider collapsible-trigger" onclick="toggleSection(this)">
-              <div class="section-divider-label">TIEP / Artwork</div>
-              <div class="section-divider-line"></div>
-              <div class="section-chevron"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></div>
-            </div>
-            <div class="collapsible-content"><div class="collapsible-content-inner">
-            </div></div>
-          </div>
-
-          <!-- section-finishing: Debossing/Pasting/Foiling/DieCutting/Embossing, Ink/Rev dropdowns -->
-          <div id="section-finishing" class="collapsible-section">
-            <div class="section-divider collapsible-trigger" onclick="toggleSection(this)">
-              <div class="section-divider-label">Finishing</div>
-              <div class="section-divider-line"></div>
-              <div class="section-chevron"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></div>
-            </div>
-            <div class="collapsible-content"><div class="collapsible-content-inner">
-            </div></div>
-          </div>
-
-          <!-- section-slab-quantities: Slab 2–5 Qty/Impression/Wastage + Confirm -->
-          <div id="section-slab-quantities" class="collapsible-section">
-            <div class="section-divider collapsible-trigger" onclick="toggleSection(this)">
-              <div class="section-divider-label">Slab Quantities</div>
-              <div class="section-divider-line"></div>
-              <div class="section-chevron"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></div>
-            </div>
-            <div class="collapsible-content"><div class="collapsible-content-inner">
-            </div></div>
-          </div>
-
-          <!-- section-other: Material Details (Varnishing, Lamination, Artwork, Finishing) -->
-          <div id="section-other" class="collapsible-section">
-            <div class="section-divider collapsible-trigger" onclick="toggleSection(this)">
-              <div class="section-divider-label">Material Details</div>
-              <div class="section-divider-line"></div>
-              <div class="section-chevron"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></div>
-            </div>
-            <div class="collapsible-content"><div class="collapsible-content-inner">
-            </div></div>
-          </div>
-
-          <!-- section-remarks: Price Enquiry Remarks, Routing Waste % -->
-          <div id="section-remarks" class="collapsible-section">
-            <div class="section-divider collapsible-trigger" onclick="toggleSection(this)">
-              <div class="section-divider-label">Remarks &amp; Routing</div>
-              <div class="section-divider-line"></div>
-              <div class="section-chevron"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></div>
-            </div>
-            <div class="collapsible-content"><div class="collapsible-content-inner">
-            </div></div>
+          <!-- Header iframe container (hidden in Details mode) -->
+          <div id="header-iframe-wrapper">
+            <iframe id="pehdrFrame" name="pehdrFrame"
+              src="../../aspx/tstruct.aspx?transid=pehdr&openerIV=crrec&isIV=false&isDupTab=false&dummyload=false&hdnbElapsTime=0"
+              style="width:100%; height:calc(100vh - 140px); border:none; display:block;" frameborder="0" allowtransparency="true">
+            </iframe>
           </div>
 
           <!-- Detail panel selector bar (visible in Details mode) -->
@@ -363,106 +219,119 @@
 
           <!-- 1. Pre Press Details -->
           <div id="detail-panel-pre-press" class="detail-panel">
-            <div class="dpanel-hdr">
-              <span class="dpanel-title">Pre Press Details</span>
-            </div>
-            <div class="dpanel-form"></div>
+            <div class="dpanel-hdr"><span class="dpanel-title">Pre Press Details</span></div>
+            <iframe id="prpreFrame" name="prpreFrame"
+              src="../../aspx/tstruct.aspx?transid=prpre&openerIV=crrec&isIV=false&isDupTab=false&dummyload=false&hdnbElapsTime=0"
+              style="width:100%; height:calc(100vh - 200px); border:none; display:block;" frameborder="0" allowtransparency="true">
+            </iframe>
           </div>
 
           <!-- 2. Route Cost -->
           <div id="detail-panel-route-cost" class="detail-panel">
-            <div class="dpanel-hdr">
-              <span class="dpanel-title">Route Cost</span>
-            </div>
-            <div class="dpanel-form"></div>
+            <div class="dpanel-hdr"><span class="dpanel-title">Route Cost</span></div>
+            <iframe id="proutFrame" name="proutFrame"
+              src="../../aspx/tstruct.aspx?transid=prout&openerIV=crrec&isIV=false&isDupTab=false&dummyload=false&hdnbElapsTime=0"
+              style="width:100%; height:calc(100vh - 200px); border:none; display:block;" frameborder="0" allowtransparency="true">
+            </iframe>
           </div>
 
           <!-- 3. Board / Paper Details -->
           <div id="detail-panel-board-paper" class="detail-panel">
-            <div class="dpanel-hdr">
-              <span class="dpanel-title">Board / Paper Details</span>
-            </div>
-            <div class="dpanel-form"></div>
+            <div class="dpanel-hdr"><span class="dpanel-title">Board / Paper Details</span></div>
+            <iframe id="prboaFrame" name="prboaFrame"
+              src="../../aspx/tstruct.aspx?transid=prboa&openerIV=crrec&isIV=false&isDupTab=false&dummyload=false&hdnbElapsTime=0"
+              style="width:100%; height:calc(100vh - 200px); border:none; display:block;" frameborder="0" allowtransparency="true">
+            </iframe>
           </div>
 
           <!-- 4. Corrugated Paper Details -->
           <div id="detail-panel-corrugated" class="detail-panel">
-            <div class="dpanel-hdr">
-              <span class="dpanel-title">Corrugated Paper Details</span>
-            </div>
-            <div class="dpanel-form"></div>
+            <div class="dpanel-hdr"><span class="dpanel-title">Corrugated Paper Details</span></div>
+            <iframe id="prcorFrame" name="prcorFrame"
+              src="../../aspx/tstruct.aspx?transid=prcor&openerIV=crrec&isIV=false&isDupTab=false&dummyload=false&hdnbElapsTime=0"
+              style="width:100%; height:calc(100vh - 200px); border:none; display:block;" frameborder="0" allowtransparency="true">
+            </iframe>
           </div>
 
           <!-- 5. Ink Material -->
           <div id="detail-panel-ink" class="detail-panel">
-            <div class="dpanel-hdr">
-              <span class="dpanel-title">Ink Material</span>
-            </div>
-            <div class="dpanel-form"></div>
+            <div class="dpanel-hdr"><span class="dpanel-title">Ink Material</span></div>
+            <iframe id="prinkFrame" name="prinkFrame"
+              src="../../aspx/tstruct.aspx?transid=prink&openerIV=crrec&isIV=false&isDupTab=false&dummyload=false&hdnbElapsTime=0"
+              style="width:100%; height:calc(100vh - 200px); border:none; display:block;" frameborder="0" allowtransparency="true">
+            </iframe>
           </div>
 
           <!-- 6. Adhesive -->
           <div id="detail-panel-adhesive" class="detail-panel">
-            <div class="dpanel-hdr">
-              <span class="dpanel-title">Adhesive</span>
-            </div>
-            <div class="dpanel-form"></div>
+            <div class="dpanel-hdr"><span class="dpanel-title">Adhesive</span></div>
+            <iframe id="padheFrame" name="padheFrame"
+              src="../../aspx/tstruct.aspx?transid=padhe&openerIV=crrec&isIV=false&isDupTab=false&dummyload=false&hdnbElapsTime=0"
+              style="width:100%; height:calc(100vh - 200px); border:none; display:block;" frameborder="0" allowtransparency="true">
+            </iframe>
           </div>
 
           <!-- 7. Foil Material -->
           <div id="detail-panel-foil" class="detail-panel">
-            <div class="dpanel-hdr">
-              <span class="dpanel-title">Foil Material</span>
-            </div>
-            <div class="dpanel-form"></div>
+            <div class="dpanel-hdr"><span class="dpanel-title">Foil Material</span></div>
+            <iframe id="pfoilFrame" name="pfoilFrame"
+              src="../../aspx/tstruct.aspx?transid=pfoil&openerIV=crrec&isIV=false&isDupTab=false&dummyload=false&hdnbElapsTime=0"
+              style="width:100%; height:calc(100vh - 200px); border:none; display:block;" frameborder="0" allowtransparency="true">
+            </iframe>
           </div>
 
           <!-- 8. Varnishing Details -->
           <div id="detail-panel-varnishing" class="detail-panel">
-            <div class="dpanel-hdr">
-              <span class="dpanel-title">Varnishing Details</span>
-            </div>
-            <div class="dpanel-form"></div>
+            <div class="dpanel-hdr"><span class="dpanel-title">Varnishing Details</span></div>
+            <iframe id="pvarnFrame" name="pvarnFrame"
+              src="../../aspx/tstruct.aspx?transid=pvarn&openerIV=crrec&isIV=false&isDupTab=false&dummyload=false&hdnbElapsTime=0"
+              style="width:100%; height:calc(100vh - 200px); border:none; display:block;" frameborder="0" allowtransparency="true">
+            </iframe>
           </div>
 
           <!-- 9. Film Details -->
           <div id="detail-panel-film" class="detail-panel">
-            <div class="dpanel-hdr">
-              <span class="dpanel-title">Film Details</span>
-            </div>
-            <div class="dpanel-form"></div>
+            <div class="dpanel-hdr"><span class="dpanel-title">Film Details</span></div>
+            <iframe id="pfilmFrame" name="pfilmFrame"
+              src="../../aspx/tstruct.aspx?transid=pfilm&openerIV=crrec&isIV=false&isDupTab=false&dummyload=false&hdnbElapsTime=0"
+              style="width:100%; height:calc(100vh - 200px); border:none; display:block;" frameborder="0" allowtransparency="true">
+            </iframe>
           </div>
 
           <!-- 10. Out Sourcing Items -->
           <div id="detail-panel-outsourcing" class="detail-panel">
-            <div class="dpanel-hdr">
-              <span class="dpanel-title">Out Sourcing Items</span>
-            </div>
-            <div class="dpanel-form"></div>
+            <div class="dpanel-hdr"><span class="dpanel-title">Out Sourcing Items</span></div>
+            <iframe id="poutsFrame" name="poutsFrame"
+              src="../../aspx/tstruct.aspx?transid=pouts&openerIV=crrec&isIV=false&isDupTab=false&dummyload=false&hdnbElapsTime=0"
+              style="width:100%; height:calc(100vh - 200px); border:none; display:block;" frameborder="0" allowtransparency="true">
+            </iframe>
           </div>
 
           <!-- 11. Other Detail -->
           <div id="detail-panel-other" class="detail-panel">
-            <div class="dpanel-hdr">
-              <span class="dpanel-title">Other Detail</span>
-            </div>
-            <div class="dpanel-form"></div>
+            <div class="dpanel-hdr"><span class="dpanel-title">Other Detail</span></div>
+            <iframe id="potheFrame" name="potheFrame"
+              src="../../aspx/tstruct.aspx?transid=pothe&openerIV=crrec&isIV=false&isDupTab=false&dummyload=false&hdnbElapsTime=0"
+              style="width:100%; height:calc(100vh - 200px); border:none; display:block;" frameborder="0" allowtransparency="true">
+            </iframe>
           </div>
 
           <!-- 12. Packing Details -->
           <div id="detail-panel-packing" class="detail-panel">
-            <div class="dpanel-hdr">
-              <span class="dpanel-title">Packing Details</span>
-            </div>
-            <div class="dpanel-form"></div>
+            <div class="dpanel-hdr"><span class="dpanel-title">Packing Details</span></div>
+            <iframe id="ppackFrame" name="ppackFrame"
+              src="../../aspx/tstruct.aspx?transid=ppack&openerIV=crrec&isIV=false&isDupTab=false&dummyload=false&hdnbElapsTime=0"
+              style="width:100%; height:calc(100vh - 200px); border:none; display:block;" frameborder="0" allowtransparency="true">
+            </iframe>
           </div>
 
           <!-- 13. SFG Details -->
           <div id="detail-panel-sfg" class="detail-panel">
-            <div class="dpanel-hdr">
-              <span class="dpanel-title">SFG Details</span>
-            </div>
-            <div class="dpanel-form"></div>
+            <div class="dpanel-hdr"><span class="dpanel-title">SFG Details</span></div>
+            <iframe id="psfgdFrame" name="psfgdFrame"
+              src="../../aspx/tstruct.aspx?transid=psfgd&openerIV=crrec&isIV=false&isDupTab=false&dummyload=false&hdnbElapsTime=0"
+              style="width:100%; height:calc(100vh - 200px); border:none; display:block;" frameborder="0" allowtransparency="true">
+            </iframe>
           </div>
 
           <!-- 14. Cost Details -->

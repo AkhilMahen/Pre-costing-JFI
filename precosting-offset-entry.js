@@ -208,3 +208,9 @@
     if (prodTab) prodTab.classList.add('open');
   }
   document.addEventListener('DOMContentLoaded', initHorizTabs);
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('iframe').forEach(f => {
+      f.addEventListener('load', () => console.log('iframe loaded:', f.id, f.src));
+    });
+  });
